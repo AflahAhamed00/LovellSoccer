@@ -1,72 +1,68 @@
 <%-include('../partials/userHeader.ejs') %>
 
 <section class="userPage">
-    <div class="container">
-        <div class="header">
-            <h2>Account Sign Up</h2>
-        </div>
-        <form class="form" action="/registerUser" method="POST" onsubmit="return signupValidate()">
-            <% if(errMsg){%>
-                <div class="errorstyle">
-                    <p style="text-align:center; color: rgb(255, 0, 0);">
-                        <%= errMsg %>
-                    </p>
-                </div>
-            <% } %>
-            <div class="form-control">
-                <label for="username"></label>
-                <input type="text" placeholder="Name" name="name" id="name"/>
-                <small id="nameError"></small>
-            </div>
-            <div class="form-control">
-                <label for="username"></label>
-                <input type="email" placeholder="Email Address" name="email" id="email"/>
-                <small id="emailError"></small>
-            </div>
-            <div class="form-control">
-                <label for="username"></label>
-                <input type="" placeholder="Phone No." name="phoneNumber" id="phoneNumber"/>
-                <small id="mobileError"></small>
-            </div>
-            <div class="form-control">
-                <label for="password"></label>
-                <input type="password" placeholder="Password" name="password" id="password" />
-                <small id="passwordError"></small>
-            </div>
-            <div class="form-control">
-                <label for="password"></label>
-                <input type="password" placeholder="Confirm Password" name="confirm_Password" id="confirm_Password" />
-                <small id="confirmPaswordError"></small>
-            </div>
-            
-                <button type="submit" >Sign Up</button>  
-            
-                <span class="log-in"> 
-                    <P>Already have an acount?<a class="txt2" href="/userLogin">
-                          Log In
-                      </a>
-                    </P>
-                  </span>
-            
-        </form>
+  <div class="container">
+    <div class="header">
+      <h2>Account Sign Up</h2>
     </div>
+    <form class="form" action="/registerUser" method="post" onsubmit="return signupValidate()">
+      <% if(errMsg) { %>
+      <div class="errorstyle">
+        <p style="text-align: center; color: rgb(255, 0, 0);"><%= errMsg %></p>
+      </div>
+      <% } %>
+      <div class="form-control">
+        <label for="name">Name</label>
+        <input type="text" placeholder="Name" name="name" id="name" />
+        <small id="nameError"></small>
+      </div>
+      <div class="form-control">
+        <label for="email">Email Address</label>
+        <input type="email" placeholder="Email Address" name="email" id="email" />
+        <small id="emailError"></small>
+      </div>
+      <div class="form-control">
+        <label for="phoneNumber">Phone No.</label>
+        <input type="text" placeholder="Phone No." name="phoneNumber" id="phoneNumber" />
+        <small id="phoneError"></small>
+      </div>
+      <div class="form-control">
+        <label for="password">Password</label>
+        <input type="password" placeholder="Password" name="password" id="password" />
+        <small id="passwordError"></small>
+      </div>
+      <div class="form-control">
+        <label for="confirm_Password">Confirm Password</label>
+        <input type="password" placeholder="Confirm Password" name="confirm_Password" id="confirm_Password" />
+        <small id="confirmPasswordError"></small>
+      </div>
+    
+      <button type="submit">Sign Up</button>
+    
+      <span class="log-in">
+        <p>Already have an account? <a class="txt2" href="/userLogin">Log In</a></p>
+      </span>
+    </form>
+    
+  </div>
 </section>
+<%-include('../partials/userFooter.ejs')%>
+
 <style>
-.txt2 {
+  .txt2 {
     font-family: Poppins-Regular;
     font-size: 13px;
     line-height: 1.5;
-    color: #151A8F;
+    color: #151a8f;
     text-decoration: none;
     font-weight: bold;
   }
 
-  span p{
-      font-size: 13px;
+  span p {
+    font-size: 13px;
   }
-  span{
-      display: flex;
-      justify-content: center;
+  span {
+    display: flex;
+    justify-content: center;
   }
-
-</style>  
+</style>

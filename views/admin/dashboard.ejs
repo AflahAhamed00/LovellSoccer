@@ -1,0 +1,78 @@
+<%- include('../partials/adminHeader.ejs')%>
+ <%- include('../partials/headerLinks.ejs')%>
+ <div class="container line-break-top line-break text-center py-3">
+    <span class="shadow-heading">DashBoard</span>
+  </div>
+  <div class="col-md-10 mx-auto my-3">
+    <div class="row m-0">
+      <div class="col-xl-3 col-lg-6 mb-2">
+        <div class="card l-bg-cherry">
+          <div class="card-statistic-3 p-4">
+            <div class="card-icon card-icon-large"><i class="fas fa-shopping-cart"></i></div>
+            <div class="mb-4">
+              <h5 class="card-title mb-0">Orders</h5>
+            </div>
+            <div class="row align-items-center mb-2 d-flex">
+              <div class="col-8">
+                <h4 class="d-flex align-items-center mb-0">
+                  <%=locals.orderCount%>
+                </h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-3 col-lg-6 mb-2 ">
+        <div class="card l-bg-blue-dark">
+          <div class="card-statistic-3 p-4">
+            <div class="card-icon card-icon-large"><i class="fas fa-users"></i></div>
+            <div class="mb-4">
+              <h5 class="card-title mb-0">Customers</h5>
+            </div>
+            <div class="row align-items-center mb-2 d-flex">
+              <div class="col-8">
+                <h4 class="d-flex align-items-center mb-0">
+                  <%=locals.customerCount%>
+                </h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-3 col-lg-6 mb-2">
+        <div class="card l-bg-green-dark">
+          <div class="card-statistic-3 p-4">
+            <div class="card-icon card-icon-large"><i class="fas fa-clock"></i></div>
+            <div class="mb-4">
+              <h5 class="card-title mb-0">Products</h5>
+            </div>
+            <div class="row align-items-center mb-2 d-flex">
+              <div class="col-8">
+                <h4 class="d-flex align-items-center mb-0">
+                  <%=locals.productCount%>
+                </h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-3 col-lg-6 mb-2">
+        <div class="card l-bg-orange-dark">
+          <div class="card-statistic-3 p-4">
+            <div class="card-icon card-icon-large"><i class="fas fa-dollar-sign"></i></div>
+            <div class="mb-4">
+              <h5 class="card-title mb-0">Revenue ₹</h5>
+            </div>
+            <div class="row align-items-center mb-2 d-flex">
+              <div class="col-8">
+                <h4 class="d-flex align-items-center mb-0">
+                  <%=locals.totalRevenue%>
+                </h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+          <%- include('../partials/adminFooter.ejs')%>

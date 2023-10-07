@@ -1,0 +1,56 @@
+<%- include("../partials/userHeader.ejs")%>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<body>
+    <section class="userPage">
+        <div class="container-fluid pt-5 pb-5"
+            style="background: #fff; width: auto;border: 1px solid #f0f0f0; padding: 36px; border-radius: 20px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);">
+            <div class="row justify-content-center">
+                <div class="form-container user-signup">
+                    <form action="/verifyOtp" method="post" id="otpverification">
+                        <% if(errMsg){%>
+                            <div class="errorstyle">
+                                <p style="text-align:center; color: rgb(255, 0, 0);">
+                                    <%= errMsg %>
+                                </p>
+                            </div>
+                            <% } %>
+                                <label for="">Enter Your OTP</label>
+                                <input style="display: none;" type="text" name="id" value="<%= userId %>">
+                                <input type="text" name="otp" style=" border-radius: 5px; border: 1px solid #a7a0a0;">
+                                <input type="submit" class="btn btn-success" value="Submit" style="background-color: #6e616163; border: 0px solid #6e616163; border-radius: 4px;">
+                                <p id="otpExpirationTime" style="text-align: center; font-size: smaller;"></p>
+                               
+                    </form>
+                    <a href="/resendOtp" id="unhide" style="text-decoration: none;">
+                        <button style="background-color:#0ede5a ;border-radius: 4px;border: none;">Resend OTP</button>
+                    </a>
+
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"
+    integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script>
+        document.getElementById('unhide').style.display="none"
+        
+        let seconds = 30
+        const otpExpirationText = setInterval(function(){
+            seconds--;
+            document.getElementById('otpExpirationTime').innerHTML=`OTP will expire in ${seconds} seconds`
+            if(seconds<0){
+                clearInterval(otpExpirationText)
+                document.getElementById('unhide').style.display="block"
+                document.getElementById('otpExpirationTime').innerHTML=""
+            }
+        },1000)
+
+    </script>
+</body>    

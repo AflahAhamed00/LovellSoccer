@@ -1,0 +1,226 @@
+<%- include('../partials/adminHeader.ejs')%>
+i<%- include('../partials/headerLinks.ejs')%>
+
+ <!-- Button trigger modal -->
+ <div class="container d-flex justify-content-center my-3">
+    <button type="button" class="btn btn-dark text-center" data-bs-toggle="modal"
+        data-bs-target="#exampleModal">
+        Add New Product
+    </button>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">
+                    Add New Product
+                </h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <!-- -------------------- -->
+
+
+                <form action="/admin/productManagement" method="post" enctype="multipart/form-data"
+                    onsubmit="return productValidate()">
+                    <div class="mb-3">
+                        <input type="text" class="form-control" id="form-holder" name="name" placeholder="Name"
+                            required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="frontImage" class="px-1" style="font-size: 0.75rem;">Upload Front
+                            Image</label>
+                        <input class="form-control" id="frontImage" name="frontImage" type="file" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="thumbnail" class="px-1" style="font-size: 0.75rem;">Upload thumbnail</label>
+                        <input class="form-control" id="thumbnail" name="thumbnail" type="file" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="images" class="px-1" style="font-size: 0.75rem;">Upload 3 Images</label>
+                        <input class="form-control" id="images" name="images" type="file" multiple />
+                    </div>
+                    <div class="mb-3 jqSelector">
+                        <select id="inputState" class="form-control " name="category">
+                            <option selected>Choose category</option>
+                            <%categories.forEach((data)=>{%>
+                                <option value="<%=data._id%>" class="new">
+                                    <%=data.name%>
+                                </option>
+                                <% })%>
+                        </select>
+                    </div>
+
+                    <div class="mb-3 dataDivs food ">
+                        <select class="form-control " name="VarientName">
+                            <option selected value="0">Choose product varient</option>
+                            <option value="1kg">
+                                1Kg
+                            </option>
+                            <option value="2kg">
+                                2Kg
+                            </option>
+                            <option value="5kg">
+                                5Kg
+                            </option>
+                        </select>
+                    </div>
+                    <div class="mb-3 dataDivs supplement ">
+                        <select class="form-control " name="VarientName">
+                            <option selected value="0">Choose product varient</option>
+                            <option value="medicine">
+                                medicine
+                            </option>
+                            <option value="supplement">
+                                supplement
+                            </option>
+
+                        </select>
+                    </div>
+                    <div class="mb-3 dataDivs accessories ">
+                        <select class="form-control " name="VarientName">
+                            <option selected value="0">Choose product varient</option>
+                            <option value="Clothes">
+                                Clothes
+                            </option>
+                            <option value="Collars">
+                                Collars
+                            </option>
+                        </select>
+                    </div>
+                    <!-- <input type="text" id="empty" name="VarientName" style="display: none;" > -->
+
+                    <div class="mb-3">
+                        <input type="text" class="form-control" id="brand" placeholder="Brand" name="brand"
+                            required />
+                    </div>
+                    <div class="mb-3">
+                        <textarea class="form-control" id="description" placeholder="Description"
+                            name="description" style="text-transform: lowercase;" required></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <input type="number" class="form-control" id="price" placeholder="Price" name="price"
+                            required />
+                    </div>
+
+                    <div class="mb-3">
+                        <input type="number" class="form-control" id="inventory" placeholder="Inventory"
+                            name="inventory" required />
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Close
+                </button>
+                <button type="submit" class="btn btn-success">
+                    Save changes
+                </button>
+                </form>
+
+
+                <!-- ------------------- -->
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Responsive data table -->
+<div class="card-body container">
+    <table id="dataTable" class="table table-hover cell-border fw-light nowrap">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Image</th>
+                <th>Category</th>
+                <th>Brand</th>
+                <th>Price ₹</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <% if(products !=null){ %>
+            <tbody>
+                
+                    <% products.forEach(function(item,i){ %>
+                        <tr>
+                            <td>
+                                <%= item.name %>
+                            </td>
+                            <td>
+                                <img src="/img/products/<%=item.frontImage%>" alt="" height="70">
+                            </td>
+                            <td>
+                                <%= item.category.name %>
+                            </td>
+                            <td>
+                                <%= item.brand %>
+                            </td>
+                            <td>
+                                <%= item.price %>
+                            </td>
+                            <td>
+
+                                <div class="text-center d-flex flex-column ">
+                                    <a href="/admin/productManagement/<%= item._id %>"
+                                        onclick="return editProductsAlertBox('<%= item.name %>',event,this)"
+                                        class="btn btn-dark text-white btn-sm my-1">Edit</a>
+                                        <div id="<%=item._id%>">
+                                    <% if(item.listed==true){ %>
+                                        <a onclick="return changeListing('<%= item._id %> ')"
+                                            class="btn btn-danger text-white btn-sm  my-1">Unlist</a>
+                                        <% }else{ %>
+                                            <a onclick="return changeListing('<%= item._id%>')"
+                                                class="btn btn-success text-white btn-sm my-1">List</a>
+                                            <% } %>
+                                        </div>
+                                </div>
+                            </td>
+                        </tr>
+               
+                <% }) %>
+            </tbody>
+            <% } %>
+    </table>
+</div>
+<script>
+    $(".dataDivs").hide();
+    $(".jqSelector").change(function () {
+        var data = $("#inputState option:selected").text().trim();
+        console.log(data)
+
+        if (data == 'food') {
+
+            $(".dataDivs").hide();
+            $(".food").show();
+
+
+        }
+        if (data == 'supplement') {
+
+            $(".dataDivs").hide();
+            $(".supplement").show();
+
+
+        }
+        if (data == 'accessories') {
+
+            $(".dataDivs").hide();
+            $(".accessories").show();
+
+        }
+        if (data != 'accessories' && data != 'supplement' && data != 'food') {
+            $(".dataDivs").hide();
+        }
+
+    });
+
+
+</script>
+
+<%- include('../layout/adminFooter.ejs')%>

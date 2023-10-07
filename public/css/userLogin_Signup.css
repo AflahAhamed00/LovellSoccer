@@ -1,103 +1,104 @@
-.project-title{
-    font-size: large;
-    margin-top: 5vh;
-    margin-left: 10vh;
+.project-title {
+  font-size: large;
+  margin-top: 5vh;
+  margin-left: 10vh;
 }
 
 .userPage {
-    font-family: 'Open Sans', sans-serif;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	min-height: 100vh;
-	margin: 0;
-    background-size: cover;
+  font-family: "Open Sans", sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  margin: 0;
+  background-size: cover;
 }
 .userPage .container {
-	background-color: #fff;
-	border-radius: 5px;
-	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-	overflow: hidden;
-	width: 800px;
-	max-width: 100%;
-    margin: 0;
-    padding: 0;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  width: 800px;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 .userPage .header {
-	border-bottom: 1px solid #f0f0f0;
-	background-color: #f7f7f7;
-	padding: 20px 40px;
-    display: flex;
-    justify-content: center;
+  border-bottom: 1px solid #f0f0f0;
+  background-color: #f7f7f7;
+  padding: 20px 40px;
+  display: flex;
+  justify-content: center;
 }
 
 .userPage .header h2 {
-	margin: 0;
+  margin: 0;
 }
 .userPage .form {
-	padding: 20px 20px;	
+  padding: 20px 20px;
 }
 
 .userPage .form-control {
-	margin-bottom: 10px;
-	padding-bottom: 10px;
-	position: relative;
-    border: none;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  position: relative;
+  border: none;
 }
 
 .userPage .form-control label {
-	display: inline-block;
-	margin-bottom: 5px;
+  display: inline-block;
+  margin-bottom: 5px;
 }
 
 .userPage .form-control input {
-	border: 2px solid #f0f0f0;
-	border-radius: 4px;
-	display: block;
-	font-family: inherit;
-	font-size: 14px;
-	padding: 10px;
-	width: 730px;
+  border: 2px solid #f0f0f0;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  display: block;
+  font-family: inherit;
+  font-size: 14px;
+  padding: 10px;
+  width: 730px;
 }
 
 .userPage .form-control input:focus {
-	outline: 0;
-	border-color: #777;
+  outline: 0;
+  border-color: #777;
 }
 
 .userPage .form-control.success input {
-	border-color: #2ecc71;
+  border-color: #2ecc71;
 }
 
 .userPage .form-control.error input {
-	border-color: #e74c3c;
+  border-color: #e74c3c;
 }
 
 .userPage .form-control i {
-	visibility: hidden;
-	position: absolute;
-	top: 40px;
-	right: 10px;
+  visibility: hidden;
+  position: absolute;
+  top: 40px;
+  right: 10px;
 }
 
 .userPage .form-control small {
-	color: #e74c3c;
-	position: absolute;
-	bottom: 0;
-	left: 0;
-    padding-left: 10px;
+  color: #e74c3c;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding-left: 10px;
 }
 
 .userPage .form button {
-	background-color: #6e616163;
-	border: 0px solid #6e616163;
-	border-radius: 4px;
-	color: black;
-	display: block;
-	font-family: inherit;
-	font-size: 16px;
-	padding: 10px;
-	margin-top: 20px;
-	width: 100%;
+  background-color: #6e616163;
+  border: 0px solid #6e616163;
+  border-radius: 4px;
+  color: black;
+  display: block;
+  font-family: inherit;
+  font-size: 16px;
+  padding: 10px;
+  margin-top: 20px;
+  width: 100%;
 }

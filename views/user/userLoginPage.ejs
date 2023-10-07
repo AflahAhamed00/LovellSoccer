@@ -1,70 +1,88 @@
 <%- include("../partials/userHeader.ejs")%>
-    
-    <section class="userPage">
-        <div class="container">
-            <div class="header">
-                <h2>Account Log In</h2>
-            </div>
-            <form class="form"  action="/userLogin" method="post" onsubmit="return loginValidate()">
-                <% if(errMsg){%>
-                    <div class="errorstyle">
-                        <p style="text-align:center; color: rgb(255, 0, 0);">
-                            <%= errMsg %>
-                        </p>
-                    </div>
-                    <% } %>
-                <div class="form-control">
-                    <label for="username"></label>
-                    <input type="email" placeholder="Email Address" name="email" id="email" />
-                    <small id="emailError"></small>
-                </div>
-                <div class="form-control">
-                    <label for="username"></label>
-                    <input type="password" placeholder="Password" name="password" id="password"/>
-                    <small id="passwordError"></small>
-                </div>
-                <div>
-                    <a class="txt1 text-decoration-none me-5" href="/forgotPass">
-                        Forgot Password?
-                       </a>
-                </div>
-                    
-                <button type="submit">Login Now</button>
 
-                <span class="sign-up"> 
-                  <P>Don't have an acount?<a class="txt2" href="/signUp">
-                            Sign Up
-                        </a>
-                    </P>
-                </span>
-            </form>
-        </div>
-    </section>
-    <style>
-        .txt1 {
-      font-family: Poppins-Regular;
-      font-size: 13px;
-      line-height: 1.5;
-      color: #151A8F;
-      display: flex;
-      justify-content: right;
-      text-decoration: none;
-    }
-    
-    .txt2 {
-      font-family: Poppins-Regular;
-      font-size: 13px;
-      line-height: 1.5;
-      color: #151A8F;
-      text-decoration: none;
-      font-weight: bold;
-    }
+<section class="userPage">
+  <div class="container">
+    <div class="header">
+      <h2>Account Log In</h2>
+    </div>
+    <form
+      class="form"
+      action="/userLogin"
+      method="post"
+      onsubmit="return loginValidate()"
+    >
+      <% if(errMsg){%>
+      <div class="errorstyle">
+        <p style="text-align: center; color: rgb(255, 0, 0);">
+          <%= errMsg %>
+        </p>
+      </div>
+      <% } %>
+      <div class="form-control">
+        <label for="username"></label>
+        <input
+          type="email"
+          placeholder="Email Address"
+          name="email"
+          id="email"
+        />
+        <small id="emailError"></small>
+      </div>
+      <div class="form-control">
+        <label for="username"></label>
+        <input
+          type="password"
+          placeholder="Password"
+          name="password"
+          id="password"
+        />
+        <small id="passwordError"></small>
+      </div>
+      <div>
+        <a class="txt1 text-decoration-none me-5" href="/forgotPassword">
+          Forgot Password?
+        </a>
+      </div>
 
-    span p{
-        font-size: 13px;
-    }
-    span{
-        display: flex;
-        justify-content: center;
-    }
-    </style>
+      <button type="submit">Login Now</button>
+
+      <span class="sign-up">
+        <P
+          >Don't have an acount?<a class="txt2" href="/signUp">
+            Sign Up
+          </a>
+        </P>
+      </span>
+    </form>
+  </div>
+</section>
+<%-include('../partials/userFooter.ejs')%>
+
+<style>
+  .txt1 {
+    font-family: Poppins-Regular;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #151a8f;
+    display: flex;
+    justify-content: right;
+    text-decoration: none;
+  }
+
+  .txt2 {
+    font-family: Poppins-Regular;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #151a8f;
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  span p {
+    font-size: 13px;
+  }
+  span {
+    display: flex;
+    justify-content: center;
+  }
+</style>

@@ -1,0 +1,29 @@
+<%- include('../partials/adminHeader.ejs')%>
+<div class="container">
+    <div class="line-break text-center py-4">
+      <span class="shadow-heading">Welcome Admin</span>
+    </div>
+    <div class="row my-4 pt-4">
+      <span class="text-center pb-3" style="font-size: 0.8rem; text-transform: none;">
+        <p class="text-danger mt-0 pt-4 fw-bold text-uppercase"><%= locals.errorMessage %></p>
+    </span>
+      <div class="col-lg-5 mx-auto">
+        <form action="/admin/login" method="post" onsubmit="return adminLoginValidation()">
+            
+          <div class="mb-3">
+            <input type="email" class="form-control" id="form-holder" name="email" placeholder="e-Mail"  />
+            <small id="emailError" style="color: rgb(255, 0, 0);"></small>
+          </div>
+         
+          <div class="mb-3">
+            <input type="password" class="form-control" id="form-holder2" placeholder="Password" name="password" value="" />
+            <small id="passwordError" style="color: rgb(255, 0, 0);"></small>
+        </div>
+        
+
+          <input type="submit"  class="btn btn-primary w-100" value="Sign in" />
+        </form>
+      </div>
+    </div>
+  </div>
+  <%- include('../partials/adminFooter.ejs')%>
