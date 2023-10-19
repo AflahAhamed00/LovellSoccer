@@ -21,6 +21,6 @@ router
 // Products
 
 router
-.get('/productManagment',adminSession,adminProductController.viewProducts)
+.get('/productManagement',adminSession,adminProductController.viewProducts)
 
 module.exports = router

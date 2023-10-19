@@ -1,15 +1,15 @@
 const mongoose = require('mongoose')
 const brandCollection = require('../model/brandModel')
-const categaryCollection = require('../model/categaryModel')
+const categoryCollection = require('../model/categoryModel')
 
 const productSchema = new mongoose.Schema({
     name:{
         type:String,
         required:true,
     },
-    catogary:{
-        type:new mongoose.Types.ObjectId,
-        ref:categaryCollection,
+    category:{
+        type: mongoose.Types.ObjectId,
+        ref:categoryCollection,
         required:true,
     },
     price:{
