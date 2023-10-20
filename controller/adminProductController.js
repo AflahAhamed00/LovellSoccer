@@ -2,6 +2,7 @@ const mongooose = require("mongoose");
 const productModel = require("../model/productModel");
 const categoryModel = require("../model/categoryModel");
 const brandModel = require("../model/brandModel");
+const sharp = require("sharp");
 
 const viewProducts = async (req, res) => {
   try {
@@ -23,4 +24,12 @@ const viewProducts = async (req, res) => {
   }
 };
 
-module.exports = { viewProducts };
+const addProducts = async (req, res) => {
+  try {
+    
+  } catch (err) {
+    console.log("error in admin side add product " + err);
+  }
+};
+
+module.exports = { viewProducts, addProducts };

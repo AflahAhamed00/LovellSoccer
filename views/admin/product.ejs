@@ -55,6 +55,14 @@ i<%- include('../partials/headerLinks.ejs')%>
                                 <% })%>
                         </select>
                     </div>
+                    <div class="mb-3">
+                        <select id="inputState-brand" class="form-control" name="brand" required> 
+                          <option value="">Choose Brand</option> 
+                          <%brands.forEach((data)=>{%> 
+                            <option value="<%=data._id%>"><%=data.name%></option> 
+                          <%})%> 
+                        </select>
+                      </div>
 
                     <div class="mb-3 dataDivs food ">
                         <select class="form-control " name="VarientName">
@@ -140,7 +148,7 @@ i<%- include('../partials/headerLinks.ejs')%>
                 <th>Image</th>
                 <th>Category</th>
                 <th>Brand</th>
-                <th>Price ₹</th>
+                <th>Price</th>
                 <th>Action</th>
             </tr>
         </thead>

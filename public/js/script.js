@@ -137,3 +137,26 @@ function forgotPasswordValidate() {
     return true;
   }
 }
+
+function adminLoginValidation() {
+  let email = document.getElementById("form-holder").value.trim();
+  let password = document.getElementById("form-holder2").value.trim();
+  let error = 0;
+  if (email === "") {
+    document.getElementById("emailError").innerHTML = "Email is required";
+    error = 1;
+  } else {
+    document.getElementById("emailError").innerHTML = "";
+  }
+  if (password === "") {
+    document.getElementById("passwordError").innerHTML = "Password is required";
+    error = 1;
+  } else {
+    document.getElementById("passwordError").innerHTML = "";
+  }
+  if (error === 1) {
+    return false;
+  } else {
+    return true;
+  }
+}
