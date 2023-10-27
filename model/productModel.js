@@ -13,7 +13,7 @@ const productSchema = new mongoose.Schema({
         required:true,
     },
     price:{
-        type:String,
+        type:Number,
         required:true,
     },
     brand:{
@@ -36,7 +36,16 @@ const productSchema = new mongoose.Schema({
     size:{
         type:Number,
         required:true,
-    }
+    },
+    thumbnail:{
+        type:String,
+        require,
+    },
+    frontImage:{
+        type:String,
+        require,
+    },
+    images:[String],
 })
 
 const productCollection = new mongoose.model("productCollection",productSchema)

@@ -64,7 +64,7 @@ i<%- include('../partials/headerLinks.ejs')%>
                         </select>
                       </div>
 
-                    <div class="mb-3 dataDivs food ">
+                    <!-- <div class="mb-3 dataDivs food ">
                         <select class="form-control " name="VarientName">
                             <option selected value="0">Choose product varient</option>
                             <option value="1kg">
@@ -77,8 +77,8 @@ i<%- include('../partials/headerLinks.ejs')%>
                                 5Kg
                             </option>
                         </select>
-                    </div>
-                    <div class="mb-3 dataDivs supplement ">
+                    </div> -->
+                    <!-- <div class="mb-3 dataDivs supplement ">
                         <select class="form-control " name="VarientName">
                             <option selected value="0">Choose product varient</option>
                             <option value="medicine">
@@ -100,16 +100,26 @@ i<%- include('../partials/headerLinks.ejs')%>
                                 Collars
                             </option>
                         </select>
-                    </div>
+                    </div> -->
                     <!-- <input type="text" id="empty" name="VarientName" style="display: none;" > -->
 
-                    <div class="mb-3">
+                    <!-- <div class="mb-3">
                         <input type="text" class="form-control" id="brand" placeholder="Brand" name="brand"
                             required />
-                    </div>
+                    </div> -->
                     <div class="mb-3">
                         <textarea class="form-control" id="description" placeholder="Description"
                             name="description" style="text-transform: lowercase;" required></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <input type="number" class="form-control" id="size" placeholder="Size"
+                            name="size" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <input type="text" class="form-control" id="form-holder" name="type" placeholder="Type"
+                            required />
                     </div>
 
                     <div class="mb-3">
@@ -118,8 +128,8 @@ i<%- include('../partials/headerLinks.ejs')%>
                     </div>
 
                     <div class="mb-3">
-                        <input type="number" class="form-control" id="inventory" placeholder="Inventory"
-                            name="inventory" required />
+                        <input type="number" class="form-control" id="stock" placeholder="Stock"
+                            name="stock" required />
                     </div>
             </div>
             <div class="modal-footer">
@@ -167,7 +177,7 @@ i<%- include('../partials/headerLinks.ejs')%>
                                 <%= item.category.name %>
                             </td>
                             <td>
-                                <%= item.brand %>
+                                <%= item.brand.name %>
                             </td>
                             <td>
                                 <%= item.price %>

@@ -20,7 +20,7 @@ const customerUserData = new mongoose.Schema({
   block: {
     type: Boolean,
     required: true,
-    default:true
+    default:false
   },
   adress: [
     {

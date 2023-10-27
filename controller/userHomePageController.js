@@ -70,7 +70,7 @@ const userLogin = async (req, res) => {
       );
     }
     if (checkUser && hashedPassword) {
-      if (checkUser.ban) {
+      if (checkUser.block) {
         res.render('user/userLoginPage', { userData: 0, errMsg: 'Sorry you are banned' })
       }
       else {
