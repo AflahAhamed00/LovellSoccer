@@ -64,49 +64,6 @@ i<%- include('../partials/headerLinks.ejs')%>
                         </select>
                       </div>
 
-                    <!-- <div class="mb-3 dataDivs food ">
-                        <select class="form-control " name="VarientName">
-                            <option selected value="0">Choose product varient</option>
-                            <option value="1kg">
-                                1Kg
-                            </option>
-                            <option value="2kg">
-                                2Kg
-                            </option>
-                            <option value="5kg">
-                                5Kg
-                            </option>
-                        </select>
-                    </div> -->
-                    <!-- <div class="mb-3 dataDivs supplement ">
-                        <select class="form-control " name="VarientName">
-                            <option selected value="0">Choose product varient</option>
-                            <option value="medicine">
-                                medicine
-                            </option>
-                            <option value="supplement">
-                                supplement
-                            </option>
-
-                        </select>
-                    </div>
-                    <div class="mb-3 dataDivs accessories ">
-                        <select class="form-control " name="VarientName">
-                            <option selected value="0">Choose product varient</option>
-                            <option value="Clothes">
-                                Clothes
-                            </option>
-                            <option value="Collars">
-                                Collars
-                            </option>
-                        </select>
-                    </div> -->
-                    <!-- <input type="text" id="empty" name="VarientName" style="display: none;" > -->
-
-                    <!-- <div class="mb-3">
-                        <input type="text" class="form-control" id="brand" placeholder="Brand" name="brand"
-                            required />
-                    </div> -->
                     <div class="mb-3">
                         <textarea class="form-control" id="description" placeholder="Description"
                             name="description" style="text-transform: lowercase;" required></textarea>
@@ -190,10 +147,10 @@ i<%- include('../partials/headerLinks.ejs')%>
                                         class="btn btn-dark text-white btn-sm my-1">Edit</a>
                                         <div id="<%=item._id%>">
                                     <% if(item.listed==true){ %>
-                                        <a onclick="return changeListing('<%= item._id %> ')"
+                                        <a  onclick="return changeListing('<%= item._id %> ')"
                                             class="btn btn-danger text-white btn-sm  my-1">Unlist</a>
                                         <% }else{ %>
-                                            <a onclick="return changeListing('<%= item._id%>')"
+                                            <a  onclick="return changeListing('<%= item._id%>')"
                                                 class="btn btn-success text-white btn-sm my-1">List</a>
                                             <% } %>
                                         </div>
@@ -206,7 +163,7 @@ i<%- include('../partials/headerLinks.ejs')%>
             <% } %>
     </table>
 </div>
-<script>
+<!-- <script>
     $(".dataDivs").hide();
     $(".jqSelector").change(function () {
         var data = $("#inputState option:selected").text().trim();
@@ -239,6 +196,6 @@ i<%- include('../partials/headerLinks.ejs')%>
     });
 
 
-</script>
+</script> -->
 
 <%- include('../partials/adminFooter.ejs')%>

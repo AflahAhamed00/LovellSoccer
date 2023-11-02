@@ -1,0 +1,86 @@
+<%- include("../partials/userHeader.ejs")%>
+<div class="max-w-6xl mx-auto bg-white p-4 rounded shadow-md">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <!-- Thumbnail -->
+      <div class="cursor-pointer md:col-span-1 shadow-sm">
+        <div class="zoom-container">
+            <img src="/img/products/<%=productDetails[0].images[0]%>" alt="Product Image 1" class="w-full rounded" 
+                data-magnify-src="/img/products/<%=productDetails[0].images[0]%>"
+                data-magnify-size="13800x13600">
+        </div>
+    </div>
+      <!-- Product Details -->
+      <div class="md:col-span-1 ml-20 mt-40">
+        <h1 class="text-2xl font-bold"><%= productDetails[0].name%></h1>
+       
+        <p class="text-xl font-bold my-8">₹<%=productDetails[0].price %></p>
+        <h3 class="text-xl font-bold">Size</h3>
+    <div class="h-36 w-72  grid grid-cols-3">
+    <button class="h-10 w-16  my-4 border border-black hover:border-blue-700">
+             <h6 class="font-sans font-semibold">6</h6>
+    </button>
+    <button class="h-10 w-16  my-4 border border-black hover:border-blue-700" >
+        <h6 class="font-sans font-semibold">7</h6>
+    </button >
+    <button class="h-10 w-16  my-4 border border-black hover:border-blue-700">
+        <h6 class="font-sans font-semibold">8</h6>
+    </button >
+    <button class="h-10 w-16  my-4 border border-black hover:border-blue-700">
+        <h6 class="font-sans font-semibold">9</h6>
+    </button>
+    <button class="h-10 w-16  my-4 border border-black hover:border-blue-700">
+        <h6 class="font-sans font-semibold">10</h6>
+    </button>
+    <button class="h-10 w-16  my-4 border border-black hover:border-blue-700">
+        <h6 class="font-sans font-semibold">11</h6>
+    </button>
+</div>
+        <button class="w-64 bg-blue-500 text-white px-4 py-2 mt-4 rounded hover:bg-blue-700">Add to Wishlist</button>
+        <button class="w-64 bg-blue-500 text-white px-4 py-2 mt-4 rounded hover:bg-blue-700">Add to Cart</button>
+      </div>
+    </div>
+
+    <!-- Image Gallery -->
+    <div class="mt-4">
+      <div class="flex gap-8">
+          <div class="cursor-pointer hover:opacity-75" id="thumbnail-1">
+              <img src="/img/products/<%=productDetails[0].images[0]%>" alt="Product Image 1" class="w-40 rounded" data-magnify-src="/img/products/<%=productDetails[0].images[0]%>">
+          </div>
+          <div class="cursor-pointer hover:opacity-75" id="thumbnail-2">
+              <img src="/img/products/<%=productDetails[0].images[1]%>" alt="Product Image 2" class="w-40 rounded" data-magnify-src="/img/products/<%=productDetails[0].images[1]%>">
+          </div>
+          <div class="cursor-pointer hover:opacity-75" id="thumbnail-3">
+              <img src="/img/products/<%=productDetails[0].images[2]%>" alt="Product Image 3" class="w-40 rounded" data-magnify-src="/img/products/<%=productDetails[0].images[2]%>">
+          </div>
+      </div>
+  </div>
+</div>
+    <div class="mt-8 ml-48 w-9/12">
+        <h2 class="font-medium">Product Description</h2>
+    <p class="text-black font-light mt-2 w-9/12"><%= productDetails[0].description %></p>
+  </div>
+</div>    
+
+    <script src="/js/jquery.magnify.js"></script> 
+    <script>
+      const thumbnailImages = document.querySelectorAll('.cursor-pointer img');
+      const zoomContainer = document.querySelector('.zoom-container img');
+  
+      thumbnailImages.forEach((img) => {
+          img.addEventListener('click', () => {
+              const newImageSrc = img.getAttribute('src');
+              
+              // Update the data-magnify-src and src attributes of the zoomed image
+              zoomContainer.setAttribute('data-magnify-src', newImageSrc);
+              zoomContainer.setAttribute('src', newImageSrc);
+
+              // to magnify the recently changed image
+              $(zoomContainer).magnify()
+          });
+      });
+  
+      // Initialize Magnify on the  image that shows first in the single product details page
+      $(zoomContainer).magnify();
+  </script>
+  
+<%- include("../partials/userFooter.ejs")%>

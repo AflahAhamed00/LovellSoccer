@@ -1,5 +1,6 @@
 const express = require("express")
 const userHomePageController = require("../controller/userHomePageController")
+const userProductController = require("../controller/userProductController")
 const router = express.Router()
 
 // Home page 
@@ -46,5 +47,13 @@ router
 
 router
 .post('/resetPassword',userHomePageController.resetPassword)
+
+// all products
+router 
+.get('/user/allProducts',userProductController.showAllProducts)
+
+// product details
+router
+.get('/user/singleProductDetails/:id',userProductController.singleProductDetails)
 
 module.exports = router

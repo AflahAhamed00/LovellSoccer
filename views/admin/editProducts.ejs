@@ -1,0 +1,127 @@
+<%- include('../partials/adminHeader.ejs') %>
+    <%- include('../partials/headerLinks.ejs') %>
+        <div class="container " style="text-decoration: none">
+            <form  method="post" action="" enctype="multipart/form-data" class="container row flex-column my-5 mx-auto" id="editProducts">
+                <input type="hidden" name="id" id="userId" value="<%= product._id %>">
+                <div class="mb-3 col-lg-6">
+                    <label for="name" class="px-1" style="font-size: 0.75rem;">Name</label>
+                    <input type="text" class="form-control" id="name" value="<%= product.name %>" name="name"
+                        placeholder="Name" />
+                </div>
+                <div class="mb-3 col-lg-6 d-flex flex-column">
+                    <label for="thumbnail" class="px-1" style="font-size: 0.75rem;">Upload Thumbnail</label>
+                    <img class=" border" src="/img/products/<%=product.thumbnail%>" width="150px" alt="">
+                    <input class="form-control" id="thumbnail" name="thumbnail" type="file" value="<%=product.thumbnail %>" />
+                </div>
+                <div class="mb-3 col-lg-6 d-flex flex-column">
+                    <label for="frontImage" class="px-1" style="font-size: 0.75rem;">Upload front image</label>
+                    <img class=" border" src="/img/products/<%=product.frontImage%>" width="150px" alt="">
+                    <input class="form-control" id="frontImage" name="frontImage" type="file" value="<%=product.frontImage %>" />
+                </div>
+                <div class="mb-3 col-lg-6 d-flex flex-column">
+                    <label for="frontImage" class="px-1" style="font-size: 0.75rem;">Upload images (Only 3)</label>
+                    <div class="row">
+                        <%product.images.forEach((image)=>{%><img class="col-8 col-lg-4 border"
+                                src="/img/products/<%=image%>" width="150px" alt="">
+                            <%})%>
+                    </div>
+                    <input class="form-control" id="frontImage" name="images" type="file" multiple />
+                </div>
+               
+                <div class="mb-3 col-lg-6 jqSelector">
+                    <select id="inputState" class="form-control" name="category" required>
+                        <option value="<%=product.category._id%>" class="fw-bold" selected>
+                            <%=product.category.name%>
+                        </option>
+                        <% categories.forEach((data) => { %>
+                            <option value="<%= data._id %>" <%= (data._id === product.category._id) ? 'selected' : '' %>>
+                                <%= data.name %>
+                            </option>
+                        <% }) %>
+                    </select>
+                </div>
+                <div class="mb-3 col-lg-6 jqSelector">
+                    <select id="inputState-brand" class="form-control" name="brand" required>
+                        <option value="<%=product.brand._id%>" class="fw-bold" selected>
+                            <%=product.brand.name%>
+                        </option>
+                        <% brands.forEach((data) => { %>
+                            <option value="<%= data._id %>" <%= (data._id === product.brand._id) ? 'selected' : '' %>>
+                                <%= data.name %>
+                            </option>
+                        <% }) %>
+                    </select>
+                </div>
+
+                <div class="mb-3 col-lg-6">
+                    <label for="Description" class="px-1" style="font-size: 0.75rem;">Description</label>
+                    <input type="text" class="form-control" id="description" placeholder="Description"
+                        name="description" value="<%= product.description %>" required />
+                </div>
+                <div class="mb-3 col-lg-6">
+                    <label for="Size" class="px-1" style="font-size: 0.75rem;">Size</label>
+                    <input type="number" class="form-control" id="size" placeholder="Size" name="size"
+                        value="<%= product.size %>" required />
+                </div>
+                <div class="mb-3 col-lg-6">
+                    <label for="Type" class="px-1" style="font-size: 0.75rem;">Type</label>
+                    <input type="text" class="form-control" id="type" placeholder="Type" name="type"
+                        value="<%= product.type %>" required />
+                </div>
+                <div class="mb-3 col-lg-6">
+                    <label for="Price" class="px-1" style="font-size: 0.75rem;">Price</label>
+                    <input type="number" class="form-control" id="Price" placeholder="Price" name="price"
+                        value="<%= product.price %>" required />
+                </div>
+                <div class="mb-3 col-lg-6">
+                    <label for="stock" class="px-1" style="font-size: 0.75rem;">Stock</label>
+                    <input type="number" class="form-control" id="stock" placeholder="Stock" name="stock"
+                        value="<%= product.stock %>" required />
+                </div>
+
+
+                <div class="float-end mb-5">
+                    <a href="/admin/productManagement" onclick="return confirm('Discard Changes ?')"
+                        class="btn btn-secondary text-white my-1">Cancel</a>
+                    <button type="submit" class="btn btn-success my-1">
+                        <span>Save changes</span>
+                    </button>
+            </form>
+        </div>
+        
+        <!-- <script>
+            $(".dataDivs").hide();
+            $(".jqSelector").change(function () {
+                var data = $("#inputState option:selected").text().trim();
+                console.log(data)
+
+                if (data == 'food') {
+
+                    $(".dataDivs").hide();
+                    $(".food").show();
+
+
+                }
+                if (data == 'supplement') {
+
+                    $(".dataDivs").hide();
+                    $(".supplement").show();
+
+
+                }
+                if (data == 'accessories') {
+
+                    $(".dataDivs").hide();
+                    $(".accessories").show();
+
+                }
+                if (data != 'accessories' && data != 'supplement' && data != 'food') {
+                    $(".dataDivs").hide();
+                }
+
+            });
+
+            
+
+        </script> -->
+        <%- include('../partials/adminFooter.ejs') %>

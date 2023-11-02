@@ -6,7 +6,7 @@ const adminDashboardController = require("../controller/adminDashboardController
 const adminProductController = require("../controller/adminProductController");
 const adminCategoryController = require("../controller/adminCategoryController");
 const adminCustomerManagement = require("../controller/adminCustomerManagement");
-const adminBrandController = require("../controller/adminBrandController")
+const adminBrandController = require("../controller/adminBrandController");
 const upload = require("../utilities/imageProcessor");
 
 router.get("/login", adminController.loginPage);
@@ -30,6 +30,29 @@ router
     adminProductController.addProducts
   );
 
+// product edit
+
+router
+  .get(
+    "/productManagement/:id",
+    adminSession,
+    adminProductController.showEditProduct
+  )
+  .post(
+    "/productManagement/:id",
+    adminSession,
+    upload.fields([
+      { name: "frontImage", maxCount: 1 },
+      { name: "thumbnail", maxCount: 1 },
+      { name: "images", maxCount: 3 },
+    ]),
+    adminProductController.saveEditProduct
+  );
+
+
+  // change listing
+  router
+  .patch("/productManagement/changeListing/:id",adminSession,adminProductController.changeListing) 
 // category
 router
   .get("/categories", adminSession, adminCategoryController.listCategory)
@@ -37,18 +60,26 @@ router
 
 //   category edit
 router
-.get("/categories/:id",adminSession,adminCategoryController.showEditCategory)
-.post("/categories/:id",adminSession,adminCategoryController.saveEditCategory)
+  .get(
+    "/categories/:id",
+    adminSession,
+    adminCategoryController.showEditCategory
+  )
+  .post(
+    "/categories/:id",
+    adminSession,
+    adminCategoryController.saveEditCategory
+  );
 
 //   brands
 router
-.get("/brands",adminSession,adminBrandController.listBrand)
-.post("/brands",adminSession,adminBrandController.addBrand)
+  .get("/brands", adminSession, adminBrandController.listBrand)
+  .post("/brands", adminSession, adminBrandController.addBrand);
 
 // brand edit
 router
-.get("/brands/:id",adminSession,adminBrandController.showEditBrand)
-.post("/brands/:id",adminSession,adminBrandController.saveEditBrand)
+  .get("/brands/:id", adminSession, adminBrandController.showEditBrand)
+  .post("/brands/:id", adminSession, adminBrandController.saveEditBrand);
 
 // Customers
 router

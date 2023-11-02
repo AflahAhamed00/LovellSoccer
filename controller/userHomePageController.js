@@ -3,7 +3,8 @@ const otpGenerator = require("otp-generator");
 const userModel = require("../model/userModel");
 const { default: mongoose } = require("mongoose");
 const bcrypt = require("bcrypt");
-const userData = require("../model/userModel");
+const brandModel = require("../model/brandModel")
+const productModel  =require("../model/productModel")
 // const { name } = require("ejs");
 
 let OTP = otpGenerator.generate(4, {
@@ -313,7 +314,15 @@ const resetPassword = async (req, res) => {
 const landingPage = async (req, res) => {
   try {
     console.log("landingpage");
-  } catch (err) {}
+    const brandList = await brandModel.find()
+    const productList= await productModel.find()
+    res.render("user/landingPage",{
+      brand : brandList,
+      product:productList
+    })
+  } catch (err) {
+    console.log(`user landing page rendering err -${err}`);
+  }
 };
 
 module.exports = {
