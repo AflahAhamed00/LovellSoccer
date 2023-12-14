@@ -52,17 +52,14 @@
                         <% }) %>
                     </select>
                 </div>
+                
 
                 <div class="mb-3 col-lg-6">
                     <label for="Description" class="px-1" style="font-size: 0.75rem;">Description</label>
                     <input type="text" class="form-control" id="description" placeholder="Description"
                         name="description" value="<%= product.description %>" required />
                 </div>
-                <div class="mb-3 col-lg-6">
-                    <label for="Size" class="px-1" style="font-size: 0.75rem;">Size</label>
-                    <input type="number" class="form-control" id="size" placeholder="Size" name="size"
-                        value="<%= product.size %>" required />
-                </div>
+        
                 <div class="mb-3 col-lg-6">
                     <label for="Type" class="px-1" style="font-size: 0.75rem;">Type</label>
                     <input type="text" class="form-control" id="type" placeholder="Type" name="type"
@@ -73,12 +70,23 @@
                     <input type="number" class="form-control" id="Price" placeholder="Price" name="price"
                         value="<%= product.price %>" required />
                 </div>
-                <div class="mb-3 col-lg-6">
-                    <label for="stock" class="px-1" style="font-size: 0.75rem;">Stock</label>
-                    <input type="number" class="form-control" id="stock" placeholder="Stock" name="stock"
-                        value="<%= product.stock %>" required />
-                </div>
 
+                
+                <div class="mb-3 col-lg-4">
+                    <p style="font-size: small;" class="mb-0">Size & Stock</p>
+                    <% product.sizeAndStock.forEach(function(data, i){ %>  
+                      <select name="sizes[]" class="form-control">
+                        <option <% if(data.size == 6){ %> selected <% } %>>6</option>
+                        <option <% if(data.size == 7){ %> selected <% } %>>7</option>
+                        <option <% if(data.size == 8){ %> selected <% } %>>8</option>
+                        <option <% if(data.size == 9){ %> selected <% } %>>9</option>
+                        <option <% if(data.size == 10){ %> selected <% } %>>10</option>
+                        <option <% if(data.size == 11){ %> selected <% } %>>11</option>
+                      </select>
+                      <input type="number" class="form-control" name="stock[]" value="<%= data.stock %>" placeholder="Stock" required>
+                    <% }) %>
+                  </div>
+                  
 
                 <div class="float-end mb-5">
                     <a href="/admin/productManagement" onclick="return confirm('Discard Changes ?')"

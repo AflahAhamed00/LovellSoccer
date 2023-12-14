@@ -55,23 +55,19 @@ i<%- include('../partials/headerLinks.ejs')%>
                                 <% })%>
                         </select>
                     </div>
+                    
                     <div class="mb-3">
                         <select id="inputState-brand" class="form-control" name="brand" required> 
                           <option value="">Choose Brand</option> 
                           <%brands.forEach((data)=>{%> 
-                            <option value="<%=data._id%>"><%=data.name%></option> 
+                            <option value="<%=data._id%>"><%=data.name%></option>
                           <%})%> 
                         </select>
                       </div>
-
+                      
                     <div class="mb-3">
                         <textarea class="form-control" id="description" placeholder="Description"
                             name="description" style="text-transform: lowercase;" required></textarea>
-                    </div>
-
-                    <div class="mb-3">
-                        <input type="number" class="form-control" id="size" placeholder="Size"
-                            name="size" required />
                     </div>
 
                     <div class="mb-3">
@@ -84,10 +80,25 @@ i<%- include('../partials/headerLinks.ejs')%>
                             required />
                     </div>
 
-                    <div class="mb-3">
-                        <input type="number" class="form-control" id="stock" placeholder="Stock"
-                            name="stock" required />
-                    </div>
+                              <div class="mb-3"> 
+                                <label>Size vs Stock : </label> 
+                                <div id="size-container"> 
+                                  <div class="size-row"> 
+                                    <select  class="form-control" name="sizes[]" required>  
+                                      <option value="">Select Sizes</option>  
+                                      <option value="6">6</option>  
+                                      <option value="7">7</option>  
+                                      <option value="8">8</option>  
+                                      <option value="9">9</option>  
+                                      <option value="10">10</option>
+                                      <option value="11">11</option>  
+                                    </select> 
+                                      <input type="number" class="form-control" name="stock[]" placeholder="Stock" required> 
+                                    </div> 
+                                  </div> 
+                                  <button type="button" class="add-size-btn btn btn-dark mt-3">Add More</button> 
+                                </div> 
+                        
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
@@ -163,6 +174,45 @@ i<%- include('../partials/headerLinks.ejs')%>
             <% } %>
     </table>
 </div>
+
+<script> 
+    $(document).ready(function() { 
+      // Add event listener for adding more SSD rows 
+      $('.add-size-btn').on('click', function() { 
+      var sizeRow = '<div class="size-row mt-4">' + 
+      ` <select  class="form-control" name="sizes[]">  
+                <option selected>Select Sizes</option>  
+                <option >6</option>  
+                <option >7</option>  
+                <option >8</option>  
+                <option >9</option>  
+                <option >10</option>
+                <option >11</option>  
+                </select>` + 
+      '<input type="number" class="form-control" name="stock[]" placeholder="Stock" required>'+ 
+      '<button type="button" class="btn btn-danger mb-1 remove-volume-btn">Remove</button>' + 
+      '</div>';  
+
+      $('#size-container').append(sizeRow); 
+      }); 
+
+      // Add event listener for removing SSD rows 
+      $('#size-container').on('click','.remove-size-btn', function() { 
+      $(this).parent().remove(); 
+      }); 
+    }); 
+
+    // 3 images validation 
+    // $('#addProductForm').submit(function(event) { 
+    //       var fileInput = $('#images'); 
+    //       //fileInput.get(0) retrieves the underlying DOM element from the jQuery object get(index) 
+    //       if (fileInput.get(0).files.length < 3) { 
+    //         event.preventDefault(); 
+    //         $('#error-message').text('Please Upload 3 files') 
+    //       } 
+    //     }); 
+
+  </script>
 <!-- <script>
     $(".dataDivs").hide();
     $(".jqSelector").change(function () {

@@ -38,6 +38,6 @@ const customerUserData = new mongoose.Schema({
   coupponsUsed: [{ type: mongoose.Schema.Types.ObjectId, ref: "Coupons" }],
 });
 
-const userData = new mongoose.model("signupUserDetails", customerUserData);
+const userData =  mongoose.model("signupUserDetails", customerUserData);
 
 module.exports = userData;

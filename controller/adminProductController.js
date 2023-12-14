@@ -2,6 +2,7 @@ const mongooose = require("mongoose");
 const productModel = require("../model/productModel");
 const categoryModel = require("../model/categoryModel");
 const brandModel = require("../model/brandModel");
+
 const sharp = require("sharp");
 
 const viewProducts = async (req, res) => {
@@ -51,21 +52,23 @@ const addProducts = async (req, res) => {
     req.body.category = new mongooose.Types.ObjectId(req.body.category);
     req.body.brand = new mongooose.Types.ObjectId(req.body.brand);
 
-    const newProduct = new productModel({
-      name: req.body.name,
-      category: req.body.category,
-      brand: req.body.brand,
-      description: req.body.description,
-      price: req.body.price,
-      stock: req.body.stock,
-      size: req.body.size,
-      type: req.body.type,
-      thumbnail: req.body.thumbnail,
-      frontImage: req.body.frontImage,
-      images: req.body.images,
-    });
+    const size = req.body.sizes  
+        const stock = req.body.stock 
+        const sizesStock = [] 
+        for(let i=0; i<size.length; i++){ 
+            sizesStock.push({ 
+                size:size[i],  
+                stock:stock[i] 
+            }) 
+        } 
+        console.log("sizesStock : "+sizesStock) 
+        req.body.sizeAndStock =sizesStock 
+        req.body.updatedBy = req.session.admin.name  
+ 
+         //fields inside req.body and collection fields should match with each other 
+         const newProduct = new productModel(req.body); 
+         await newProduct.save();
 
-    await productModel.insertMany([newProduct]);
     console.log("product added succesfully");
     res.redirect("/admin/productManagement");
   } catch (err) {
@@ -79,6 +82,7 @@ const showEditProduct = async (req, res) => {
     const editProduct = await productModel
       .findOne({ _id: id })
       .populate(["category", "brand"]);
+      console.log("edit product"+editProduct);
     const categoryList = await categoryModel.find();
     const brandList = await brandModel.find();
     if (editProduct) {
@@ -87,7 +91,7 @@ const showEditProduct = async (req, res) => {
         DocumentTitle: "Product Management",
         categories: categoryList,
         brands: brandList,
-        product: editProduct,
+        product: editProduct
       });
     } else { 
       res.redirect("/admin/dashboard");
@@ -133,26 +137,22 @@ const saveEditProduct = async (req, res) => {
     }
     req.body.category = new mongooose.Types.ObjectId(req.body.category);
     req.body.brand = new mongooose.Types.ObjectId(req.body.brand);
-    const editProducts = await productModel.updateOne(
-      {
-        _id: req.params.id,
-      },
-      {
-        $set: {
-          name: req.body.name,
-          category: req.body.category,
-          brand: req.body.brand,
-          description: req.body.description,
-          price: req.body.price,
-          stock: req.body.stock,
-          size: req.body.size,
-          type: req.body.type,
-          thumbnail: req.body.thumbnail,
-          frontImage: req.body.frontImage,
-          images: req.body.images,
-        },
-      }
-    );
+
+    const size = req.body.sizes
+    const stock = req.body.stock
+    const sizesStock = []
+    for(let i= 0;i < size.length;i++){
+      sizesStock.push({
+        size:size[i],
+        stock:stock[i]
+      })
+    }
+    req.body.sizeAndStock = sizesStock
+    req.body.category = new mongooose.Types.ObjectId(req.body.category);
+    req.body.brand = new mongooose.Types.ObjectId(req.body.brand);
+    req.body.updatedBy = req.session.admin.name
+
+    await productModel.findByIdAndUpdate(req.params.id,req.body)
     
     res.redirect("/admin/productManagement");
   } catch (err) { 

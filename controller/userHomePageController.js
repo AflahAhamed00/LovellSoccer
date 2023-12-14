@@ -5,6 +5,9 @@ const { default: mongoose } = require("mongoose");
 const bcrypt = require("bcrypt");
 const brandModel = require("../model/brandModel")
 const productModel  =require("../model/productModel")
+const cartModel = require('../model/cartModel');
+const { request } = require("express");
+const wishlistModel = require('../model/wishlistModel')
 // const { name } = require("ejs");
 
 let OTP = otpGenerator.generate(4, {
@@ -109,7 +112,7 @@ const registerUserDetails = async (req, res) => {
     if (userExists) {
       res.render("user/userSignUpPage", {
         errMsg: `User email already exists`,
-        userData: 0,
+        userData
       });
     } else {
       sendVerifyMail(req.body.name, req.body.email);
@@ -119,7 +122,7 @@ const registerUserDetails = async (req, res) => {
 
       console.log("old-", req.session.otp);
 
-      res.render("user/otpVerification", { userId: 0, errMsg: false });
+      res.render("user/otpVerification", { userData:0,wishlistCount:0,cartCount:0,userId: 0, errMsg: false });
     }
   } catch (err) {
     console.log(`OTP generating ${err}`);
@@ -140,9 +143,36 @@ const otpVerification = async (req, res) => {
           phoneNumber: phoneNumber,
           password: hashedPassword,
         });
+        res.render("user/userLoginPage", { userData:0 ,errMsg: false });
+
         req.session.user = user;
         await userModel.insertMany([user]);
-        res.render("user/userLoginPage", { userData: 0, errMsg: false });
+        const newUser = await userModel.findOne({ name: user.name }); // Fetch the newly created user
+
+        // Create a new cart for the user
+        const newCart = await cartModel({
+          customer: new mongoose.Types.ObjectId(newUser._id),
+        });
+    
+        // Update the user document with the cart ID
+        await userModel.findByIdAndUpdate(newUser._id, {
+          $set: { cart: new mongoose.Types.ObjectId(newCart._id) },
+        });
+        
+        await newCart.save();
+        // Create a new wishlist for the user
+        const newWishlist = await wishlistModel({
+          customer: new mongoose.Types.ObjectId(newUser._id),
+        });
+      
+        // Update the user document with the wishlist ID
+        await userModel.findByIdAndUpdate(newUser._id, {
+          $set: { wishlist: new mongoose.Types.ObjectId(newWishlist._id) },
+        });
+
+        await newWishlist.save();
+
+        console.log("cart and whislist created");
       } else {
         res.render("user/otpVerification", {
           userId: 0,
@@ -313,12 +343,42 @@ const resetPassword = async (req, res) => {
 
 const landingPage = async (req, res) => {
   try {
-    console.log("landingpage");
+    let userData = req.session.user
+    let cartCount = null;
+    let wishlistCount = null;
+    let cart=0;
+    let wishlist = 0;
+    if (req.session.userLoggedIn) {
+      cartCount = await cartModel.find({customer:userData._id})
+      if (cartCount && cartCount.length > 0 && cartCount[0].totalQuantity !== undefined){
+        cart=cartCount[0].totalQuantity;
+      }
+      wishlistCount = await wishlistModel.aggregate([
+        {
+          $group: {
+            _id: null,
+            totalSize: {
+              $sum: {
+                $size:{
+                  $ifNull: ["$products", []],
+                },
+              },
+            },
+          },
+        },
+      ]);
+      if (wishlistCount && wishlistCount.length > 0 && wishlistCount[0].totalSize !== undefined) {
+        wishlist = parseInt(wishlistCount[0].totalSize);
+      }
+    }
     const brandList = await brandModel.find()
     const productList= await productModel.find()
     res.render("user/landingPage",{
       brand : brandList,
-      product:productList
+      product:productList,
+      userData,
+      cartCount:cart,
+      wishlistCount:wishlist
     })
   } catch (err) {
     console.log(`user landing page rendering err -${err}`);

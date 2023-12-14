@@ -9,4 +9,4 @@ const userLoginSession = async (req, res, next) => {
   }
 };
 
-module.exports =  userLoginSession ;
+module.exports =  {userLoginSession} ;

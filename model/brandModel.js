@@ -8,6 +8,6 @@ const brandSchema = new mongoose.Schema({
     },
 })
 
-const brandCollection = new mongoose.model("brandsCollection",brandSchema)
+const brandCollection =  mongoose.model("brandsCollection",brandSchema)
 
 module.exports = brandCollection

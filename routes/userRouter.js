@@ -1,6 +1,10 @@
 const express = require("express")
 const userHomePageController = require("../controller/userHomePageController")
 const userProductController = require("../controller/userProductController")
+const userCartController = require('../controller/userCartConroller')
+const userWishlistController = require('../controller/userWishlistController')
+const userCheckoutController = require('../controller/userCheckoutController')
+const userSession = require('../middleware/userSession')
 const router = express.Router()
 
 // Home page 
@@ -51,9 +55,39 @@ router
 // all products
 router 
 .get('/user/allProducts',userProductController.showAllProducts)
+.post('/user/allProducts',userProductController.sortBy)
+
 
 // product details
 router
 .get('/user/singleProductDetails/:id',userProductController.singleProductDetails)
+
+//showing cart page
+router
+.get('/user/cart',userCartController.showCart)
+.delete('/user/cart',userCartController.removeCartProduct)
+// add to cart
+
+router
+.post('/product/addToCart',userCartController.addToCart)
+
+
+// change Product Quantity
+
+router
+.put('/cart/changeProductQuantity',userCartController.addCount)
+.delete('/cart/changeProductQuantity',userCartController.reduceCount)
+
+// wishlist page showing
+
+router
+.get('/user/wishlist',userSession.userLoginSession,userWishlistController.showWishlistPage)
+.delete('/user/wishlist',userSession.userLoginSession,userWishlistController.removeWishlistProduct)
+.post('/user/wishlist',userSession.userLoginSession,userWishlistController.addToWishlist)
+
+// user proceed to payment page
+
+router
+.post('/cart/proceedToPayment',userCartController.proceedToPayment)
 
 module.exports = router

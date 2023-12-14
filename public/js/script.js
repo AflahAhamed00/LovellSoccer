@@ -160,3 +160,153 @@ function adminLoginValidation() {
     return true;
   }
 }
+
+// function addToCart(productId, discountPrice) {
+//   let count = $("#cartCount").html();
+//   let wishlistCount = $("#wishlistCount").html();
+//   $.ajax({
+//     url: "/product/addToCart",
+//     type: "post",
+//     data: {
+//       price: discountPrice,
+//       productId: productId,
+//     },
+//     success: (response) => {
+//       if (response.status == "addedToCart") {
+//         count = parseInt(count) + 1;
+//         $("#cartCount").html(count);
+//         if (wishlistCount > 0) {
+//           wishlistCount = parseInt(wishlistCount) - 1;
+//           $("#wishlistCount").html(wishlistCount);
+//         }
+//         Swal.fire({
+//           position: "top-right",
+//           icon: "sucess",
+//           title: "product has been added to cart",
+//           showConfirmButton: false,
+//           timer: 1500,
+//         });
+//         $(".content").load(location.href + ".content");
+//       } else if (response.status == "countAdded") {
+//         count = parseInt(count) + 1;
+//         $("#cartCount").html(count);
+//         if (wishlistCount > 0) {
+//           wishlistCount = parseInt(wishlistCount) - 1;
+//           $("#wislistCount").html(wishlistCount);
+//         }
+//         Swal.fire({
+//           position: "top-right",
+//           icon: "success",
+//           title: "product count added",
+//           showConfirmButton: false,
+//           timer: 1500,
+//         });
+//         $(".content").load(location.href + ".content");
+//       } else {
+//         location.href = "/userLogin";
+//       }
+//     },
+//   });
+// }
+
+
+function addToCart(productId, discountPrice,selectedSize) {
+  console.log('size = ',selectedSize);
+  // if(validateSize()){
+  let count = $("#cartCount").html();
+  let wishlistCount = $("#wishlistCount").html();
+  
+  $.ajax({
+    url: "/product/addToCart",
+    type: "post",
+    data: {
+      price: discountPrice,
+      productId: productId,
+      size: selectedSize,
+    },
+    success: (response) => {
+      if (response.status == "addedToCart") {
+        count = parseInt(count) + 1;
+        $("#cartCount").html(count);
+        if (wishlistCount > 0) {
+          wishlistCount = parseInt(wishlistCount) - 1;
+          $("#wishlistCount").html(wishlistCount);
+        }
+        Swal.fire({
+          position: "top-right",
+          icon: "success",
+          title: "Product has been added to cart",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        // Assuming you want to reload content after successful addition to cart
+        $(".content").load(location.href + " .content");
+      } else if (response.status == "countAdded") {
+        count = parseInt(count) + 1;
+        $("#cartCount").html(count);
+        if (wishlistCount > 0) {
+          wishlistCount = parseInt(wishlistCount) - 1;
+          $("#wishlistCount").html(wishlistCount);
+        }
+        Swal.fire({
+          position: "top-right",
+          icon: "success",
+          title: "Product count added",
+          showConfirmButton: false,
+          timer: 1500,
+          customClass: {
+            popup: 'custom-alert-size'
+          },
+          willOpen: () => {
+            Swal.getPopup().style.width = '400px';
+          }
+        });
+        // Assuming you want to reload content after successful addition to cart
+        $(".content").load(location.href + " .content");
+      } else {
+        location.href = "/userLogin";
+      }
+    },
+    error: (error) => {
+      console.error("AJAX error:", error);
+      // Handle the error, e.g., show an alert to the user
+    },
+  });
+
+}
+
+
+function addToWishlist(productId,selectedSize){
+  let count = $('#wishlistCount').html()
+  $.ajax({
+    url:'/user/wishlist',
+    data:{productId: productId,size:selectedSize},
+    method:'post',
+    success:(response)=>{
+      console.log('response : ',response);
+      if(response.status == true){
+        count = parseInt(count)+1
+        $('#wishlistCount').html(count)
+        Swal.fire({
+          position: 'top-right',
+          icon: 'success',
+          title: 'product has been added to wishlist',
+          showConfirmButton: false,
+          timer: 1500
+      })
+      }
+      else if(response.status == 'alreadyExists'){
+        Swal.fire({
+          position: 'top-right',
+          icon: 'success',
+          title: 'product exists in  your wishlist',
+          showConfirmButton: false,
+          timer: 1500
+      })
+      }
+      else{
+        location.href = '/userLogin'
+      }
+    }
+  })
+}

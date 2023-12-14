@@ -29,14 +29,18 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  stock: {
-    type: Number,
-    required: true,
-  },
-  size: {
-    type: Number,
-    required: true,
-  },
+  sizeAndStock: [
+    {
+      size: {
+        type: Number,
+        required: true,
+      },
+      stock: {
+        type: Number,
+        required: true,
+      },
+    },
+  ],
   thumbnail: {
     type: String,
     require,
@@ -52,9 +56,6 @@ const productSchema = new mongoose.Schema({
   images: [String],
 });
 
-const productCollection = new mongoose.model(
-  "productCollection",
-  productSchema
-);
+const productCollection = mongoose.model("productCollection", productSchema);
 
 module.exports = productCollection;

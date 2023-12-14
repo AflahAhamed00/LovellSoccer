@@ -1,0 +1,407 @@
+const cartModel = require("../model/cartModel");
+const categoryModel = require("../model/categoryModel");
+const brandModel = require("../model/brandModel");
+const productModel = require("../model/productModel");
+const wishlistModel = require("../model/wishlistModel");
+const { default: mongoose } = require("mongoose");
+
+const addToCart = async (req, res) => {
+  try {
+    if (req.session.user && req.session.user._id) {
+      let userData = req.session.user;
+      let productId = req.body.productId;
+      let selectedSize = req.body.size;
+
+      console.log("selectedSize - ", selectedSize);
+      productId = productId.trim();
+
+      const wishlistCheck = await wishlistModel.findOne({
+        customer: userData._id,
+        products: new mongoose.Types.ObjectId(productId),
+      });
+      if (wishlistCheck && wishlistCheck._id) {
+        await wishlistModel.findByIdAndUpdate(wishlistCheck._id, {
+          $pull: {
+            products: productId,
+          },
+        });
+      }
+      
+      const userCart = await cartModel.findOne({
+        customer: userData._id,
+      });
+      const product = await productModel.findById(productId);
+
+      const [sizeAndStockEntry] = product.sizeAndStock.filter((item) => {
+        if (item.size == selectedSize) {
+          return item;
+        }
+      });
+      let size = sizeAndStockEntry.size;
+      let stock = sizeAndStockEntry.stock;
+
+      console.log("type of size is - ",typeof size);
+
+      const productExist = await cartModel.findOne({
+        _id: userCart._id,
+        products: {
+          $elemMatch: { name: new mongoose.Types.ObjectId(productId) },
+        },
+      });
+
+      if (productExist) {
+        const productSizeExist = await cartModel.findOne({
+          _id: userCart._id,
+          products: {
+            $elemMatch: {
+              name: new mongoose.Types.ObjectId(productId),
+              productSize: size,
+            },
+          },
+        });
+        if (productSizeExist) {
+          console.log("size exists");
+          await cartModel.updateOne(
+            {
+              _id: userCart._id,
+              products: {
+                $elemMatch: { name: new mongoose.Types.ObjectId(productId),
+                  productSize: size, },
+              },
+            },
+            {
+              $inc: {
+                "products.$.quantity": 1,
+                totalPrice: product.price,
+                totalQuantity: 1,
+                "products.$.price": product.price,
+              },
+            }
+          );
+          res.json({
+            status: "countAdded",
+          });
+        }
+        else{
+          await cartModel.findByIdAndUpdate(userCart._id, {
+            $push: {
+              products: [
+                {
+                  name: new mongoose.Types.ObjectId(productId),
+                  price: product.price,
+                  productSize: size,
+                  productStock: stock,
+                },
+              ],
+            },
+            $inc: {
+              totalPrice: product.price,
+              totalQuantity: 1,
+            },
+          });
+          console.log("same product different size added");
+          res.send({
+            status: "addedToCart",
+          });
+        }
+      } else {
+        await cartModel.findByIdAndUpdate(userCart._id, {
+          $push: {
+            products: [
+              {
+                name: new mongoose.Types.ObjectId(productId),
+                price: product.price,
+                productSize: size,
+                productStock: stock,
+              },
+            ],
+          },
+          $inc: {
+            totalPrice: product.price,
+            totalQuantity: 1,
+          },
+        });
+        console.log("added");
+        res.send({
+          status: "addedToCart",
+        });
+      }
+    } else {
+      res.send({
+        status: false,
+      });
+    }
+  } catch (err) {
+    console.log("adding product to cart error - " + err);
+    res.redirect("/");
+  }
+};
+
+const showCart = async (req, res) => {
+  try {
+    if (req.session.user) {
+      let cartCount = null;
+      let wishlistCount = null;
+      let cart = 0;
+      let wishlist = 0;
+      let userData = req.session.user;
+      let cartProducts = await cartModel
+        .findOne({ customer: userData._id })
+        .populate("products.name");
+      if (req.session.userLoggedIn) {
+        cartCount = await cartModel.findOne({ customer: userData._id });
+        if (cartCount && cartCount.totalQuantity !== undefined) {
+          cart = cartCount.totalQuantity;
+        }
+        wishlistCount = await wishlistModel.aggregate([
+          {
+            $group: {
+              _id: null,
+              totalSize: {
+                $sum: {
+                  $size: {
+                    $ifNull: ["$products", []],
+                  },
+                },
+              },
+            },
+          },
+        ]);
+        if (
+          wishlistCount &&
+          wishlistCount.length > 0 &&
+          wishlistCount[0].totalSize !== undefined
+        ) {
+          wishlist = parseInt(wishlistCount[0].totalSize);
+        }
+      }
+      let totalAmount = await cartModel.find({ customer: userData._id });
+      let totalPrice = totalAmount.totalPrice;
+      const category = await categoryModel.find();
+      const brand = await brandModel.find();
+      res.render("user/cart", {
+        category,
+        brand,
+        userData,
+        cartProducts,
+        cartCount: cart,
+        wishlistCount: wishlist,
+        totalAmount: totalPrice,
+      });
+    } else {
+      console.log("Need to login first");
+      res.redirect("/userLogin");
+    }
+  } catch (err) {
+    console.log(`Error in showing cart page - ${err}`);
+    res.redirect("/");
+  }
+};
+
+const removeCartProduct = async(req,res)=>{
+  try {
+    if (req.session.user) {
+      let size = parseInt(req.body.size,10)
+      let productFromCart = await cartModel.aggregate([
+        {
+          $match: {
+            customer: new mongoose.Types.ObjectId(req.session.user._id),
+          },
+        },
+        {
+          $unwind: "$products",
+        },
+        {
+          $match: {
+            "products.name": new mongoose.Types.ObjectId(req.body.id),
+            "products.productSize":size,
+          },
+        },
+      ]);
+      const cartID = productFromCart[0]._id;
+      productFromCart = productFromCart[0].products;
+      await cartModel.findByIdAndUpdate(cartID, {
+        $pull: {
+          products: {
+            name: req.body.id,
+            productSize : size,
+          },
+        },
+        $inc: {
+          totalPrice: -productFromCart.price,
+          totalQuantity: -productFromCart.quantity,
+        },
+      });
+      res.json({
+        success: "removed",
+      });
+    } else {
+      console.log("Need to login first");
+      res.redirect("/");
+    }
+  } catch (err) {
+    console.log('removing cart product error - ',err);
+  }
+}
+
+const addCount = async (req, res) => {
+  try {
+    console.log("adding count");
+    if (req.session.user) {
+      const product = await productModel.findById(req.body.product);
+      let size = parseInt(req.body.size,10)
+      // const userCart = await cartModel.findOne({
+      //   customer: req.session.user._id,
+      // });
+
+      const count = await cartModel.findOneAndUpdate(
+        {
+          customer: req.session.user._id,
+          // _id:userCart._id,
+          products: {
+            $elemMatch: { name: req.body.product ,
+            productSize:size},
+          },
+        },
+        {
+          $inc: {
+            "products.$.quantity": 1,
+            "products.$.price": product.price,
+            totalPrice: product.price,
+            totalQuantity: 1,
+          },
+        }
+      );
+      const userCart = await cartModel.findOne({
+        customer: req.session.user._id,
+      });
+      res.json({
+        userCart,
+      });
+    } else {
+      console.log("Need to login first");
+      res.redirect("/");
+    }
+  } catch (err) {
+    console.log("error in adding count in cart" + err);
+    res.redirect("/");
+  }
+};
+
+const reduceCount = async (req, res) => {
+  try {
+    console.log("reducing count");
+    if (req.session.user) {
+      console.log(req.body.size);
+      const product = await productModel.findById(req.body.product);
+      let size = parseInt(req.body.size,10)
+      const currentItem = await cartModel.aggregate([
+        {
+          $match: {
+            customer: new mongoose.Types.ObjectId(req.session.user._id),
+          },
+        },
+        {
+          $unwind: "$products",
+        },
+        {
+          $match: {
+            "products.name": product._id,
+            "products.productSize":size,
+          },
+        },
+      ]);
+
+      console.log("current item is -",currentItem);
+      const totalQtyPerItem = currentItem[0].totalQuantity;
+      console.log("total quantity per item " + totalQtyPerItem);
+      if (totalQtyPerItem > 1) {
+     
+
+        const count = await cartModel.findOneAndUpdate(
+          {
+            _id: currentItem[0]._id,
+            products: {
+              $elemMatch: {
+                name: new mongoose.Types.ObjectId(req.body.product),
+                productSize: size,
+              },
+            },
+          },
+          {
+            $inc: {
+              "products.$.quantity": -1,
+              totalPrice: -product.price,
+              "products.$.price": -product.price,
+              totalQuantity: -1,
+            },
+          }
+        );
+        console.log('count id ',count._id );
+
+        const userCart = await cartModel.findOne({
+          customer: req.session.user._id,
+        });
+        res.json({
+          userCart,
+          removedProduct: false,
+        });
+      }
+      if (totalQtyPerItem == 1) {
+        await cartModel.findOneAndUpdate(
+          {
+            _id: currentItem[0]._id,
+            "products.name": new mongoose.Types.ObjectId(req.body.product),
+            "products.productSize": size,
+          },
+          {
+            $inc: {
+              "products.$.quantity": -1,
+              totalPrice: -product.price,
+              "products.$.price": -product.price,
+              totalQuantity: -1,
+            },
+          }
+        );
+
+        // await cartModel.updateOne(
+        //   {
+        //     _id: currentItem[0]._id,
+        //   },
+        //   {
+        //     $pull: {
+        //       products: {
+        //         "products.name": new mongoose.Types.ObjectId(req.body.product),
+        //         "products.productSize": size,
+        //       },
+        //     },
+        //   }
+        // );
+
+        const userCart = await cartModel.findOne({
+          customer: req.session.user._id,
+        });
+        res.json({
+          userCart,
+          removedProduct: true,
+        });
+      }
+    }
+  } catch (err) {
+    console.log("error in reducing the cart product count" + err);
+    res.redirect("/");
+  }
+};
+
+
+const proceedToPayment = (req,res)=>{
+  try {
+    if(req.session.user){
+      window.location.href = '/cart/proceedToPayment'
+    }
+  } catch (err) {
+    console.log('proceed to payment rendring page error - ',err);
+  }
+}
+
+module.exports = { showCart, addToCart, addCount, reduceCount, removeCartProduct, proceedToPayment};

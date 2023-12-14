@@ -1,11 +1,65 @@
 <%- include("../partials/userHeader.ejs")%>
+<div class="relative flex justify-end items-center mr-20">
+  <button
+    id="dropdownDefaultButton"
+    data-dropdown-toggle="dropdown"
+    class="text-black w-40 font-medium rounded-lg text-sm px-5 py-2.5 text-center flex justify-end items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+    type="button"
+  >
+    Sort By
+    <svg
+      class="w-2.5 h-2.5 ms-3"
+      aria-hidden="true"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 10 6"
+    >
+      <path
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="m1 1 4 4 4-4"
+      />
+    </svg>
+  </button>
+
+  <!-- Dropdown menu -->
+  <div
+    id="dropdown"
+    class="absolute right-0 top-10 z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-40 dark:bg-gray-700"
+  >
+    <ul
+      class="py-2 text-sm text-gray-700 dark:text-gray-200"
+      aria-labelledby="dropdownDefaultButton"
+    >
+      <li>
+        <a
+          href="javascript:void(0)"
+          class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+          onclick="sortBy('ascending')"
+          >Price: Low to High</a
+        >
+      </li>
+      <li>
+        <a
+          href="javascript:void(0)"
+          class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+          onclick="sortBy('descending')"
+          >Price: High to Low</a
+        >
+      </li>
+    </ul>
+  </div>
+</div>
+
 <div>
   <div class="container flex">
-    <div class="grid grid-cols-4  mx-28 mt-5 w-10/12 h-5/6 gap-10">
+    <div id="productGrid" class="grid grid-cols-4 mx-28 mt-5 w-10/12 h-5/6 gap-10">
       <% for (i = 0; i < product.length; i++) { %>
       <a
         href="/user/singleProductDetails/<%= product[i]._id %>"
-        class="group  relative h-[370px] block overflow-hidden"
+        class="group relative h-[370px] block overflow-hidden"
       >
         <img
           src="/img/products/<%= product[i].frontImage %>"
@@ -26,4 +80,65 @@
     </div>
   </div>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const dropdownButton = document.getElementById("dropdownDefaultButton");
+    const dropdownMenu = document.getElementById("dropdown");
+
+    const sortingPreference = localStorage.getItem("sortingPreference");
+
+    if (sortingPreference) {
+      sortBy(sortingPreference);
+    }
+
+    dropdownButton.addEventListener("click", function () {
+      dropdownMenu.classList.toggle("hidden");
+    });
+  });
+
+  
+  function sortBy(order) {
+  $.ajax({
+    url: "/user/allProducts", 
+    method: "post",
+    data: { sortBy: order },
+    success: (res) => {
+      if (res && res.products) {
+        // Update the product grid with the sorted products
+        const productGrid = document.getElementById("productGrid");
+        productGrid.innerHTML = ""; // Clear the existing products
+        res.products.forEach((product) => {
+          productGrid.innerHTML += `
+            <a href="/user/singleProductDetails/${product._id}" class="group relative h-[370px] block overflow-hidden">
+              <img src="/img/products/${product.frontImage}" alt="" class="h-1.5 w-full object-cover sm:h-72" />
+              <div class="relative border border-gray-100 bg-white p-6">
+                <div class="flex justify-between">
+                  <h3 class="text-sm font-medium text-gray-900">${product.name}</h3>
+                  <p class="text-sm text-gray-700">₹${product.price}</p>
+                </div>
+              </div>
+            </a>
+          `;
+        });
+
+        localStorage.setItem("sortingPreference", order);
+
+        // Swal.fire({
+        //   toast: true,
+        //   icon: "success",
+        //   position: "top-right",
+        //   showConfirmButton: false,
+        //   timer: 500,
+        //   animation: true,
+        //   title: "Sorted",
+        // });
+      }
+    },
+  });
+}
+
+  
+</script>
+
 <%- include("../partials/userFooter.ejs")%>
