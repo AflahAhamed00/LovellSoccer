@@ -80,7 +80,14 @@
 document.getElementById("addToCartButton").addEventListener("click", function () {
   const selectedSizeRadio = document.querySelector('input[name="size"]:checked');
   if (!selectedSizeRadio) {
-    alert("Please select a size");
+    Toastify({
+          text: "Please select a szie before adding to cart",
+          className: "info",
+          duration:600,
+          style: {
+            background: "linear-gradient(to right, #00b09b, #96c93d)",
+          }
+        }).showToast();
     return;
   }
 
@@ -97,7 +104,14 @@ document.getElementById("addToCartButton").addEventListener("click", function ()
 document.getElementById("addToWishlistButton").addEventListener("click", function () {
   const selectedSizeRadio = document.querySelector('input[name="size"]:checked');
   if (!selectedSizeRadio) {
-    alert("Please select a size");
+    Toastify({
+          text: "Please select a size before adding to wishlist",
+          className: "info",
+          duration:600,
+          style: {
+            background: "linear-gradient(to right, #00b09b, #96c93d)",
+          }
+        }).showToast();
     return;
   }
 

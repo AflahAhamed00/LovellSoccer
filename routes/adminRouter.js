@@ -7,6 +7,7 @@ const adminProductController = require("../controller/adminProductController");
 const adminCategoryController = require("../controller/adminCategoryController");
 const adminCustomerManagement = require("../controller/adminCustomerManagement");
 const adminBrandController = require("../controller/adminBrandController");
+const adminCouponController = require("../controller/adminCouponController")
 const upload = require("../utilities/imageProcessor");
 
 router.get("/login", adminController.loginPage);
@@ -89,5 +90,9 @@ router
     adminSession,
     adminCustomerManagement.updateBan
   );
+
+  // coupon 
+  router
+  .get('/couponManagement',adminSession,adminCouponController.getCouponPage)
 
 module.exports = router;

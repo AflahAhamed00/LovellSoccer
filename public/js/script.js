@@ -232,13 +232,14 @@ function addToCart(productId, discountPrice,selectedSize) {
           wishlistCount = parseInt(wishlistCount) - 1;
           $("#wishlistCount").html(wishlistCount);
         }
-        Swal.fire({
-          position: "top-right",
-          icon: "success",
-          title: "Product has been added to cart",
-          showConfirmButton: false,
-          timer: 1500,
-        });
+        Toastify({
+          text: "Added to cart",
+          className: "info",
+          duration:600,
+          style: {
+            background: "linear-gradient(to right, #00b09b, #96c93d)",
+          }
+        }).showToast();
         // Assuming you want to reload content after successful addition to cart
         $(".content").load(location.href + " .content");
       } else if (response.status == "countAdded") {
@@ -248,19 +249,14 @@ function addToCart(productId, discountPrice,selectedSize) {
           wishlistCount = parseInt(wishlistCount) - 1;
           $("#wishlistCount").html(wishlistCount);
         }
-        Swal.fire({
-          position: "top-right",
-          icon: "success",
-          title: "Product count added",
-          showConfirmButton: false,
-          timer: 1500,
-          customClass: {
-            popup: 'custom-alert-size'
-          },
-          willOpen: () => {
-            Swal.getPopup().style.width = '400px';
+        Toastify({
+          text: "Product count added",
+          className: "info",
+          duration:600,
+          style: {
+            background: "linear-gradient(to right, #00b09b, #96c93d)",
           }
-        });
+        }).showToast();
         // Assuming you want to reload content after successful addition to cart
         $(".content").load(location.href + " .content");
       } else {
@@ -287,22 +283,24 @@ function addToWishlist(productId,selectedSize){
       if(response.status == true){
         count = parseInt(count)+1
         $('#wishlistCount').html(count)
-        Swal.fire({
-          position: 'top-right',
-          icon: 'success',
-          title: 'product has been added to wishlist',
-          showConfirmButton: false,
-          timer: 1500
-      })
+      Toastify({
+        text: "Added to wishlist",
+        className: "info",
+        duration:600,
+        style: {
+          background: "linear-gradient(to right, #00b09b, #96c93d)",
+        }
+      }).showToast();
       }
       else if(response.status == 'alreadyExists'){
-        Swal.fire({
-          position: 'top-right',
-          icon: 'success',
-          title: 'product exists in  your wishlist',
-          showConfirmButton: false,
-          timer: 1500
-      })
+        Toastify({
+          text: "Product already exists",
+          className: "info",
+          duration:600,
+          style: {
+            background: "linear-gradient(to right, #00b09b, #96c93d)",
+          }
+        }).showToast();
       }
       else{
         location.href = '/userLogin'

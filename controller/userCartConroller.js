@@ -1,8 +1,10 @@
+const Toastify = require('toastify-js');
 const cartModel = require("../model/cartModel");
 const categoryModel = require("../model/categoryModel");
 const brandModel = require("../model/brandModel");
 const productModel = require("../model/productModel");
 const wishlistModel = require("../model/wishlistModel");
+const userModel = require("../model/userModel")
 const { default: mongoose } = require("mongoose");
 
 const addToCart = async (req, res) => {
@@ -26,7 +28,7 @@ const addToCart = async (req, res) => {
           },
         });
       }
-      
+
       const userCart = await cartModel.findOne({
         customer: userData._id,
       });
@@ -40,7 +42,7 @@ const addToCart = async (req, res) => {
       let size = sizeAndStockEntry.size;
       let stock = sizeAndStockEntry.stock;
 
-      console.log("type of size is - ",typeof size);
+      console.log("type of size is - ", typeof size);
 
       const productExist = await cartModel.findOne({
         _id: userCart._id,
@@ -65,8 +67,10 @@ const addToCart = async (req, res) => {
             {
               _id: userCart._id,
               products: {
-                $elemMatch: { name: new mongoose.Types.ObjectId(productId),
-                  productSize: size, },
+                $elemMatch: {
+                  name: new mongoose.Types.ObjectId(productId),
+                  productSize: size,
+                },
               },
             },
             {
@@ -81,8 +85,7 @@ const addToCart = async (req, res) => {
           res.json({
             status: "countAdded",
           });
-        }
-        else{
+        } else {
           await cartModel.findByIdAndUpdate(userCart._id, {
             $push: {
               products: [
@@ -102,6 +105,7 @@ const addToCart = async (req, res) => {
           console.log("same product different size added");
           res.send({
             status: "addedToCart",
+            Toastify,
           });
         }
       } else {
@@ -198,10 +202,10 @@ const showCart = async (req, res) => {
   }
 };
 
-const removeCartProduct = async(req,res)=>{
+const removeCartProduct = async (req, res) => {
   try {
     if (req.session.user) {
-      let size = parseInt(req.body.size,10)
+      let size = parseInt(req.body.size, 10);
       let productFromCart = await cartModel.aggregate([
         {
           $match: {
@@ -214,7 +218,7 @@ const removeCartProduct = async(req,res)=>{
         {
           $match: {
             "products.name": new mongoose.Types.ObjectId(req.body.id),
-            "products.productSize":size,
+            "products.productSize": size,
           },
         },
       ]);
@@ -224,7 +228,7 @@ const removeCartProduct = async(req,res)=>{
         $pull: {
           products: {
             name: req.body.id,
-            productSize : size,
+            productSize: size,
           },
         },
         $inc: {
@@ -240,27 +244,28 @@ const removeCartProduct = async(req,res)=>{
       res.redirect("/");
     }
   } catch (err) {
-    console.log('removing cart product error - ',err);
+    console.log("removing cart product error - ", err);
   }
-}
+};
 
 const addCount = async (req, res) => {
   try {
     console.log("adding count");
     if (req.session.user) {
       const product = await productModel.findById(req.body.product);
-      let size = parseInt(req.body.size,10)
-      // const userCart = await cartModel.findOne({
-      //   customer: req.session.user._id,
-      // });
+      let size = parseInt(req.body.size, 10);
+      const userCart = await cartModel.findOne({
+        customer: req.session.user._id,
+      });
+
+      console.log("cart Id is -  ",userCart);
 
       const count = await cartModel.findOneAndUpdate(
         {
+          _id:userCart._id,
           customer: req.session.user._id,
-          // _id:userCart._id,
           products: {
-            $elemMatch: { name: req.body.product ,
-            productSize:size},
+            $elemMatch: { name:req.body.product, productSize: size },
           },
         },
         {
@@ -272,9 +277,9 @@ const addCount = async (req, res) => {
           },
         }
       );
-      const userCart = await cartModel.findOne({
-        customer: req.session.user._id,
-      });
+      // const userCart = await cartModel.findOne({
+      //   customer: req.session.user._id,
+      // });
       res.json({
         userCart,
       });
@@ -294,7 +299,7 @@ const reduceCount = async (req, res) => {
     if (req.session.user) {
       console.log(req.body.size);
       const product = await productModel.findById(req.body.product);
-      let size = parseInt(req.body.size,10)
+      let size = parseInt(req.body.size, 10);
       const currentItem = await cartModel.aggregate([
         {
           $match: {
@@ -307,17 +312,15 @@ const reduceCount = async (req, res) => {
         {
           $match: {
             "products.name": product._id,
-            "products.productSize":size,
+            "products.productSize": size,
           },
         },
       ]);
 
-      console.log("current item is -",currentItem);
+      console.log("current item is -", currentItem);
       const totalQtyPerItem = currentItem[0].totalQuantity;
       console.log("total quantity per item " + totalQtyPerItem);
       if (totalQtyPerItem > 1) {
-     
-
         const count = await cartModel.findOneAndUpdate(
           {
             _id: currentItem[0]._id,
@@ -337,7 +340,7 @@ const reduceCount = async (req, res) => {
             },
           }
         );
-        console.log('count id ',count._id );
+        console.log("count id ", count._id);
 
         const userCart = await cartModel.findOne({
           customer: req.session.user._id,
@@ -393,15 +396,83 @@ const reduceCount = async (req, res) => {
   }
 };
 
-
-const proceedToPayment = (req,res)=>{
+const proceedToPayment = async (req, res) => {
   try {
-    if(req.session.user){
-      window.location.href = '/cart/proceedToPayment'
+    if (req.session.user) {
+      let wishlistCount = null;
+      let cartCount = null;
+      let cart = 0;
+      let wishlist = 0;
+      let userData = req.session.user;
+      let cartProducts = await cartModel
+        .findOne({ customer: userData._id })
+        .populate("products.name");
+      cartCount = await cartModel.findOne({ customer: userData._id });
+      if (cartCount.totalQuantity > 0) {
+        if (req.session.userLoggedIn) {
+          if (cartCount && cartCount.totalQuantity !== undefined) {
+            cart = cartCount.totalQuantity;
+          }
+          wishlistCount = await wishlistModel.aggregate([
+            {
+              $group: {
+                _id: null,
+                totalSize: {
+                  $sum: {
+                    $size: {
+                      $ifNull: ["$products", []],
+                    },
+                  },
+                },
+              },
+            },
+          ]);
+          if (
+            wishlistCount &&
+            wishlistCount.length > 0 &&
+            wishlistCount[0].totalSize !== undefined
+          ) {
+            wishlist = parseInt(wishlistCount[0].totalSize);
+          }
+        }
+        let totalAmount = await cartModel.find({ customer: userData._id });
+        let totalPrice = totalAmount.totalPrice;
+        const category = await categoryModel.find();
+        const brand = await brandModel.find();
+        let user = await userModel.findOne(
+          {
+              _id: userData._id,
+
+          }, {
+          _id: 0,
+          addresses: 1
+      }
+      )
+        // console.log("user",user[0].cart);
+        res.render("user/checkout", {
+          category,
+          brand,
+          userData,
+          user,
+          cartCount: cart,
+          wishlistCount: wishlist,
+          cartProducts,
+          totalAmount: totalPrice,
+        });
+      }else{
+        res.redirect('/')
+      }
     }
   } catch (err) {
-    console.log('proceed to payment rendring page error - ',err);
+    console.log("proceed to payment rendring page error - ", err);
   }
-}
+};
 
-module.exports = { showCart, addToCart, addCount, reduceCount, removeCartProduct, proceedToPayment};
+module.exports = {
+  showCart,
+  addToCart,
+  addCount,
+  reduceCount,
+  removeCartProduct,
+  proceedToPayment,
+};

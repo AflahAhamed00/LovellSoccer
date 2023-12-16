@@ -70,50 +70,41 @@ const sortBy = async (req,res) =>{
 
 const singleProductDetails = async(req,res)=>{
     try {
-        let productId = req.params.id
-        let cartCount = null
-        let wishlistCount = null
-        let cart = 0
-        let wishlist = 0
-        let userData = req.session.user
-        if(req.session.userLoggedIn){
-            cartCount = await cartModel.findOne({customer:userData._id})
-            if (cartCount && cartCount.length > 0 && cartCount[0].totalQuantity !== undefined){
-                cart=cartCount[0].totalQuantity;
-              }
-              wishlistCount = await wishlistModel.aggregate([
-                {
-                  $group: {
-                    _id: null,
-                    totalSize: {
-                      $sum: {
-                        $size:{
-                          $ifNull: ["$products", []],
-                        },
-                      },
-                    },
-                  },
-                },
-              ]);
-              if (wishlistCount && wishlistCount.length > 0 && wishlistCount[0].totalSize !== undefined) {
-                wishlist = parseInt(wishlistCount[0].totalSize);
-              }
+      let productId = req.params.id;
+      let userData = req.session.user;
+      let cartCount = 0;
+      let wishlistCount = 0;
+  
+      if (req.session.userLoggedIn) {
+        const cartData = await cartModel.findOne({ customer: userData._id });
+        if (cartData && cartData.totalQuantity !== undefined) {
+          cartCount = cartData.totalQuantity;
         }
-        const productDetails = await productModel.find({_id:productId})
-        const category = await categoryModel.find()
-        const brand = await brandModel.find()
-        res.render('user/singleProductDetails',{
-            userData,
-            cartCount:cart,
-            wishlistCount:wishlist,
-            productDetails,
-            category,
-            brand
-        })
-    } catch (err) {
-        console.log(`Error in rendering single product detail page - ${err}`);
-        res.redirect('/')
+  
+      const wishlistData = await wishlistModel.findOne({ customer: userData._id });
+
+      if (wishlistData && wishlistData.products) {
+        wishlistCount = wishlistData.products.length;
+      }
     }
-}
+        
+      const productDetails = await productModel.find({ _id: productId });
+      const category = await categoryModel.find();
+      const brand = await brandModel.find();
+  
+      res.render('user/singleProductDetails', {
+        userData,
+        cartCount,
+        wishlistCount,
+        productDetails,
+        category,
+        brand,
+      });
+    } catch (err) {
+      console.log(`Error in rendering single product detail page - ${err}`);
+      res.redirect('/');
+    }
+  };
+  
 
 module.exports = {showAllProducts, sortBy, singleProductDetails}

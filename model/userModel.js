@@ -22,20 +22,22 @@ const customerUserData = new mongoose.Schema({
     required: true,
     default:false
   },
-  adress: [
+  addresses: [
     {
       building: String,
       mobileNumber: Number,
       pinCode: Number,
       city: String,
       state: String,
-      primary: Boolean,
+      address:String,
+      alternativePhoneNumber:Number,
+      primary:Boolean,
     },
   ],
   wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: "Wishlist" }],
   cart: [{ type: mongoose.Schema.Types.ObjectId, ref: "Cart" }],
   orders: [{ type: mongoose.Schema.Types.ObjectId, ref: "Orders" }],
-  coupponsUsed: [{ type: mongoose.Schema.Types.ObjectId, ref: "Coupons" }],
+  coupponsUsed: [{ type: mongoose.Schema.Types.ObjectId, ref: "Coupon" }],
 });
 
 const userData =  mongoose.model("signupUserDetails", customerUserData);

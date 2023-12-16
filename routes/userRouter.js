@@ -4,6 +4,7 @@ const userProductController = require("../controller/userProductController")
 const userCartController = require('../controller/userCartConroller')
 const userWishlistController = require('../controller/userWishlistController')
 const userCheckoutController = require('../controller/userCheckoutController')
+const userProfileController = require('../controller/userProfileController')
 const userSession = require('../middleware/userSession')
 const router = express.Router()
 
@@ -85,9 +86,19 @@ router
 .delete('/user/wishlist',userSession.userLoginSession,userWishlistController.removeWishlistProduct)
 .post('/user/wishlist',userSession.userLoginSession,userWishlistController.addToWishlist)
 
+// userProfile page 
+router.
+get('/userProfile',userProfileController.showUserProfilePage)
+
 // user proceed to payment page
 
 router
-.post('/cart/proceedToPayment',userCartController.proceedToPayment)
+.get('/cart/proceedToPayment',userCartController.proceedToPayment)
+
+// adress page 
+
+router
+.get('/addressPage',userProfileController.showAdressPage)
+.post('/addressPage',userProfileController.addAddress)
 
 module.exports = router
