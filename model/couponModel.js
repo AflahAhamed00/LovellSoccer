@@ -4,7 +4,7 @@ const couponSchema = new mongoose.Schema({
   name: String,
   code: String,
   discount: Number,
-  startingDating: Date,
+  startingDate: Date,
   expiryDate: Date,
   totalCount: Number,
   active: {

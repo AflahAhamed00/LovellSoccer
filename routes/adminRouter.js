@@ -94,5 +94,9 @@ router
   // coupon 
   router
   .get('/couponManagement',adminSession,adminCouponController.getCouponPage)
+  .post('/couponManagement',adminSession,adminCouponController.addNewCoupon)
+
+  router
+  .get('/couponManagement/changeActivity',adminSession,adminCouponController.changeCouponActivity)
 
 module.exports = router;

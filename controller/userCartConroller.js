@@ -5,6 +5,7 @@ const brandModel = require("../model/brandModel");
 const productModel = require("../model/productModel");
 const wishlistModel = require("../model/wishlistModel");
 const userModel = require("../model/userModel")
+const couponModel = require("../model/couponModel")
 const { default: mongoose } = require("mongoose");
 
 const addToCart = async (req, res) => {
@@ -439,6 +440,8 @@ const proceedToPayment = async (req, res) => {
         let totalPrice = totalAmount.totalPrice;
         const category = await categoryModel.find();
         const brand = await brandModel.find();
+        const coupon = await couponModel.find({active:true})
+        console.log('coupon available are - ',coupon);
         let user = await userModel.findOne(
           {
               _id: userData._id,
@@ -452,6 +455,7 @@ const proceedToPayment = async (req, res) => {
         res.render("user/checkout", {
           category,
           brand,
+          coupon,
           userData,
           user,
           cartCount: cart,
