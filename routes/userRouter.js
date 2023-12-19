@@ -95,6 +95,11 @@ get('/userProfile',userProfileController.showUserProfilePage)
 router
 .get('/cart/proceedToPayment',userCartController.proceedToPayment)
 
+// apply coupon
+
+router
+.post('/applyCoupon',userCheckoutController.applyCoupon)
+
 // adress page 
 
 router

@@ -368,20 +368,6 @@ const reduceCount = async (req, res) => {
           }
         );
 
-        // await cartModel.updateOne(
-        //   {
-        //     _id: currentItem[0]._id,
-        //   },
-        //   {
-        //     $pull: {
-        //       products: {
-        //         "products.name": new mongoose.Types.ObjectId(req.body.product),
-        //         "products.productSize": size,
-        //       },
-        //     },
-        //   }
-        // );
-
         const userCart = await cartModel.findOne({
           customer: req.session.user._id,
         });

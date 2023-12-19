@@ -112,18 +112,23 @@
         <input
           type="text"
           name="coupon"
-          id="coupon"
+          id="couponCode"
+          value="<%= coupon._id %>"
           class="p-3 ml-6 mr-12 rounded-md"
         />
         <button
-          class="mt-8 mb-8 rounded-md bg-gray-900 px-3 py-3 font-medium text-white" 
+          class="mt-8 mb-8 rounded-md bg-gray-900 px-3 py-3 font-medium text-white"
           onclick="applyCoupon()"
         >
           Apply Coupon
         </button>
         <div class="ml-6">
+          <div id="message"></div>
           <% coupon.forEach((coupon, i) => { %>
-          <p>avail <%= coupon.discount %>% discount use <span class="font-mono font-bold"><%= coupon.code %></span></p>
+          <p>
+            avail <%= coupon.discount %>% discount use
+            <span class="font-mono font-bold"><%= coupon.code %></span>
+          </p>
           <% }); %>
         </div>
       </div>
@@ -138,12 +143,12 @@
         </div>
         <div class="flex items-center justify-between">
           <p class="text-sm font-medium text-gray-900">Discount</p>
-          <p class="font-semibold text-gray-900">₹0</p>
+          <p class="font-semibold text-gray-900" id="discount">₹0</p>
         </div>
       </div>
       <div class="mt-6 flex items-center justify-between">
         <p class="text-sm font-medium text-gray-900">Total</p>
-        <p class="text-2xl font-semibold text-gray-900">
+        <p class="text-2xl font-semibold text-gray-900" id="totalAmount">
           ₹<%= cartProducts.totalPrice %>
         </p>
       </div>
@@ -155,5 +160,50 @@
     </button>
   </div>
 </div>
+
+<script>
+  function applyCoupon() {
+    let couponCode = document.getElementById("couponCode").value;
+    let messageCoupon = document.getElementById("message");
+    console.log(couponCode);
+    fetch("/applyCoupon", {
+      method: "post",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ couponCode }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.noCoupon) {
+          let message = `<span style="color: red;"><i class="las la-times"></i>Invalid Coupon Code</span>`;
+          messageCoupon.innerHTML = message;
+          setTimeout(() => {
+            location.reload();
+          }, 800);
+        } else if (data.expiry) {
+          let message = `<span style="color: red;"><i class="las la-times"></i>Coupon Expired</span>`;
+          messageCoupon.innerHTML = message;
+        } else {
+          let checkoutTotalAmount = data.response.totalAmount;
+          let discountedAmount = parseInt(
+            (parseInt(checkoutTotalAmount) * parseInt(data.response.discount)) /
+              100
+          );
+          document.getElementById("discount").innerHTML = discountedAmount;
+          document.getElementById("totalAmount").innerHTML =
+            checkoutTotalAmount - discountedAmount;
+          let message = `<span style="color: green;"><i class="las la-check"></i>Coupon is valid</span>`;
+          messageCoupon.innerHTML = message;
+          Toastify({
+        text: "Coupon Applied",
+        className: "info",
+        duration:600,
+        style: {
+          background: "linear-gradient(to right, #00b09b, #96c93d)",
+        }
+      }).showToast();
+        }
+      });
+  }
+</script>
 
 <%- include("../partials/userFooter.ejs")%>
