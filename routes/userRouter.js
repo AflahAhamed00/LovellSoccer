@@ -5,6 +5,7 @@ const userCartController = require('../controller/userCartConroller')
 const userWishlistController = require('../controller/userWishlistController')
 const userCheckoutController = require('../controller/userCheckoutController')
 const userProfileController = require('../controller/userProfileController')
+const userOrderController = require('../controller/userOrderController')
 const userSession = require('../middleware/userSession')
 const router = express.Router()
 
@@ -99,6 +100,11 @@ router
 
 router
 .post('/applyCoupon',userCheckoutController.applyCoupon)
+
+// place order
+
+router
+.post('/placeOrder',userOrderController.placeOrder)
 
 // adress page 
 

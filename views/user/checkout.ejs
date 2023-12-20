@@ -72,7 +72,7 @@
     </button>
 
     <div class="">
-      <div class="p-4" style="width: 100%; background: #fff;">
+      <div id="address" class="p-4" style="width: 100%; background: #fff;">
         <%- console.log(user) %> <% let address=user ? user.addresses : "" %> <%
         if (address=="" ) { %>
         <h4>No Address. Add Address</h4>
@@ -154,6 +154,7 @@
       </div>
     </div>
     <button
+      type="submit"
       class="mt-4 mb-8 w-full rounded-md bg-gray-900 px-6 py-3 font-medium text-white"
     >
       Place Order
@@ -162,6 +163,20 @@
 </div>
 
 <script>
+  let radioBtn = document.querySelectorAll("input[name='address']");
+  let result = document.getElementById("result");
+
+  let findSelected = () => {
+    let selected = document.querySelector("input[name='address']:checked")
+      .value;
+      console.log('selected address - ',selected);
+    result.textContent = `${selected}`;
+  };
+
+  radioBtn.forEach((radioBtn) => {
+    radioBtn.addEventListener("change", findSelected);
+  });
+
   function applyCoupon() {
     let couponCode = document.getElementById("couponCode").value;
     let messageCoupon = document.getElementById("message");
@@ -194,13 +209,13 @@
           let message = `<span style="color: green;"><i class="las la-check"></i>Coupon is valid</span>`;
           messageCoupon.innerHTML = message;
           Toastify({
-        text: "Coupon Applied",
-        className: "info",
-        duration:600,
-        style: {
-          background: "linear-gradient(to right, #00b09b, #96c93d)",
-        }
-      }).showToast();
+            text: "Coupon Applied",
+            className: "info",
+            duration: 600,
+            style: {
+              background: "linear-gradient(to right, #00b09b, #96c93d)",
+            },
+          }).showToast();
         }
       });
   }

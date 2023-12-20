@@ -8,6 +8,7 @@ const adminCategoryController = require("../controller/adminCategoryController")
 const adminCustomerManagement = require("../controller/adminCustomerManagement");
 const adminBrandController = require("../controller/adminBrandController");
 const adminCouponController = require("../controller/adminCouponController")
+const adminOrderController = require('../controller/adminOrderController')
 const upload = require("../utilities/imageProcessor");
 
 router.get("/login", adminController.loginPage);
@@ -98,5 +99,10 @@ router
 
   router
   .get('/couponManagement/changeActivity',adminSession,adminCouponController.changeCouponActivity)
+
+  // order
+
+  router
+  .get('/orders',adminSession,adminOrderController.showAdminOrderPage)
 
 module.exports = router;
