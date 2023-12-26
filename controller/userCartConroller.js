@@ -427,13 +427,11 @@ const proceedToPayment = async (req, res) => {
         const category = await categoryModel.find();
         const brand = await brandModel.find();
         const coupon = await couponModel.find({active:true})
-        console.log('coupon available are - ',coupon);
         let user = await userModel.findOne(
           {
               _id: userData._id,
 
           }, {
-          _id: 0,
           addresses: 1
       }
       )

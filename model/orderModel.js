@@ -36,6 +36,12 @@ const orderSchema = new mongoose.Schema({
     type: String,
     default: "In-transit",
   },
+  price:Number,
+  discountPrice:{
+    type:Number,
+    default:0
+  },
+  finalPrice:Number
 });
 
 const orderModel = mongoose.model('Orders',orderSchema)

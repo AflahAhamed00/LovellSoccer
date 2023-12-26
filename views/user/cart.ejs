@@ -119,7 +119,7 @@
             <div class="flex items-center justify-between">
               <p class="text-sm text-gray-400">Discount</p>
               <p id="discount" class="text-lg font-semibold text-gray-900">
-                ₹0
+                0
               </p>
             </div>
           </div>
@@ -204,7 +204,7 @@
     let quantity = parseInt(quantityElement.innerHTML);
     console.log(price);
     if (quantity > 1) {
-      document.getElementById("discount").innerHTML = "₹" + 0;
+      document.getElementById("discount").innerHTML =  0;
       $.ajax({
         url: "/cart/changeProductQuantity",
         data: {
@@ -237,7 +237,7 @@
             // Update the subtotal, discount, and total amount
             document.getElementById("subTotal").innerHTML =
               "₹" + response.userCart.totalPrice;
-            document.getElementById("discount").innerHTML = "₹" + 0;
+            document.getElementById("discount").innerHTML =  0;
             document.getElementById("totalAmount").innerHTML =
               "₹" + response.userCart.totalPrice;
           }
@@ -259,7 +259,7 @@
     let quantity = parseInt(quantityElement.innerHTML);
 
     if (quantity >= 0) {
-      document.getElementById("discount").innerHTML = "₹" + 0;
+      document.getElementById("discount").innerHTML =  0;
       $.ajax({
         url: "/cart/changeProductQuantity",
         data: {
@@ -284,7 +284,7 @@
           // Update the subtotal, discount, and total amount
           document.getElementById("subTotal").innerHTML =
             "₹" + response.userCart.totalPrice;
-          document.getElementById("discount").innerHTML = "₹" + 0;
+          document.getElementById("discount").innerHTML =  0;
           document.getElementById("totalAmount").innerHTML =
             "₹" + response.userCart.totalPrice;
         },

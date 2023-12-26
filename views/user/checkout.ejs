@@ -21,45 +21,8 @@
       </div>
     </div>
     <% }) %>
-
-    <p class="mt-8 text-lg font-medium">Shipping Methods</p>
-    <form class="mt-5 grid gap-6">
-      <div class="relative">
-        <input
-          class="peer hidden"
-          id="radio_1"
-          type="radio"
-          name="radio"
-          checked
-        />
-        <span
-          class="peer-checked:border-gray-700 absolute right-4 top-1/2 box-content block h-3 w-3 -translate-y-1/2 rounded-full border-8 border-gray-300 bg-white"
-        ></span>
-        <label
-          class="peer-checked:border-2 peer-checked:border-gray-700 peer-checked:bg-gray-50 flex cursor-pointer select-none rounded-lg border border-gray-300 p-4"
-          for="radio_1"
-        >
-          <!-- <img class="w-14 object-contain" src="/images/naorrAeygcJzX0SyNI4Y0.png" alt="" /> -->
-          <div class="ml-5">
-            <span class="mt-2 font-semibold">Cash on Delivery</span>
-            <p class="text-slate-500 text-sm leading-6">Delivery: 6-8 Days</p>
-          </div>
-        </label>
-      </div>
-      <div class="relative">
-        <!-- <input class="peer hidden" id="radio_2" type="radio" name="radio" checked />
-          <span class="peer-checked:border-gray-700 absolute right-4 top-1/2 box-content block h-3 w-3 -translate-y-1/2 rounded-full border-8 border-gray-300 bg-white"></span>
-          <label class="peer-checked:border-2 peer-checked:border-gray-700 peer-checked:bg-gray-50 flex cursor-pointer select-none rounded-lg border border-gray-300 p-4" for="radio_2">
-            <img class="w-14 object-contain" src="/images/oG8xsl3xsOkwkMsrLGKM4.png" alt="" />
-            <div class="ml-5">
-              <span class="mt-2 font-semibold">RazorPay</span>
-              <p class="text-slate-500 text-sm leading-6">Delivery: 6-8 Days</p>
-            </div>
-          </label> -->
-      </div>
-    </form>
   </div>
-  <div class="mt-10 bg-gray-50 px-4 pt-8 lg:mt-0">
+  <form id="checkout" class="mt-10 bg-gray-50 px-4 pt-8 lg:mt-0">
     <p class="text-xl font-medium">Payment Details</p>
     <p class="text-gray-400 mb-4">
       Complete your order by providing your payment details.
@@ -73,7 +36,7 @@
 
     <div class="">
       <div id="address" class="p-4" style="width: 100%; background: #fff;">
-        <%- console.log(user) %> <% let address=user ? user.addresses : "" %> <%
+        <%- console.log(user._id) %> <% let address=user ? user.addresses : "" %> <%
         if (address=="" ) { %>
         <h4>No Address. Add Address</h4>
         <% } else { %> <% address.forEach((address, i) => { %>
@@ -117,6 +80,7 @@
           class="p-3 ml-6 mr-12 rounded-md"
         />
         <button
+          id="applyCouponBtn"
           class="mt-8 mb-8 rounded-md bg-gray-900 px-3 py-3 font-medium text-white"
           onclick="applyCoupon()"
         >
@@ -133,6 +97,56 @@
         </div>
       </div>
 
+      <p class="mt-8 text-lg font-medium">Shipping Methods</p>
+      <div id="payment" class="mt-5 grid gap-6">
+        <div class="relative">
+          <input
+            class="peer hidden"
+            id="radio_1"
+            type="radio"
+            name="paymentMethod"
+            value="COD"
+            checked
+          />
+          <span
+            class="peer-checked:border-gray-700 absolute right-4 top-1/2 box-content block h-3 w-3 -translate-y-1/2 rounded-full border-8 border-gray-300 bg-white"
+          ></span>
+          <label
+            class="peer-checked:border-2 peer-checked:border-gray-700 peer-checked:bg-gray-50 flex cursor-pointer select-none rounded-lg border border-gray-300 p-4"
+            for="radio_1"
+          >
+            <!-- <img class="w-14 object-contain" src="/images/naorrAeygcJzX0SyNI4Y0.png" alt="" /> -->
+            <div class="ml-5">
+              <span class="mt-2 font-semibold">Cash on Delivery</span>
+              <p class="text-slate-500 text-sm leading-6">Delivery: 6-8 Days</p>
+            </div>
+          </label>
+        </div>
+        <!-- <div class="relative">
+          <input
+            class="peer hidden"
+            id="radio_2"
+            type="radio"
+            name="paymentMethod"
+            value="razorPay"
+            checked
+          />
+          <span
+            class="peer-checked:border-gray-700 absolute right-4 top-1/2 box-content block h-3 w-3 -translate-y-1/2 rounded-full border-8 border-gray-300 bg-white"
+          ></span>
+          <label
+            class="peer-checked:border-2 peer-checked:border-gray-700 peer-checked:bg-gray-50 flex cursor-pointer select-none rounded-lg border border-gray-300 p-4"
+            for="radio_2"
+          >
+            <div class="ml-5">
+              <span class="mt-2 font-semibold">RazorPay</span>
+              <p class="text-slate-500 text-sm leading-6">Delivery: 6-8 Days</p>
+            </div>
+          </label>
+        </div> -->
+        <!-- <input type="hidden" id="paymentType" name="paymentType" value="" /> -->
+      </div>
+
       <!-- Total -->
       <div class="mt-6 border-t border-b py-2">
         <div class="flex items-center justify-between">
@@ -143,7 +157,7 @@
         </div>
         <div class="flex items-center justify-between">
           <p class="text-sm font-medium text-gray-900">Discount</p>
-          <p class="font-semibold text-gray-900" id="discount">₹0</p>
+          <p class="font-semibold text-gray-900" id="discount">0</p>
         </div>
       </div>
       <div class="mt-6 flex items-center justify-between">
@@ -159,17 +173,18 @@
     >
       Place Order
     </button>
-  </div>
+  </form>
 </div>
 
 <script>
   let radioBtn = document.querySelectorAll("input[name='address']");
   let result = document.getElementById("result");
 
+
   let findSelected = () => {
     let selected = document.querySelector("input[name='address']:checked")
       .value;
-      console.log('selected address - ',selected);
+    console.log("selected address - ", selected);
     result.textContent = `${selected}`;
   };
 
@@ -177,48 +192,139 @@
     radioBtn.addEventListener("change", findSelected);
   });
 
-  function applyCoupon() {
-    let couponCode = document.getElementById("couponCode").value;
-    let messageCoupon = document.getElementById("message");
-    console.log(couponCode);
-    fetch("/applyCoupon", {
+
+  function applyCoupon(event) {
+  // Prevent the default form submission behavior
+  event.preventDefault();
+
+  let couponCode = document.getElementById("couponCode").value;
+  let messageCoupon = document.getElementById("message");
+  fetch("/applyCoupon", {
+    method: "post",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ couponCode }),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.noCoupon) {
+        let message = `<span style="color: red;"><i class="las la-times"></i>Invalid Coupon Code</span>`;
+        messageCoupon.innerHTML = message;
+        setTimeout(() => {
+          location.reload();
+        }, 800);
+      } else if (data.expiry) {
+        let message = `<span style="color: red;"><i class="las la-times"></i>Coupon Expired</span>`;
+        messageCoupon.innerHTML = message;
+      } else {
+        let checkoutTotalAmount = data.response.totalAmount;
+        let discountedAmount = parseInt(
+          (parseInt(checkoutTotalAmount) * parseInt(data.response.discount)) /
+            100
+        );
+        document.getElementById("discount").innerHTML = discountedAmount;
+        document.getElementById("totalAmount").innerHTML =
+          checkoutTotalAmount - discountedAmount;
+        let message = `<span style="color: green;"><i class="las la-check"></i>Coupon is valid</span>`;
+        messageCoupon.innerHTML = message;
+        Toastify({
+          text: "Coupon Applied",
+          className: "info",
+          duration: 600,
+          style: {
+            background: "linear-gradient(to right, #00b09b, #96c93d)",
+          },
+        }).showToast();
+      }
+    });
+}
+
+// Attach the applyCoupon function to the "Apply Coupon" button click event
+document.getElementById("applyCouponBtn").addEventListener("click", applyCoupon);
+
+
+    // ORDER PLACING
+
+    let addOfferForm = document.getElementById("checkout");
+
+$("#checkout").submit((e) => {
+  // Prevent the default form submission behavior
+  e.preventDefault();
+
+  let discountAmount = document.getElementById("discount").innerHTML;
+  let coupon = document.getElementById("couponCode")
+    ? document.getElementById("couponCode").value
+    : "";
+
+  // Update the payment type before submitting the form
+  let selectedPaymentType = document.querySelector(
+    "input[name='paymentMethod']:checked"
+  ).value;
+
+  // Create a FormData object from the form with the id 'checkout'
+  const formData = new FormData(addOfferForm);
+
+  // Convert the FormData object to a regular JavaScript object
+  const data = Object.fromEntries(formData);
+
+  console.log('data - ',data)
+
+  // Create an object named 'dataObject' with specific properties from the form data, including userID, address, paymentMethod, discountAmount, and coupon
+  let dataObject = {
+    userID: data.userID,
+    address: data.address,
+    paymentMethod: selectedPaymentType,
+    discountAmount: discountAmount,
+    coupon: coupon,
+  };
+
+  // Check if the paymentMethod property in 'dataObject' is not undefined
+  if (dataObject.paymentMethod != undefined) {
+    // Make an AJAX request to the '/placeOrder' URL using the HTTP POST method, sending the 'dataObject'
+    $.ajax({
+      url: "/placeOrder",
       method: "post",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ couponCode }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.noCoupon) {
-          let message = `<span style="color: red;"><i class="las la-times"></i>Invalid Coupon Code</span>`;
-          messageCoupon.innerHTML = message;
-          setTimeout(() => {
-            location.reload();
-          }, 800);
-        } else if (data.expiry) {
-          let message = `<span style="color: red;"><i class="las la-times"></i>Coupon Expired</span>`;
-          messageCoupon.innerHTML = message;
-        } else {
-          let checkoutTotalAmount = data.response.totalAmount;
-          let discountedAmount = parseInt(
-            (parseInt(checkoutTotalAmount) * parseInt(data.response.discount)) /
-              100
-          );
-          document.getElementById("discount").innerHTML = discountedAmount;
-          document.getElementById("totalAmount").innerHTML =
-            checkoutTotalAmount - discountedAmount;
-          let message = `<span style="color: green;"><i class="las la-check"></i>Coupon is valid</span>`;
-          messageCoupon.innerHTML = message;
+      data: dataObject,
+      success: (response) => {
+        // If the response indicates that there is no address, show a warning message and redirect to the address page after a short delay
+        if (response.noAddress == true) {
           Toastify({
-            text: "Coupon Applied",
-            className: "info",
+            text: "Add address",
+            className: "warning",
             duration: 600,
             style: {
               background: "linear-gradient(to right, #00b09b, #96c93d)",
             },
           }).showToast();
+          setTimeout(() => {
+            location.href = "/addressPage";
+          }, 1500);
         }
-      });
+        // If the response indicates that cash on delivery was successful, redirect to the order success page
+        if (response.codSuccess) {
+          location.href = "/orderSuccess";
+        }
+        // If not, initiate a payment using Razorpay
+        // else {
+        //   razorpayPayment(response);
+        // }
+      },
+    });
   }
+  // If the paymentMethod is undefined, show a message asking to select a payment method
+  else {
+    Toastify({
+      text: "kindly select a payment method",
+      className: "info",
+      duration: 600,
+      style: {
+        background: "linear-gradient(to right, #00b09b, #96c93d)",
+      },
+    }).showToast();
+  }
+});
+
+// ORDER PLACING COMPLETED
+
 </script>
 
 <%- include("../partials/userFooter.ejs")%>

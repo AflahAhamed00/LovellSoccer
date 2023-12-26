@@ -8,7 +8,6 @@ const applyCoupon = async(req,res)=>{
         let totalAmount = cartDetails.totalPrice
         let couponList = await couponModel.findOne({code:couponCode, active:true})
         
-        console.log('coupon is  -',couponList);
             if(couponList){
                 let startDate = Date.parse(couponList.startingDate)
                 let expiryDate = Date.parse(couponList.expiryDate)
