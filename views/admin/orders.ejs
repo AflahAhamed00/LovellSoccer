@@ -37,10 +37,9 @@
           <td class="text-center" style="width: 20%">
             <div id="deliver<%=i%>">
               <%if(item.status === 'In-transit'){%>
-                <% if (item.delivered != true) {%>
+                <% if (Date.now() < item.deliveredOn) {%>
                   <button
                     class="btn btn-sm btn-dark w-100"
-                    onclick="deliverOrder('<%=item._id%>','<%=i%>')"
                   >
                     <i class="fa fa-truck text-warning"></i><span>Deliver</span>
                   </button>

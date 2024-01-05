@@ -52,10 +52,261 @@
     </ul>
   </div>
 </div>
+<div class="container flex">
+  <div id="filterDiv" class="filter-container w-1/6">
+    <div class="border-t border-gray-200 px-4 py-6">
+      <h3 class="-mx-2 -my-3 flow-root">
+        <!-- Expand/collapse section button -->
+        <button
+          type="button"
+          class="flex w-full items-center justify-between bg-white px-2 py-3 text-gray-400 hover:text-gray-500"
+          aria-controls="filter-section-mobile-0"
+          aria-expanded="false"
+          onclick="brandFilterDropdown()"
+        >
+          <span class="font-medium text-gray-900">Brand</span>
+          <span class="ml-6 flex items-center">
+            <!-- Expand icon, show/hide based on section open state. -->
+            <svg
+              class="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z"
+              />
+            </svg>
+            <!-- Collapse icon, show/hide based on section open state. -->
+            <svg
+              class="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </span>
+        </button>
+      </h3>
+      <!-- Filter section, show/hide based on section state. -->
+      <div class="pt-3" id="filter-section-mobile-0">
+        <div class="space-y-1">
+          <% for (i = 0; i < brand.length; i++) { %>
+          <div class="flex items-center">
+            <input
+              id="brand-<%= brand[i].name %>"
+              name="<%= brand[i].name %>"
+              value="brand-<%= brand[i]._id %>"
+              type="checkbox"
+              class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+            />
+            <label
+              for="filter-mobile-brand-0"
+              class="ml-3 min-w-0 flex-1 text-gray-500"
+              ><%= brand[i].name %></label
+            >
+          </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+    <div class="border-t border-gray-200 px-4 py-6">
+      <h3 class="-mx-2 -my-3 flow-root">
+        <!-- Expand/collapse section button -->
+        <button
+          type="button"
+          class="flex w-full items-center justify-between bg-white px-2 py-3 text-gray-400 hover:text-gray-500"
+          aria-controls="filter-section-mobile-1"
+          aria-expanded="false"
+          onclick="categoryFilterDropdown()"
+        >
+          <span class="font-medium text-gray-900">Category</span>
+          <span class="ml-6 flex items-center">
+            <!-- Expand icon, show/hide based on section open state. -->
+            <svg
+              class="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z"
+              />
+            </svg>
+            <!-- Collapse icon, show/hide based on section open state. -->
+            <svg
+              class="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </span>
+        </button>
+      </h3>
+      <!-- Filter section, show/hide based on section state. -->
+      <div class="pt-3" id="filter-section-mobile-1">
+        <div class="space-y-1">
+          <% for (i = 0; i < categories.length; i++) { %>
+          <div class="flex items-center">
+            <input id="category-<%= categories[i].name %>" name="<%=
+            categories[i].name %>" type="checkbox" value="category-<%=
+            categories[i]._id %>" class="h-4 w-4 rounded border-gray-300
+            text-indigo-600 focus:ring-indigo-500" />
+            <label
+              for="filter-mobile-category-0"
+              class="ml-3 min-w-0 flex-1 text-gray-500"
+              ><%= categories[i].name %></label
+            >
+          </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+    <div class="border-t border-gray-200 px-4 py-6">
+      <h3 class="-mx-2 -my-3 flow-root">
+        <!-- Expand/collapse section button -->
+        <button
+          type="button"
+          class="flex w-full items-center justify-between bg-white px-2 py-3 text-gray-400 hover:text-gray-500"
+          aria-controls="filter-section-mobile-2"
+          aria-expanded="false"
+          onclick="sizeFilterDropdown()"
+        >
+          <span class="font-medium text-gray-900">Size</span>
+          <span class="ml-6 flex items-center">
+            <!-- Expand icon, show/hide based on section open state. -->
+            <svg
+              class="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z"
+              />
+            </svg>
+            <!-- Collapse icon, show/hide based on section open state. -->
+            <svg
+              class="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </span>
+        </button>
+      </h3>
+      <!-- Filter section, show/hide based on section state. -->
+      <div class="pt-3" id="filter-section-mobile-2">
+        <div class="space-y-1">
+          <div class="flex items-center">
+            <input
+              id="size-6"
+              name="size[]"
+              value="size-6"
+              type="checkbox"
+              class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+            />
+            <label
+              for="filter-mobile-size-0"
+              class="ml-3 min-w-0 flex-1 text-gray-500"
+              >6</label
+            >
+          </div>
+          <div class="flex items-center">
+            <input
+              id="size-7"
+              name="size[]"
+              value="size-7"
+              type="checkbox"
+              class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+            />
+            <label
+              for="filter-mobile-size-1"
+              class="ml-3 min-w-0 flex-1 text-gray-500"
+              >7</label
+            >
+          </div>
+          <div class="flex items-center">
+            <input
+              id="size-8"
+              name="size[]"
+              value="size-8"
+              type="checkbox"
+              class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+            />
+            <label
+              for="filter-mobile-size-2"
+              class="ml-3 min-w-0 flex-1 text-gray-500"
+              >8</label
+            >
+          </div>
+          <div class="flex items-center">
+            <input
+              id="size-9"
+              name="size[]"
+              value="size-9"
+              type="checkbox"
+              class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+            />
+            <label
+              for="filter-mobile-size-3"
+              class="ml-3 min-w-0 flex-1 text-gray-500"
+              >9</label
+            >
+          </div>
 
-<div>
-  <div class="container flex">
-    <div id="productGrid" class="grid grid-cols-4 mx-28 mt-5 w-10/12 h-5/6 gap-10">
+          <div class="flex items-center">
+            <input
+              id="size-10"
+              name="size[]"
+              value="size-10"
+              type="checkbox"
+              class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+            />
+            <label
+              for="filter-mobile-size-5"
+              class="ml-3 min-w-0 flex-1 text-gray-500"
+              >10</label
+            >
+          </div>
+          <div class="flex items-center">
+            <input
+              id="size-11"
+              name="size[]"
+              value="size-11"
+              type="checkbox"
+              class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+            />
+            <label
+              for="filter-mobile-size-5"
+              class="ml-3 min-w-0 flex-1 text-gray-500"
+              >11</label
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="product-container flex-1 ml-10">
+    <div id="productGrid" class="grid grid-cols-3 mt-5 w-11/12 h-5/6 gap-10">
       <% for (i = 0; i < product.length; i++) { %>
       <a
         href="/user/singleProductDetails/<%= product[i]._id %>"
@@ -97,19 +348,18 @@
     });
   });
 
-  
   function sortBy(order) {
-  $.ajax({
-    url: "/user/allProducts", 
-    method: "post",
-    data: { sortBy: order },
-    success: (res) => {
-      if (res && res.products) {
-        // Update the product grid with the sorted products
-        const productGrid = document.getElementById("productGrid");
-        productGrid.innerHTML = ""; // Clear the existing products
-        res.products.forEach((product) => {
-          productGrid.innerHTML += `
+    $.ajax({
+      url: "/user/allProducts",
+      method: "post",
+      data: { sortBy: order },
+      success: (res) => {
+        if (res && res.products) {
+          // Update the product grid with the sorted products
+          const productGrid = document.getElementById("productGrid");
+          productGrid.innerHTML = ""; // Clear the existing products
+          res.products.forEach((product) => {
+            productGrid.innerHTML += `
             <a href="/user/singleProductDetails/${product._id}" class="group relative h-[370px] block overflow-hidden">
               <img src="/img/products/${product.frontImage}" alt="" class="h-1.5 w-full object-cover sm:h-72" />
               <div class="relative border border-gray-100 bg-white p-6">
@@ -120,25 +370,91 @@
               </div>
             </a>
           `;
-        });
+          });
 
-        localStorage.setItem("sortingPreference", order);
+          localStorage.setItem("sortingPreference", order);
 
-        // Swal.fire({
-        //   toast: true,
-        //   icon: "success",
-        //   position: "top-right",
-        //   showConfirmButton: false,
-        //   timer: 500,
-        //   animation: true,
-        //   title: "Sorted",
-        // });
+          // Swal.fire({
+          //   toast: true,
+          //   icon: "success",
+          //   position: "top-right",
+          //   showConfirmButton: false,
+          //   timer: 500,
+          //   animation: true,
+          //   title: "Sorted",
+          // });
+        }
+      },
+    });
+  }
+
+  // Filtering of the product
+
+  let displayProduct = async (allCheckFilter = []) => {
+    const productGrid = document.getElementById("productGrid");
+    productGrid.innerHTML = ""; // Clear the existing products
+    let brandFilter = [];
+    let categoryFilter = [];
+    let sizeFilter = [];
+
+    console.log("all check filter - ", allCheckFilter);
+    allCheckFilter.forEach((filter) => {
+      const [type, value] = filter.split("-");
+
+      if (type === "brand") {
+        brandFilter.push(value);
+      } else if (type === "category") {
+        categoryFilter.push(value);
+      } else if (type === "size") {
+        sizeFilter.push(parseInt(value));
       }
-    },
-  });
-}
+    });
 
-  
+    $.ajax({
+      url: '/user/filterProducts',
+      method: 'post',
+      data: {
+        brandFilter: brandFilter,
+        categoryFilter: categoryFilter,
+        sizeFilter: sizeFilter,
+      },
+      success: (res) => {
+        if (res && res.products) {
+          // Update the product grid with the filtered products
+          res.products.forEach((product) => {
+            productGrid.innerHTML += `
+              <a href="/user/singleProductDetails/${product._id}" class="group relative h-[370px] block overflow-hidden">
+                <img src="/img/products/${product.frontImage}" alt="" class="h-1.5 w-full object-cover sm:h-72" />
+                <div class="relative border border-gray-100 bg-white p-6">
+                  <div class="flex justify-between">
+                    <h3 class="text-sm font-medium text-gray-900">${product.name}</h3>
+                    <p class="text-sm text-gray-700">₹${product.price}</p>
+                  </div>
+                </div>
+              </a>
+            `;
+          });
+        }
+      },
+    });
+  };
+
+  displayProduct();
+
+  document.addEventListener("DOMContentLoaded", function () {
+    let checkInput = document.querySelectorAll('input[type="checkbox"]');
+    let checkedData = [];
+
+    checkInput.forEach((checkbox) => {
+      checkbox.addEventListener("change", function () {
+        checkedData = Array.from(checkInput)
+          .filter((checkbox) => checkbox.checked)
+          .map((checkbox) => checkbox.value);
+
+        displayProduct(checkedData);
+      });
+    });
+  });
 </script>
 
 <%- include("../partials/userFooter.ejs")%>

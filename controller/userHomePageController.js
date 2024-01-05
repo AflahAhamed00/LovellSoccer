@@ -8,6 +8,7 @@ const productModel  =require("../model/productModel")
 const cartModel = require('../model/cartModel');
 const { request } = require("express");
 const wishlistModel = require('../model/wishlistModel')
+const categoryModel = require('../model/categoryModel')
 // const { name } = require("ejs");
 
 let OTP = otpGenerator.generate(4, {
@@ -56,7 +57,8 @@ const sendVerifyMail = async (name, email) => {
 
 const showLoginPage = async (req, res) => {
   try {
-    res.render("user/userLoginPage", { userData: 0, errMsg: false });
+    const categoryList = await categoryModel.find()
+    res.render("user/userLoginPage", { categories:categoryList,userData: 0, errMsg: false });
   } catch (err) {
     console.log(`showing login page ${err}`);
   }
@@ -67,6 +69,7 @@ const userLogin = async (req, res) => {
   try {
     let hashedPassword;
     const checkUser = await userModel.findOne({ email: req.body.email });
+    const categoryList = await categoryModel.find()
     if (checkUser) {
       hashedPassword = await bcrypt.compare(
         inputPassword,
@@ -75,7 +78,7 @@ const userLogin = async (req, res) => {
     }
     if (checkUser && hashedPassword) {
       if (checkUser.block) {
-        res.render('user/userLoginPage', { userData: 0, errMsg: 'Sorry you are banned' })
+        res.render('user/userLoginPage', { categories:categoryList, userData: 0, errMsg: 'Sorry you are banned' })
       }
       else {
         req.session.userLoggedIn = true;
@@ -84,7 +87,7 @@ const userLogin = async (req, res) => {
       } 
     }
     else{
-      res.render('user/userLoginPage',{ userData: 0, errMsg:`Invalid Credentials`})
+      res.render('user/userLoginPage',{categories:categoryList, userData: 0, errMsg:`Invalid Credentials`})
     }
   } catch (err) {
     console.log(`user Login ${err}`);
@@ -372,10 +375,12 @@ const landingPage = async (req, res) => {
       }
     }
     const brandList = await brandModel.find()
+    const categoryList = await categoryModel.find() 
     const productList= await productModel.find()
     res.render("user/landingPage",{
       brand : brandList,
       product:productList,
+      categories:categoryList,
       userData,
       cartCount:cart,
       wishlistCount:wishlist

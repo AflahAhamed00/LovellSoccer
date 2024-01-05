@@ -1,21 +1,25 @@
-const productModel = require("../model/productModel")
-const categoryModel = require("../model/categoryModel")
-const brandModel = require("../model/brandModel")
-const cartModel = require("../model/cartModel")
-const wishlistModel = require("../model/wishlistModel")
+const productModel = require("../model/productModel");
+const categoryModel = require("../model/categoryModel");
+const brandModel = require("../model/brandModel");
+const cartModel = require("../model/cartModel");
+const wishlistModel = require("../model/wishlistModel");
 
-const showAllProducts = async(req,res)=>{
-    try {
-        let userData = req.session.user
+const showAllProducts = async (req, res) => {
+  try {
+    let userData = req.session.user;
     let cartCount = null;
     let wishlistCount = null;
-    let cart=0;
+    let cart = 0;
     let wishlist = 0;
     if (req.session.userLoggedIn) {
-      cartCount = await cartModel.find({customer:userData._id})
-      console.log('myCart : ',cartCount);
-      if (cartCount && cartCount.length > 0 && cartCount[0].totalQuantity !== undefined){
-        cart=cartCount[0].totalQuantity;
+      cartCount = await cartModel.find({ customer: userData._id });
+      console.log("myCart : ", cartCount);
+      if (
+        cartCount &&
+        cartCount.length > 0 &&
+        cartCount[0].totalQuantity !== undefined
+      ) {
+        cart = cartCount[0].totalQuantity;
       }
       wishlistCount = await wishlistModel.aggregate([
         {
@@ -23,7 +27,7 @@ const showAllProducts = async(req,res)=>{
             _id: null,
             totalSize: {
               $sum: {
-                $size:{
+                $size: {
                   $ifNull: ["$products", []],
                 },
               },
@@ -31,80 +35,245 @@ const showAllProducts = async(req,res)=>{
           },
         },
       ]);
-      if (wishlistCount && wishlistCount.length > 0 && wishlistCount[0].totalSize !== undefined) {
+      if (
+        wishlistCount &&
+        wishlistCount.length > 0 &&
+        wishlistCount[0].totalSize !== undefined
+      ) {
         wishlist = parseInt(wishlistCount[0].totalSize);
       }
     }
-        const productList = await productModel.find({listed:true})
-        res.render('user/allProducts',{
-            product : productList,
-            userData,
-            cartCount:cart,
-            wishlistCount:wishlist
-        })
-    } catch (err) {
-        console.log(`Error showing all products page- ${err}`);
-        res.redirect('/')
-    }
-}
+    const productList = await productModel
+      .find({ listed: true })
+      .populate("category brand");
+    const brandList = await brandModel.find();
+    const categoryList = await categoryModel.find();
+    console.log("product available - ", productList);
+    res.render("user/allProducts", {
+      product: productList,
+      brand: brandList,
+      categories:categoryList,
+      userData,
+      cartCount: cart,
+      wishlistCount: wishlist,
+    });
+  } catch (err) {
+    console.log(`Error showing all products page- ${err}`);
+    res.redirect("/");
+  }
+};
 
-
-const sortBy = async (req,res) =>{
+const brandBasedProducts = async (req, res) => {
   try {
-    req.session.listing = await productModel.find({listed:true})
-    if(req.body.sortBy == 'ascending'){
-      let products = await productModel.find({listed:true}).sort({price:1})
-
-      res.send({products})
+    let userData = req.session.user;
+    let cartCount = null;
+    let wishlistCount = null;
+    let cart = 0;
+    let wishlist = 0;
+    if (req.session.userLoggedIn) {
+      cartCount = await cartModel.find({ customer: userData._id });
+      console.log("myCart : ", cartCount);
+      if (
+        cartCount &&
+        cartCount.length > 0 &&
+        cartCount[0].totalQuantity !== undefined
+      ) {
+        cart = cartCount[0].totalQuantity;
+      }
+      wishlistCount = await wishlistModel.aggregate([
+        {
+          $group: {
+            _id: null,
+            totalSize: {
+              $sum: {
+                $size: {
+                  $ifNull: ["$products", []],
+                },
+              },
+            },
+          },
+        },
+      ]);
+      if (
+        wishlistCount &&
+        wishlistCount.length > 0 &&
+        wishlistCount[0].totalSize !== undefined
+      ) {
+        wishlist = parseInt(wishlistCount[0].totalSize);
+      }
     }
-    else if(req.body.sortBy == 'descending'){
-      let products = await productModel.find({listed:true}).sort({price:-1})
 
-      res.send({products})
+    const brandList = await brandModel.find();
+    const categoryList = await categoryModel.find();
+
+    let brandId = req.params.id;
+    const productList = await productModel.find({brand:brandId,listed:true})
+    console.log('brand based products - ',productList);
+    res.render('user/brandBasedProducts',{
+      product:productList,
+      brand: brandList,
+      categories: categoryList,
+      userData,
+      cartCount: cart,
+      wishlistCount: wishlist,
+    })
+  } catch (err) {
+    console.log("error in showing products based on the brands - ", err);
+  }
+};
+
+const categoryBasedProducts = async (req, res) => {
+  try {
+    let userData = req.session.user;
+    let cartCount = null;
+    let wishlistCount = null;
+    let cart = 0;
+    let wishlist = 0;
+    if (req.session.userLoggedIn) {
+      cartCount = await cartModel.find({ customer: userData._id });
+      console.log("myCart : ", cartCount);
+      if (
+        cartCount &&
+        cartCount.length > 0 &&
+        cartCount[0].totalQuantity !== undefined
+      ) {
+        cart = cartCount[0].totalQuantity;
+      }
+      wishlistCount = await wishlistModel.aggregate([
+        {
+          $group: {
+            _id: null,
+            totalSize: {
+              $sum: {
+                $size: {
+                  $ifNull: ["$products", []],
+                },
+              },
+            },
+          },
+        },
+      ]);
+      if (
+        wishlistCount &&
+        wishlistCount.length > 0 &&
+        wishlistCount[0].totalSize !== undefined
+      ) {
+        wishlist = parseInt(wishlistCount[0].totalSize);
+      }
+    }
+
+    const brandList = await brandModel.find();
+    const categoryList = await categoryModel.find();
+
+    let categoryId = req.params.id;
+    const productList = await productModel.find({category:categoryId,listed:true})
+    console.log('brand based products - ',productList);
+    res.render('user/brandBasedProducts',{
+      product:productList,
+      brand: brandList,
+      categories: categoryList,
+      userData,
+      cartCount: cart,
+      wishlistCount: wishlist,
+    })
+  } catch (err) {
+    console.log("error in showing products based on the brands - ", err);
+  }
+};
+
+const sortBy = async (req, res) => {
+  try {
+    let brandId = req.body.brandId
+    console.log('brand id - ',brandId);
+    req.session.listing = await productModel.find({listed: true });
+    if (req.body.sortBy == "ascending") {
+      let products = await productModel
+        .find({ listed: true })
+        .sort({ price: 1 });
+      res.send({ products ,brandId});
+    } else if (req.body.sortBy == "descending") {
+      let products = await productModel
+        .find({ listed: true })
+        .sort({ price: -1 });
+      res.send({ products ,brandId});
     }
   } catch (err) {
-    console.log('error in sorting - ',err);
-    res.redirect('/')
+    console.log("error in sorting - ", err);
+    res.redirect("/");
   }
-}
+};
 
-const singleProductDetails = async(req,res)=>{
-    try {
-      let productId = req.params.id;
-      let userData = req.session.user;
-      let cartCount = 0;
-      let wishlistCount = 0;
-  
-      if (req.session.userLoggedIn) {
-        const cartData = await cartModel.findOne({ customer: userData._id });
-        if (cartData && cartData.totalQuantity !== undefined) {
-          cartCount = cartData.totalQuantity;
-        }
-  
-      const wishlistData = await wishlistModel.findOne({ customer: userData._id });
+const filterProducts = async (req, res) => {
+  try {
+    const filterObject = {};
+    let brandFilter = req.body.brandFilter || [];
+    let categoryFilter = req.body.categoryFilter || [];
+    let sizeFilter = req.body.sizeFilter || [];
+
+    if (brandFilter.length > 0) {
+      filterObject.brand = { $in: brandFilter };
+    }
+    if (categoryFilter.length > 0) {
+      filterObject.category = { $in: categoryFilter };
+    }
+    if (sizeFilter.length > 0) {
+      filterObject.sizeAndStock = { $elemMatch: { size: { $in: sizeFilter } } };
+    }
+    filterObject.listed = true
+    // Fetch products using filters
+    const products = await productModel.find(filterObject);
+    
+    res.send({ products });
+  } catch (err) {
+    console.log("error in filtering products - ", err);
+  }
+};
+
+const singleProductDetails = async (req, res) => {
+  try {
+    let productId = req.params.id;
+    let userData = req.session.user;
+    let cartCount = 0;
+    let wishlistCount = 0;
+
+    if (req.session.userLoggedIn) {
+      const cartData = await cartModel.findOne({ customer: userData._id });
+      if (cartData && cartData.totalQuantity !== undefined) {
+        cartCount = cartData.totalQuantity;
+      }
+
+      const wishlistData = await wishlistModel.findOne({
+        customer: userData._id,
+      });
 
       if (wishlistData && wishlistData.products) {
         wishlistCount = wishlistData.products.length;
       }
     }
-        
-      const productDetails = await productModel.find({ _id: productId });
-      const category = await categoryModel.find();
-      const brand = await brandModel.find();
-  
-      res.render('user/singleProductDetails', {
-        userData,
-        cartCount,
-        wishlistCount,
-        productDetails,
-        category,
-        brand,
-      });
-    } catch (err) {
-      console.log(`Error in rendering single product detail page - ${err}`);
-      res.redirect('/');
-    }
-  };
-  
 
-module.exports = {showAllProducts, sortBy, singleProductDetails}
+    const productDetails = await productModel.find({ _id: productId });
+    const category = await categoryModel.find();
+    const brand = await brandModel.find();
+
+    res.render("user/singleProductDetails", {
+      userData,
+      cartCount,
+      wishlistCount,
+      productDetails,
+      categories: category,
+      brand,
+    });
+  } catch (err) {
+    console.log(`Error in rendering single product detail page - ${err}`);
+    res.redirect("/");
+  }
+};
+
+module.exports = {
+  showAllProducts,
+  brandBasedProducts,
+  categoryBasedProducts,
+  sortBy,
+  filterProducts,
+  singleProductDetails,
+};

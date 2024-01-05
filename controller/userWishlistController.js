@@ -43,7 +43,7 @@ const showWishlistPage = async (req,res)=>{
         let brand = await brandModel.find()
         let wishlistData = await wishlistModel.findOne({customer:userData._id}).populate("products")
         // console.log("wislist data - ",wishlistData);
-        res.render('user/wishlist',{userData,cartCount:cart,wishlistCount:wishlist,category,brand,wishlist:wishlistData})
+        res.render('user/wishlist',{userData,cartCount:cart,wishlistCount:wishlist,categories:category,brand,wishlist:wishlistData})
     } catch (err) {
         console.log('wishlist page showing error',err);
         res.redirect('/')

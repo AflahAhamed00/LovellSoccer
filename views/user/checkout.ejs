@@ -277,6 +277,8 @@ $("#checkout").submit((e) => {
     coupon: coupon,
   };
 
+  console.log('data available',dataObject);
+
   // Check if the paymentMethod property in 'dataObject' is not undefined
   if (dataObject.paymentMethod != undefined) {
     // Make an AJAX request to the '/placeOrder' URL using the HTTP POST method, sending the 'dataObject'

@@ -59,6 +59,21 @@ router
 .get('/user/allProducts',userProductController.showAllProducts)
 .post('/user/allProducts',userProductController.sortBy)
 
+// filtering
+router
+.post('/user/filterProducts',userProductController.filterProducts)
+
+
+// brand based product showing
+router
+.get('/brand/:id',userProductController.brandBasedProducts)
+.post('/brand/:id',userProductController.sortBy)
+
+// category based product showing
+router
+.get('/MEN/:id',userProductController.categoryBasedProducts)
+.get('/WOMEN/:id',userProductController.categoryBasedProducts)
+.get('/KIDS/:id',userProductController.categoryBasedProducts)
 
 // product details
 router

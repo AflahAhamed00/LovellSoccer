@@ -185,7 +185,7 @@ const showCart = async (req, res) => {
       const category = await categoryModel.find();
       const brand = await brandModel.find();
       res.render("user/cart", {
-        category,
+        categories: category,
         brand,
         userData,
         cartProducts,
@@ -437,7 +437,7 @@ const proceedToPayment = async (req, res) => {
       )
         // console.log("user",user[0].cart);
         res.render("user/checkout", {
-          category,
+         categories: category,
           brand,
           coupon,
           userData,

@@ -104,5 +104,8 @@ router
 
   router
   .get('/orders',adminSession,adminOrderController.showAdminOrderPage)
+  .get('/orders/:id',adminSession,adminOrderController.orderDetails)
+
+
 
 module.exports = router;
