@@ -7,6 +7,13 @@ const moment = require("moment");
 const nodemailer = require("nodemailer");
 const { default: mongoose } = require("mongoose");
 const couponModel = require("../model/couponModel");
+const wishlistModel = require("../model/wishlistModel");
+const Razorpay = require("razorpay");
+
+var instance = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_KEY_SECRET,
+});
 
 const placeOrder = async (req, res) => {
   try {
@@ -78,13 +85,11 @@ const placeOrder = async (req, res) => {
       customer: req.session.user._id,
     });
 
-    const orderDate = Date.now() // 'this' refers to the order document
+    const orderDate = Date.now(); // 'this' refers to the order document
 
- // Example: Deliver in 5 business days (excluding weekends)
- const deliveryDate = new Date(orderDate);
- deliveryDate.setMinutes(deliveryDate.getMinutes() + 2);
-
-
+    // Example: Deliver in 5 business days (excluding weekends)
+    const deliveryDate = new Date(orderDate);
+    deliveryDate.setMinutes(deliveryDate.getMinutes() + 2);
 
     let orderDetails = {
       customer: req.session.user._id,
@@ -98,9 +103,9 @@ const placeOrder = async (req, res) => {
         mobileNumber: shippingAddress.mobileNumber,
       },
       paymentMethod: req.body.paymentMethod,
-      size:[],
+      size: [],
       couponUsed: couponId,
-      deliveredOn:deliveryDate,
+      deliveredOn: deliveryDate,
       totalQuantity: userCart.totalQuantity,
       price: userCart.totalPrice,
       finalPrice: finalPrice,
@@ -111,7 +116,7 @@ const placeOrder = async (req, res) => {
       orderDetails.size.push({ productSize: product.productSize });
     });
 
-    console.log('order details - ',orderDetails);
+    console.log("order details - ", orderDetails);
     req.session.orderDetails = orderDetails;
 
     const transactionID = Math.floor(
@@ -120,40 +125,11 @@ const placeOrder = async (req, res) => {
     console.log("transaction id - ", transactionID);
     req.session.transactionID = transactionID;
 
-    // if(deliveryDate> Date.now()){
-    //   await orderModel.findOneAndUpdate({
-    //     _id:_id,
-    // },
-    // {
-    //   $set:{
-    //     status:"Delivered"
-    //   }
-    // },
-    // {
-    //   new:true,
-    // },
-    // )
-    //  }
-
     if (req.session.transactionID) {
       const couponUsed = req.session.couponUsed;
       req.session.transactionID = false;
       const orderDetails = new orderModel(req.session.orderDetails);
       orderDetails.save();
-      //   if (couponUsed) {
-      //     await userModel.findByIdAndUpdate(req.session.user._id, {
-      //       $push: {
-      //         orders: [new mongoose.Types.ObjectId(orderDetails)],
-      //         couponsUsed: [couponUsed],
-      //       },
-      //     });
-      //   } else {
-      //     await userModel.findByIdAndUpdate(req.session.user._id, {
-      //       $push: {
-      //         orders: [new mongoose.Types.ObjectId(orderDetails)],
-      //       },
-      //     });
-      //   }
 
       await cartModel.findOneAndUpdate(
         {
@@ -166,6 +142,22 @@ const placeOrder = async (req, res) => {
 
       if (req.body.paymentMethod == "COD") {
         res.json({ codSuccess: true });
+      } else {
+        let order = orderDetails._id;
+        var options = {
+          amount: finalPrice * 100, // amount in the smallest currency unit
+          currency: "INR",
+          receipt: "" + order,
+        };
+        console.log("options - ", options);
+        instance.orders.create(options, function (err, order) {
+          if (err) {
+            console.log("error in razorpay - ", err);
+          } else {
+            console.log("New order ; ", options);
+            res.send({ options });
+          }
+        });
       }
     }
   } catch (err) {
@@ -173,4 +165,172 @@ const placeOrder = async (req, res) => {
   }
 };
 
-module.exports = { placeOrder };
+const verifyPayment = async (req, res) => {
+  try {
+    console.log("body ", req.body);
+    res.json({ status: true });
+  } catch (err) {
+    console.log("error in online payment - ", err);
+    res.redirect("/");
+  }
+};
+
+const orderSuccess = async (req, res) => {
+  try {
+    let userData = req.session.user;
+    let cartCount = null;
+    let wishlistCount = null;
+    let cart = 0;
+    let wishlist = 0;
+    if (req.session.userLoggedIn) {
+      cartCount = await cartModel.find({ customer: userData._id });
+      console.log("myCart : ", cartCount);
+      if (
+        cartCount &&
+        cartCount.length > 0 &&
+        cartCount[0].totalQuantity !== undefined
+      ) {
+        cart = cartCount[0].totalQuantity;
+      }
+      wishlistCount = await wishlistModel.aggregate([
+        {
+          $group: {
+            _id: null,
+            totalSize: {
+              $sum: {
+                $size: {
+                  $ifNull: ["$products", []],
+                },
+              },
+            },
+          },
+        },
+      ]);
+      if (
+        wishlistCount &&
+        wishlistCount.length > 0 &&
+        wishlistCount[0].totalSize !== undefined
+      ) {
+        wishlist = parseInt(wishlistCount[0].totalSize);
+      }
+    }
+
+    const brandList = await brandModel.find();
+    const categoryList = await categoryModel.find();
+
+    const sendVerifyMail = async (name, email) => {
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        host: "smtp.gmail.com",
+        port: 465,
+        secure: true,
+        auth: {
+          user: process.env.VERIFICATION_MAIL_ID,
+          pass: process.env.VERIFICATION_MAIL_PASSWORD,
+        },
+      });
+
+      // define the mail subject
+
+      const mailOptions = {
+        from: process.env.VERIFICATION_MAIL_ID,
+        to: email,
+        subject: "Order confirmation mail",
+        text: `Hi ${name}, Your order has succesfully placed`,
+      };
+
+      // send the email
+
+      transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+          console.log(`Error in sending ` + error);
+          return true;
+        } else {
+          console.log(`Email sent: ` + info.response);
+          return false;
+        }
+      });
+    };
+    sendVerifyMail(userData.name, userData.email);
+
+    res.render("user/orderSuccess", {
+      userData,
+      brand: brandList,
+      categories: categoryList,
+      cartCount: cart,
+      wishlistCount: wishlist,
+    });
+  } catch (err) {
+    console.log("error in showing the order success page - ", err);
+  }
+};
+
+const viewOrders = async (req, res) => {
+  try {
+    let userData = req.session.user;
+    let cartCount = null;
+    let wishlistCount = null;
+    let cart = 0;
+    let wishlist = 0;
+    if (req.session.userLoggedIn) {
+      cartCount = await cartModel.find({ customer: userData._id });
+      console.log("myCart : ", cartCount);
+      if (
+        cartCount &&
+        cartCount.length > 0 &&
+        cartCount[0].totalQuantity !== undefined
+      ) {
+        cart = cartCount[0].totalQuantity;
+      }
+      wishlistCount = await wishlistModel.aggregate([
+        {
+          $group: {
+            _id: null,
+            totalSize: {
+              $sum: {
+                $size: {
+                  $ifNull: ["$products", []],
+                },
+              },
+            },
+          },
+        },
+      ]);
+      if (
+        wishlistCount &&
+        wishlistCount.length > 0 &&
+        wishlistCount[0].totalSize !== undefined
+      ) {
+        wishlist = parseInt(wishlistCount[0].totalSize);
+      }
+    }
+
+    const brandList = await brandModel.find();
+    const categoryList = await categoryModel.find();
+
+    let currentOrderedProducts = await orderModel
+      .find({ customer: userData._id })
+      .sort({ orderedOn: -1 });
+    currentOrderedProducts = currentOrderedProducts[0];
+    console.log("ordered product list - ", currentOrderedProducts);
+    // if(currentOrderedProducts.deliveredOn > Date.now()){
+    //   await orderModel.updateOne({_id:currentOrderedProducts._id},{
+    //     $set:{
+    //       status:'Delivered'
+    //     }
+    //   })
+    // }
+    res.render("user/viewOrders", {
+      userData,
+      categories: categoryList,
+      brand: brandList,
+      cartCount: cart,
+      wishlistCount: wishlist,
+      orderedProduct: currentOrderedProducts,
+    });
+  } catch (err) {
+    console.log("error showing orders - ", err);
+  }
+};
+
+module.exports = { placeOrder, orderSuccess, viewOrders, verifyPayment };

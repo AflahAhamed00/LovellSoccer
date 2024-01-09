@@ -1,11 +1,11 @@
-const Toastify = require('toastify-js');
+const Toastify = require("toastify-js");
 const cartModel = require("../model/cartModel");
 const categoryModel = require("../model/categoryModel");
 const brandModel = require("../model/brandModel");
 const productModel = require("../model/productModel");
 const wishlistModel = require("../model/wishlistModel");
-const userModel = require("../model/userModel")
-const couponModel = require("../model/couponModel")
+const userModel = require("../model/userModel");
+const couponModel = require("../model/couponModel");
 const { default: mongoose } = require("mongoose");
 
 const addToCart = async (req, res) => {
@@ -25,7 +25,10 @@ const addToCart = async (req, res) => {
       if (wishlistCheck && wishlistCheck._id) {
         await wishlistModel.findByIdAndUpdate(wishlistCheck._id, {
           $pull: {
-            products: productId,
+            products: {
+              product: productId,
+              size: selectedSize,
+            },
           },
         });
       }
@@ -259,14 +262,14 @@ const addCount = async (req, res) => {
         customer: req.session.user._id,
       });
 
-      console.log("cart Id is -  ",userCart);
+      console.log("cart Id is -  ", userCart);
 
       const count = await cartModel.findOneAndUpdate(
         {
-          _id:userCart._id,
+          _id: userCart._id,
           customer: req.session.user._id,
           products: {
-            $elemMatch: { name:req.body.product, productSize: size },
+            $elemMatch: { name: req.body.product, productSize: size },
           },
         },
         {
@@ -426,18 +429,18 @@ const proceedToPayment = async (req, res) => {
         let totalPrice = totalAmount.totalPrice;
         const category = await categoryModel.find();
         const brand = await brandModel.find();
-        const coupon = await couponModel.find({active:true})
+        const coupon = await couponModel.find({ active: true });
         let user = await userModel.findOne(
           {
-              _id: userData._id,
-
-          }, {
-          addresses: 1
-      }
-      )
+            _id: userData._id,
+          },
+          {
+            addresses: 1,
+          }
+        );
         // console.log("user",user[0].cart);
         res.render("user/checkout", {
-         categories: category,
+          categories: category,
           brand,
           coupon,
           userData,
@@ -447,8 +450,8 @@ const proceedToPayment = async (req, res) => {
           cartProducts,
           totalAmount: totalPrice,
         });
-      }else{
-        res.redirect('/')
+      } else {
+        res.redirect("/");
       }
     }
   } catch (err) {

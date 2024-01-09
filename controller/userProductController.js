@@ -183,19 +183,17 @@ const categoryBasedProducts = async (req, res) => {
 
 const sortBy = async (req, res) => {
   try {
-    let brandId = req.body.brandId
-    console.log('brand id - ',brandId);
     req.session.listing = await productModel.find({listed: true });
     if (req.body.sortBy == "ascending") {
       let products = await productModel
         .find({ listed: true })
         .sort({ price: 1 });
-      res.send({ products ,brandId});
+      res.send({ products});
     } else if (req.body.sortBy == "descending") {
       let products = await productModel
         .find({ listed: true })
         .sort({ price: -1 });
-      res.send({ products ,brandId});
+      res.send({ products});
     }
   } catch (err) {
     console.log("error in sorting - ", err);

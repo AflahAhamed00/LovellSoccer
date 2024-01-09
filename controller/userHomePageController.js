@@ -99,7 +99,8 @@ const userLogin = async (req, res) => {
 
 const signUpPage = async (req, res) => {
   try {
-    res.render("user/usersignUpPage", { userData: 0, errMsg: false });
+    const categoryList = await categoryModel.find()
+    res.render("user/usersignUpPage", {categories:categoryList, userData: 0, errMsg: false });
   } catch (err) {
     console.log(`signUp ${err}`);
   }
@@ -109,6 +110,7 @@ const registerUserDetails = async (req, res) => {
   req.session.userDetails = req.body;
   console.log(req.body);
   console.log("fds");
+  const categoryList = await categoryModel.find()
   try {
     const userExists = await userModel.findOne({ email: req.body.email });
 
@@ -125,7 +127,7 @@ const registerUserDetails = async (req, res) => {
 
       console.log("old-", req.session.otp);
 
-      res.render("user/otpVerification", { userData:0,wishlistCount:0,cartCount:0,userId: 0, errMsg: false });
+      res.render("user/otpVerification", { categories:categoryList, userData:0,wishlistCount:0,cartCount:0,userId: 0, errMsg: false });
     }
   } catch (err) {
     console.log(`OTP generating ${err}`);
@@ -137,6 +139,7 @@ const otpVerification = async (req, res) => {
   const { name, email, password, phoneNumber } = req.session.userDetails;
   try {
     const currentTime = Date.now();
+    const categoryList = await categoryModel.find()
     if (req.session.targetTime >= currentTime) {
       if (req.session.otp === req.body.otp) {
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -146,7 +149,8 @@ const otpVerification = async (req, res) => {
           phoneNumber: phoneNumber,
           password: hashedPassword,
         });
-        res.render("user/userLoginPage", { userData:0 ,errMsg: false });
+        
+        res.render("user/userLoginPage", { categories: categoryList,userData:0 ,errMsg: false });
 
         req.session.user = user;
         await userModel.insertMany([user]);
@@ -180,6 +184,7 @@ const otpVerification = async (req, res) => {
         res.render("user/otpVerification", {
           userId: 0,
           errMsg: `Invalid OTP`,
+          categories:categoryList
         });
       }
     } else {

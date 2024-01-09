@@ -67,7 +67,7 @@ router
 // brand based product showing
 router
 .get('/brand/:id',userProductController.brandBasedProducts)
-.post('/brand/:id',userProductController.sortBy)
+.post('/sort/brand/',userProductController.sortBy)
 
 // category based product showing
 router
@@ -120,6 +120,19 @@ router
 
 router
 .post('/placeOrder',userOrderController.placeOrder)
+
+// razorpay payment verification
+
+router
+.post('/verifyPayment',userOrderController.verifyPayment)
+
+// order success
+router
+.get('/orderSuccess',userSession.userLoginSession,userOrderController.orderSuccess)
+
+// current order details page 
+router
+.get('/orders',userSession.userLoginSession,userOrderController.viewOrders)
 
 // adress page 
 

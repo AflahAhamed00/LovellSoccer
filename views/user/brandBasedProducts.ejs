@@ -1,5 +1,5 @@
 <%- include("../partials/userHeader.ejs")%>
-<div class="product-container flex-1 ml-10">
+<!-- <div class="product-container flex-1 ml-10">
     <div class="relative flex justify-end items-center mr-20">
         <button
           id="dropdownDefaultButton"
@@ -26,7 +26,7 @@
         </button>
       
         <!-- Dropdown menu -->
-        <div
+        <!-- <div
           id="dropdown"
           class="absolute right-0 top-10 z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-40 dark:bg-gray-700"
         >
@@ -52,8 +52,8 @@
             </li>
           </ul>
         </div>
-      </div>
-    <div id="productGrid" class="grid grid-cols-4 mt-5 w-11/12 h-5/6 gap-10">
+      </div>  -->
+    <div id="productGrid" class="grid grid-cols-4 mt-5 ml-16 w-11/12 h-5/6 gap-10">
       <% for (i = 0; i < product.length; i++) { %>
       <a
         href="/user/singleProductDetails/<%= product[i]._id %>"
@@ -78,7 +78,7 @@
     </div>
   </div>
 
-<script>
+<!-- <script>
 
 document.addEventListener("DOMContentLoaded", function () {
     const dropdownButton = document.getElementById("dropdownDefaultButton");
@@ -99,7 +99,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const currentBrandId = window.location.pathname.split("/")[2]
     console.log('current brand id - ',currentBrandId);
     $.ajax({
-      url: `/brand/${currentBrandId}`,
+      url: `/sort/brand/`,
       method: "post",
       data: { sortBy: order , brandId:currentBrandId},
       success: (res) => {
@@ -138,6 +138,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-</script>
+</script> -->
 
 <%- include("../partials/userFooter.ejs")%>

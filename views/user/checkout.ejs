@@ -36,8 +36,8 @@
 
     <div class="">
       <div id="address" class="p-4" style="width: 100%; background: #fff;">
-        <%- console.log(user._id) %> <% let address=user ? user.addresses : "" %> <%
-        if (address=="" ) { %>
+        <%- console.log(user._id) %> <% let address=user ? user.addresses : ""
+        %> <% if (address=="" ) { %>
         <h4>No Address. Add Address</h4>
         <% } else { %> <% address.forEach((address, i) => { %>
         <div class="mb-2 d-flex">
@@ -122,7 +122,7 @@
             </div>
           </label>
         </div>
-        <!-- <div class="relative">
+        <div class="relative">
           <input
             class="peer hidden"
             id="radio_2"
@@ -143,7 +143,7 @@
               <p class="text-slate-500 text-sm leading-6">Delivery: 6-8 Days</p>
             </div>
           </label>
-        </div> -->
+        </div>
         <!-- <input type="hidden" id="paymentType" name="paymentType" value="" /> -->
       </div>
 
@@ -176,10 +176,10 @@
   </form>
 </div>
 
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
   let radioBtn = document.querySelectorAll("input[name='address']");
   let result = document.getElementById("result");
-
 
   let findSelected = () => {
     let selected = document.querySelector("input[name='address']:checked")
@@ -192,141 +192,189 @@
     radioBtn.addEventListener("change", findSelected);
   });
 
-
   function applyCoupon(event) {
-  // Prevent the default form submission behavior
-  event.preventDefault();
+    // Prevent the default form submission behavior
+    event.preventDefault();
 
-  let couponCode = document.getElementById("couponCode").value;
-  let messageCoupon = document.getElementById("message");
-  fetch("/applyCoupon", {
-    method: "post",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ couponCode }),
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      if (data.noCoupon) {
-        let message = `<span style="color: red;"><i class="las la-times"></i>Invalid Coupon Code</span>`;
-        messageCoupon.innerHTML = message;
-        setTimeout(() => {
-          location.reload();
-        }, 800);
-      } else if (data.expiry) {
-        let message = `<span style="color: red;"><i class="las la-times"></i>Coupon Expired</span>`;
-        messageCoupon.innerHTML = message;
-      } else {
-        let checkoutTotalAmount = data.response.totalAmount;
-        let discountedAmount = parseInt(
-          (parseInt(checkoutTotalAmount) * parseInt(data.response.discount)) /
-            100
-        );
-        document.getElementById("discount").innerHTML = discountedAmount;
-        document.getElementById("totalAmount").innerHTML =
-          checkoutTotalAmount - discountedAmount;
-        let message = `<span style="color: green;"><i class="las la-check"></i>Coupon is valid</span>`;
-        messageCoupon.innerHTML = message;
-        Toastify({
-          text: "Coupon Applied",
-          className: "info",
-          duration: 600,
-          style: {
-            background: "linear-gradient(to right, #00b09b, #96c93d)",
-          },
-        }).showToast();
-      }
-    });
-}
-
-// Attach the applyCoupon function to the "Apply Coupon" button click event
-document.getElementById("applyCouponBtn").addEventListener("click", applyCoupon);
-
-
-    // ORDER PLACING
-
-    let addOfferForm = document.getElementById("checkout");
-
-$("#checkout").submit((e) => {
-  // Prevent the default form submission behavior
-  e.preventDefault();
-
-  let discountAmount = document.getElementById("discount").innerHTML;
-  let coupon = document.getElementById("couponCode")
-    ? document.getElementById("couponCode").value
-    : "";
-
-  // Update the payment type before submitting the form
-  let selectedPaymentType = document.querySelector(
-    "input[name='paymentMethod']:checked"
-  ).value;
-
-  // Create a FormData object from the form with the id 'checkout'
-  const formData = new FormData(addOfferForm);
-
-  // Convert the FormData object to a regular JavaScript object
-  const data = Object.fromEntries(formData);
-
-  console.log('data - ',data)
-
-  // Create an object named 'dataObject' with specific properties from the form data, including userID, address, paymentMethod, discountAmount, and coupon
-  let dataObject = {
-    userID: data.userID,
-    address: data.address,
-    paymentMethod: selectedPaymentType,
-    discountAmount: discountAmount,
-    coupon: coupon,
-  };
-
-  console.log('data available',dataObject);
-
-  // Check if the paymentMethod property in 'dataObject' is not undefined
-  if (dataObject.paymentMethod != undefined) {
-    // Make an AJAX request to the '/placeOrder' URL using the HTTP POST method, sending the 'dataObject'
-    $.ajax({
-      url: "/placeOrder",
+    let couponCode = document.getElementById("couponCode").value;
+    let messageCoupon = document.getElementById("message");
+    fetch("/applyCoupon", {
       method: "post",
-      data: dataObject,
-      success: (response) => {
-        // If the response indicates that there is no address, show a warning message and redirect to the address page after a short delay
-        if (response.noAddress == true) {
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ couponCode }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.noCoupon) {
+          let message = `<span style="color: red;"><i class="las la-times"></i>Invalid Coupon Code</span>`;
+          messageCoupon.innerHTML = message;
+          setTimeout(() => {
+            location.reload();
+          }, 800);
+        } else if (data.expiry) {
+          let message = `<span style="color: red;"><i class="las la-times"></i>Coupon Expired</span>`;
+          messageCoupon.innerHTML = message;
+        } else {
+          let checkoutTotalAmount = data.response.totalAmount;
+          let discountedAmount = parseInt(
+            (parseInt(checkoutTotalAmount) * parseInt(data.response.discount)) /
+              100
+          );
+          document.getElementById("discount").innerHTML = discountedAmount;
+          document.getElementById("totalAmount").innerHTML =
+            checkoutTotalAmount - discountedAmount;
+          let message = `<span style="color: green;"><i class="las la-check"></i>Coupon is valid</span>`;
+          messageCoupon.innerHTML = message;
           Toastify({
-            text: "Add address",
-            className: "warning",
+            text: "Coupon Applied",
+            className: "info",
             duration: 600,
             style: {
               background: "linear-gradient(to right, #00b09b, #96c93d)",
             },
           }).showToast();
-          setTimeout(() => {
-            location.href = "/addressPage";
-          }, 1500);
         }
-        // If the response indicates that cash on delivery was successful, redirect to the order success page
-        if (response.codSuccess) {
+      });
+  }
+
+  // Attach the applyCoupon function to the "Apply Coupon" button click event
+  document
+    .getElementById("applyCouponBtn")
+    .addEventListener("click", applyCoupon);
+
+  // ORDER PLACING
+
+  let addOfferForm = document.getElementById("checkout");
+
+  $("#checkout").submit((e) => {
+    // Prevent the default form submission behavior
+    e.preventDefault();
+
+    let discountAmount = document.getElementById("discount").innerHTML;
+    let coupon = document.getElementById("couponCode")
+      ? document.getElementById("couponCode").value
+      : "";
+
+    // Update the payment type before submitting the form
+    let selectedPaymentType = document.querySelector(
+      "input[name='paymentMethod']:checked"
+    ).value;
+
+    // Create a FormData object from the form with the id 'checkout'
+    const formData = new FormData(addOfferForm);
+
+    // Convert the FormData object to a regular JavaScript object
+    const data = Object.fromEntries(formData);
+
+    // Create an object named 'dataObject' with specific properties from the form data, including userID, address, paymentMethod, discountAmount, and coupon
+    let dataObject = {
+      userID: data.userID,
+      address: data.address,
+      paymentMethod: selectedPaymentType,
+      discountAmount: discountAmount,
+      coupon: coupon,
+    };
+
+    console.log("data available", dataObject);
+
+    // Check if the paymentMethod property in 'dataObject' is not undefined
+    if (dataObject.paymentMethod != undefined) {
+      // Make an AJAX request to the '/placeOrder' URL using the HTTP POST method, sending the 'dataObject'
+      $.ajax({
+        url: "/placeOrder",
+        method: "post",
+        data: dataObject,
+        success: (response) => {
+          // If the response indicates that there is no address, show a warning message and redirect to the address page after a short delay
+          if (response.noAddress == true) {
+            Toastify({
+              text: "Add address",
+              className: "warning",
+              duration: 600,
+              style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+              },
+            }).showToast();
+            setTimeout(() => {
+              location.href = "/addressPage";
+            }, 1500);
+          }
+          // If the response indicates that cash on delivery was successful, redirect to the order success page
+          if (response.codSuccess) {
+            location.href = "/orderSuccess";
+          }
+          // If not, initiate a payment using Razorpay
+          else {
+            razorpayPayment(response);
+          }
+        },
+      });
+    }
+    // If the paymentMethod is undefined, show a message asking to select a payment method
+    else {
+      Toastify({
+        text: "kindly select a payment method",
+        className: "info",
+        duration: 600,
+        style: {
+          background: "linear-gradient(to right, #00b09b, #96c93d)",
+        },
+      }).showToast();
+    }
+  });
+
+  function razorpayPayment(order) {
+    try {
+      console.log(order);
+      var options = {
+        key: "rzp_test_J6bWJb0PpW1l6v", // Enter the Key ID generated from the Dashboard
+        amount: order.options.amount,
+        name: "lovell soccer",
+        description: "Test Transaction",
+        order_id: order.receipt, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+        handler: function (response) {
+          verifyPayment(response, order);
+        },
+        callback_url: "https://eneqd3r9zrjok.x.pipedream.net/",
+        prefill: {
+          name: "Aflah Ahamed PM",
+          email: "aflahahamed777@gmail.com",
+          contact: "8089735806",
+        },
+        notes: {
+          address: "Razorpay Corporate Office",
+        },
+        theme: {
+          color: "#3399cc",
+        },
+      };
+      var rzp1 = new Razorpay(options);
+      rzp1.open();
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  function verifyPayment(payment, order) {
+    console.log('verify payment - ',order);
+    $.ajax({
+      url: "/verifyPayment",
+      data: {
+        payment,
+        order,
+      },
+      method: "post",
+      success: (response) => {
+        if (response.status == true) {
           location.href = "/orderSuccess";
+        } else {
+          alert("Payment Failed");
         }
-        // If not, initiate a payment using Razorpay
-        // else {
-        //   razorpayPayment(response);
-        // }
       },
     });
   }
-  // If the paymentMethod is undefined, show a message asking to select a payment method
-  else {
-    Toastify({
-      text: "kindly select a payment method",
-      className: "info",
-      duration: 600,
-      style: {
-        background: "linear-gradient(to right, #00b09b, #96c93d)",
-      },
-    }).showToast();
-  }
-});
 
-// ORDER PLACING COMPLETED
-
+  // ORDER PLACING COMPLETED
 </script>
 
 <%- include("../partials/userFooter.ejs")%>

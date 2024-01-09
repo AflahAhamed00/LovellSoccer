@@ -48,7 +48,7 @@ const showUserProfilePage = async (req, res) => {
       const brand = await brandModel.find();
       // const user = await userModel.find()
       res.render("user/userProfile", {
-        category,
+        categories:category,
         brand,
         userData,
         cartProducts,
@@ -138,7 +138,7 @@ const showAdressPage = async (req, res) => {
       const category = await categoryModel.find();
       const brand = await brandModel.find();
       res.render("user/adressPage", {
-        category,
+        categories:category,
         brand,
         userData,
         cartCount: cart,

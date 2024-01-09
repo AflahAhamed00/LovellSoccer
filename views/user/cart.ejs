@@ -57,7 +57,7 @@
                             -
                           </button>
                           <div
-                            id="<%= product.name._id %>"
+                            id="<%= product.productSize %>"
                             class="flex w-full items-center justify-center bg-gray-100 px-4 text-xs uppercase transition"
                           >
                             <%= product.quantity %>
@@ -200,7 +200,7 @@
     size,
     name
   ) {
-    let quantityElement = document.getElementById(productID);
+    let quantityElement = document.getElementById(size);
     let quantity = parseInt(quantityElement.innerHTML);
     console.log(price);
     if (quantity > 1) {
@@ -255,8 +255,10 @@
     size,
     name
   ) {
-    let quantityElement = document.getElementById(productID);
-    let quantity = parseInt(quantityElement.innerHTML);
+    let quantityElement = document.getElementById(size);
+    console.log('current product - ',quantityElement);
+    let quantity = parseInt(quantityElement.innerHTML); + count
+    console.log('quantity - ',quantity);
 
     if (quantity >= 0) {
       document.getElementById("discount").innerHTML =  0;

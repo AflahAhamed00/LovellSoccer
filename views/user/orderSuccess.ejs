@@ -1,0 +1,31 @@
+<%- include("../partials/userHeader.ejs")%>
+
+<div class="container mx-auto text-center mt-4">
+    <h4>Your Order has been placed successfully</h4>
+  
+    <div class="my-4">
+      <div class="flex justify-center items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="text-green-600 w-28 h-28" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+  
+      <h6 class="mt-4">
+        Thank you for choosing <span class="brand-name font-bold">lovell soccer</span>
+      </h6>
+    </div>
+  
+    <div class="mb-4 font-bold">
+      <a href="/orders" class="text-dark btn btn-secondary btn-sm py-2 px-3 mx-2">View order details</a>
+      <a href="/" class="text-dark btn btn-dark btn-sm py-2 px-3">Continue shopping <i class="fa fa-arrow-right"></i></a>
+    </div>
+  
+    <!-- Uncomment this section if needed -->
+    <!--
+    <div>
+      <span style="text-transform: none;">For any queries, contact us on <u style="text-transform: none;">petcommercepet@gmail.com</u></span>
+    </div>
+    -->
+  </div>
+  
+<%- include("../partials/userFooter.ejs")%>
