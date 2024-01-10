@@ -13,7 +13,6 @@ const showAllProducts = async (req, res) => {
     let wishlist = 0;
     if (req.session.userLoggedIn) {
       cartCount = await cartModel.find({ customer: userData._id });
-      console.log("myCart : ", cartCount);
       if (
         cartCount &&
         cartCount.length > 0 &&
@@ -48,7 +47,6 @@ const showAllProducts = async (req, res) => {
       .populate("category brand");
     const brandList = await brandModel.find();
     const categoryList = await categoryModel.find();
-    console.log("product available - ", productList);
     res.render("user/allProducts", {
       product: productList,
       brand: brandList,
@@ -72,7 +70,6 @@ const brandBasedProducts = async (req, res) => {
     let wishlist = 0;
     if (req.session.userLoggedIn) {
       cartCount = await cartModel.find({ customer: userData._id });
-      console.log("myCart : ", cartCount);
       if (
         cartCount &&
         cartCount.length > 0 &&
@@ -108,7 +105,6 @@ const brandBasedProducts = async (req, res) => {
 
     let brandId = req.params.id;
     const productList = await productModel.find({brand:brandId,listed:true})
-    console.log('brand based products - ',productList);
     res.render('user/brandBasedProducts',{
       product:productList,
       brand: brandList,
@@ -131,7 +127,6 @@ const categoryBasedProducts = async (req, res) => {
     let wishlist = 0;
     if (req.session.userLoggedIn) {
       cartCount = await cartModel.find({ customer: userData._id });
-      console.log("myCart : ", cartCount);
       if (
         cartCount &&
         cartCount.length > 0 &&
@@ -167,7 +162,6 @@ const categoryBasedProducts = async (req, res) => {
 
     let categoryId = req.params.id;
     const productList = await productModel.find({category:categoryId,listed:true})
-    console.log('brand based products - ',productList);
     res.render('user/brandBasedProducts',{
       product:productList,
       brand: brandList,

@@ -89,7 +89,7 @@ const placeOrder = async (req, res) => {
 
     // Example: Deliver in 5 business days (excluding weekends)
     const deliveryDate = new Date(orderDate);
-    deliveryDate.setMinutes(deliveryDate.getMinutes() + 2);
+    deliveryDate.setMinutes(deliveryDate.getMinutes() + 1);
 
     let orderDetails = {
       customer: req.session.user._id,
@@ -129,7 +129,7 @@ const placeOrder = async (req, res) => {
       const couponUsed = req.session.couponUsed;
       req.session.transactionID = false;
       const orderDetails = new orderModel(req.session.orderDetails);
-      orderDetails.save();
+      await orderDetails.save();
 
       await cartModel.findOneAndUpdate(
         {
@@ -310,7 +310,8 @@ const viewOrders = async (req, res) => {
 
     let currentOrderedProducts = await orderModel
       .find({ customer: userData._id })
-      .sort({ orderedOn: -1 });
+      .sort({ orderedOn: -1 })
+      .populate('summary.product');
     currentOrderedProducts = currentOrderedProducts[0];
     console.log("ordered product list - ", currentOrderedProducts);
     // if(currentOrderedProducts.deliveredOn > Date.now()){
@@ -333,4 +334,21 @@ const viewOrders = async (req, res) => {
   }
 };
 
-module.exports = { placeOrder, orderSuccess, viewOrders, verifyPayment };
+const cancelOrder = async(req,res)=>{
+  try {
+    console.log('orderid - ',req.body.orderId);
+     await orderModel.findByIdAndUpdate(req.body.orderId,{
+      $set:{
+        status:"cancelled"
+      }
+    })
+
+    res.json('cancelled')
+  } catch (err) {
+    console.log('error in canceling order- ',err);
+    res.redirect('/user/viewOrders')
+  }
+}
+
+
+module.exports = { placeOrder, orderSuccess, viewOrders, verifyPayment, cancelOrder};

@@ -121,6 +121,10 @@ router
 router
 .post('/placeOrder',userOrderController.placeOrder)
 
+// cancel order
+router
+.post("/cancelOrder",userOrderController.cancelOrder)
+
 // razorpay payment verification
 
 router

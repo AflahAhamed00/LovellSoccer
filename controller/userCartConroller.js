@@ -15,7 +15,6 @@ const addToCart = async (req, res) => {
       let productId = req.body.productId;
       let selectedSize = req.body.size;
 
-      console.log("selectedSize - ", selectedSize);
       productId = productId.trim();
 
       const wishlistCheck = await wishlistModel.findOne({
@@ -45,8 +44,6 @@ const addToCart = async (req, res) => {
       });
       let size = sizeAndStockEntry.size;
       let stock = sizeAndStockEntry.stock;
-
-      console.log("type of size is - ", typeof size);
 
       const productExist = await cartModel.findOne({
         _id: userCart._id,
@@ -129,7 +126,6 @@ const addToCart = async (req, res) => {
             totalQuantity: 1,
           },
         });
-        console.log("added");
         res.send({
           status: "addedToCart",
         });
@@ -262,8 +258,6 @@ const addCount = async (req, res) => {
         customer: req.session.user._id,
       });
 
-      console.log("cart Id is -  ", userCart);
-
       const count = await cartModel.findOneAndUpdate(
         {
           _id: userCart._id,
@@ -281,9 +275,6 @@ const addCount = async (req, res) => {
           },
         }
       );
-      // const userCart = await cartModel.findOne({
-      //   customer: req.session.user._id,
-      // });
       res.json({
         userCart,
       });
@@ -321,9 +312,7 @@ const reduceCount = async (req, res) => {
         },
       ]);
 
-      console.log("current item is -", currentItem);
       const totalQtyPerItem = currentItem[0].totalQuantity;
-      console.log("total quantity per item " + totalQtyPerItem);
       if (totalQtyPerItem > 1) {
         const count = await cartModel.findOneAndUpdate(
           {
@@ -344,7 +333,6 @@ const reduceCount = async (req, res) => {
             },
           }
         );
-        console.log("count id ", count._id);
 
         const userCart = await cartModel.findOne({
           customer: req.session.user._id,
@@ -438,7 +426,6 @@ const proceedToPayment = async (req, res) => {
             addresses: 1,
           }
         );
-        // console.log("user",user[0].cart);
         res.render("user/checkout", {
           categories: category,
           brand,

@@ -117,12 +117,7 @@
     <a href="/admin/orders" style="font-size: 0.7rem;" class="col-3 btn btn-dark d-flex align-items-center justify-content-center px-2 mb-3 text-white"
     ><i class="fa fa-arrow-left mx-1"></i> Back to all orders</a
   > 
-  <%if(currentOrder.status !== 'Cancelled' && currentOrder.status !== 'Returned' && currentOrder.status !== 'Delivered'  && currentOrder.status !== 'Pending'){%> <button style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2.5px;" class="col-3 btn btn-danger d-flex align-items-center justify-content-center px-2 mb-3 text-white"
-  onclick="cancelOrder('<%=currentOrder._id%>')">Cancel Order</button
-> <% }%>
-  <!-- <button style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2.5px;" class="col-3 btn btn-dark d-flex align-items-center justify-content-center px-2 mb-3 text-white"
-    onclick="printInvoice('invoice')"><i class="fa fa-download"></i>Download Invoice</button
-  >  -->
+  
 </div>
 </div>
 <%}%>
