@@ -311,16 +311,9 @@ const viewOrders = async (req, res) => {
     let currentOrderedProducts = await orderModel
       .find({ customer: userData._id })
       .sort({ orderedOn: -1 })
-      .populate('summary.product');
+      .populate("summary.product");
     currentOrderedProducts = currentOrderedProducts[0];
     console.log("ordered product list - ", currentOrderedProducts);
-    // if(currentOrderedProducts.deliveredOn > Date.now()){
-    //   await orderModel.updateOne({_id:currentOrderedProducts._id},{
-    //     $set:{
-    //       status:'Delivered'
-    //     }
-    //   })
-    // }
     res.render("user/viewOrders", {
       userData,
       categories: categoryList,
@@ -334,21 +327,26 @@ const viewOrders = async (req, res) => {
   }
 };
 
-const cancelOrder = async(req,res)=>{
+const cancelOrder = async (req, res) => {
   try {
-    console.log('orderid - ',req.body.orderId);
-     await orderModel.findByIdAndUpdate(req.body.orderId,{
-      $set:{
-        status:"cancelled"
-      }
-    })
+    console.log("orderid - ", req.body.orderId);
+    await orderModel.findByIdAndUpdate(req.body.orderId, {
+      $set: {
+        status: "cancelled",
+      },
+    });
 
-    res.json('cancelled')
+    res.json("cancelled");
   } catch (err) {
-    console.log('error in canceling order- ',err);
-    res.redirect('/user/viewOrders')
+    console.log("error in canceling order- ", err);
+    res.redirect("/user/viewOrders");
   }
-}
+};
 
-
-module.exports = { placeOrder, orderSuccess, viewOrders, verifyPayment, cancelOrder};
+module.exports = {
+  placeOrder,
+  orderSuccess,
+  viewOrders,
+  verifyPayment,
+  cancelOrder,
+};

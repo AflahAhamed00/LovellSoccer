@@ -104,7 +104,23 @@ router
 
 // userProfile page 
 router.
-get('/userProfile',userProfileController.showUserProfilePage)
+get('/userProfile',userSession.userLoginSession, userProfileController.showUserProfilePage)
+.get('/userProfile/editAddressPage/:id',userSession.userLoginSession, userProfileController.addressEditingPage)
+.put('/userProfile/address/update',userSession.userLoginSession,userProfileController.updateAddress)
+
+// profile name editing and updating
+
+router 
+.route('/userProfile/profile/update')
+.put(userSession.userLoginSession,userProfileController.updateProfile)
+
+// profile email and phone editig and updating
+router
+.put('/userProfile/emailPhone/update',userSession.userLoginSession,userProfileController.updateEmailPhone)
+
+// user profile password updating
+router
+.put('/userProfile/password/update',userSession.userLoginSession,userProfileController.updatePassword)
 
 // user proceed to payment page
 
