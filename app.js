@@ -12,7 +12,7 @@ const cron = require('node-cron')
 dotenv.config({ path: "config.env" });
 
 dbConnect()
-cron.schedule("0 * * * *", async () => {
+cron.schedule("* * * * *", async () => {
   try {
     // Fetch orders that are not delivered and have a delivery time in the past
     const ordersToUpdate = await orderModel.find({

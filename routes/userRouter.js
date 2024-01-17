@@ -105,7 +105,7 @@ router
 // userProfile page 
 router.
 get('/userProfile',userSession.userLoginSession, userProfileController.showUserProfilePage)
-.get('/userProfile/editAddressPage/:id',userSession.userLoginSession, userProfileController.addressEditingPage)
+.get('/userProfile/editAddressPage/:id',userSession.userLoginSession, userProfileController.getAddressEditingPage)
 .put('/userProfile/address/update',userSession.userLoginSession,userProfileController.updateAddress)
 
 // profile name editing and updating

@@ -16,8 +16,12 @@ router.get("/login", adminController.loginPage);
 router.post("/login", adminController.adminVerification);
 
 // Dashboard
-router.get("/dashboard", adminSession, adminDashboardController.view);
+router
+.get("/dashboard", adminSession, adminDashboardController.view)
+.put('/dashboard',adminSession,adminDashboardController.chartData)
 
+router
+.get('/chart/:id',adminSession,adminDashboardController.customChartData)
 // Products
 router
   .get("/productManagement", adminSession, adminProductController.viewProducts)

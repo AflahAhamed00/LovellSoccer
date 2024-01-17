@@ -150,13 +150,6 @@ const showAdressPage = async (req, res) => {
   }
 };
 
-const manageAddress = async (req, res) => {
-  try {
-  } catch (err) {
-    console.log("error in rendering manage address page - ", err);
-    res.redirect("/");
-  }
-};
 
 const updateProfile = async (req, res) => {
   try {
@@ -218,7 +211,7 @@ const updatePassword = async (req, res) => {
   }
 };
 
-const addressEditingPage = async (req, res) => {
+const getAddressEditingPage = async (req, res) => {
   try {
     if (req.session.user) {
       let cartCount = null;
@@ -312,10 +305,9 @@ module.exports = {
   showUserProfilePage,
   showAdressPage,
   addAddress,
-  manageAddress,
   updateProfile,
   updateEmailPhone,
   updatePassword,
-  addressEditingPage,
+  getAddressEditingPage,
   updateAddress
 };

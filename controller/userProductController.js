@@ -50,7 +50,7 @@ const showAllProducts = async (req, res) => {
     res.render("user/allProducts", {
       product: productList,
       brand: brandList,
-      categories:categoryList,
+      categories: categoryList,
       userData,
       cartCount: cart,
       wishlistCount: wishlist,
@@ -104,15 +104,18 @@ const brandBasedProducts = async (req, res) => {
     const categoryList = await categoryModel.find();
 
     let brandId = req.params.id;
-    const productList = await productModel.find({brand:brandId,listed:true})
-    res.render('user/brandBasedProducts',{
-      product:productList,
+    const productList = await productModel.find({
+      brand: brandId,
+      listed: true,
+    });
+    res.render("user/brandBasedProducts", {
+      product: productList,
       brand: brandList,
       categories: categoryList,
       userData,
       cartCount: cart,
       wishlistCount: wishlist,
-    })
+    });
   } catch (err) {
     console.log("error in showing products based on the brands - ", err);
   }
@@ -161,15 +164,18 @@ const categoryBasedProducts = async (req, res) => {
     const categoryList = await categoryModel.find();
 
     let categoryId = req.params.id;
-    const productList = await productModel.find({category:categoryId,listed:true})
-    res.render('user/brandBasedProducts',{
-      product:productList,
+    const productList = await productModel.find({
+      category: categoryId,
+      listed: true,
+    });
+    res.render("user/brandBasedProducts", {
+      product: productList,
       brand: brandList,
       categories: categoryList,
       userData,
       cartCount: cart,
       wishlistCount: wishlist,
-    })
+    });
   } catch (err) {
     console.log("error in showing products based on the brands - ", err);
   }
@@ -177,17 +183,17 @@ const categoryBasedProducts = async (req, res) => {
 
 const sortBy = async (req, res) => {
   try {
-    req.session.listing = await productModel.find({listed: true });
+    req.session.listing = await productModel.find({ listed: true });
     if (req.body.sortBy == "ascending") {
       let products = await productModel
         .find({ listed: true })
         .sort({ price: 1 });
-      res.send({ products});
+      res.send({ products });
     } else if (req.body.sortBy == "descending") {
       let products = await productModel
         .find({ listed: true })
         .sort({ price: -1 });
-      res.send({ products});
+      res.send({ products });
     }
   } catch (err) {
     console.log("error in sorting - ", err);
@@ -211,10 +217,10 @@ const filterProducts = async (req, res) => {
     if (sizeFilter.length > 0) {
       filterObject.sizeAndStock = { $elemMatch: { size: { $in: sizeFilter } } };
     }
-    filterObject.listed = true
+    filterObject.listed = true;
     // Fetch products using filters
     const products = await productModel.find(filterObject);
-    
+
     res.send({ products });
   } catch (err) {
     console.log("error in filtering products - ", err);

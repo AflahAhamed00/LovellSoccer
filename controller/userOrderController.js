@@ -89,7 +89,7 @@ const placeOrder = async (req, res) => {
 
     // Example: Deliver in 5 business days (excluding weekends)
     const deliveryDate = new Date(orderDate);
-    deliveryDate.setMinutes(deliveryDate.getMinutes() + 1);
+    deliveryDate.setDate(deliveryDate.getDate() + 5);
 
     let orderDetails = {
       customer: req.session.user._id,
