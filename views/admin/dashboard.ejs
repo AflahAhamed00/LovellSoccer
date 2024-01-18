@@ -170,7 +170,7 @@ $.ajax({
     let productsPerMonth = [];
     orderData.forEach((order) => {
       totalOrders[order._id.month - 1] = order.totalOrders;
-      revenuePerMonth[order._id.month - 1] = order.revene;
+      revenuePerMonth[order._id.month - 1] = order.revenue;
       avgBillPerOrder[order._id.month - 1] = order.avgBillPerOrder;
       productsPerMonth[order._id.month - 1] = order.totalProducts;
     });

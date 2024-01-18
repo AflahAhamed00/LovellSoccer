@@ -7,6 +7,7 @@ const wishlistModel = require("../model/wishlistModel");
 const userModel = require("../model/userModel");
 const couponModel = require("../model/couponModel");
 const { default: mongoose } = require("mongoose");
+const { name } = require("ejs");
 
 const addToCart = async (req, res) => {
   try {
@@ -14,22 +15,29 @@ const addToCart = async (req, res) => {
       let userData = req.session.user;
       let productId = req.body.productId;
       let selectedSize = req.body.size;
+      console.log(productId);
+      console.log(selectedSize);
 
       productId = productId.trim();
 
       const wishlistCheck = await wishlistModel.findOne({
         customer: userData._id,
-        products: new mongoose.Types.ObjectId(productId),
       });
       if (wishlistCheck && wishlistCheck._id) {
-        await wishlistModel.findByIdAndUpdate(wishlistCheck._id, {
-          $pull: {
-            products: {
-              product: productId,
-              size: selectedSize,
+        const productIdToRemoveFromWishlist = new mongoose.Types.ObjectId(
+          productId
+        );
+        await wishlistModel.findByIdAndUpdate(
+          wishlistCheck._id,
+          {
+            $pull: {
+              products: {
+                name: productIdToRemoveFromWishlist,
+              },
             },
           },
-        });
+          { new: true }
+        );
       }
 
       const userCart = await cartModel.findOne({
@@ -45,47 +53,71 @@ const addToCart = async (req, res) => {
       let size = sizeAndStockEntry.size;
       let stock = sizeAndStockEntry.stock;
 
-      const productExist = await cartModel.findOne({
-        _id: userCart._id,
-        products: {
-          $elemMatch: { name: new mongoose.Types.ObjectId(productId) },
-        },
-      });
-
-      if (productExist) {
-        const productSizeExist = await cartModel.findOne({
+      if (stock > 0) {
+        const productExist = await cartModel.findOne({
           _id: userCart._id,
           products: {
-            $elemMatch: {
-              name: new mongoose.Types.ObjectId(productId),
-              productSize: size,
-            },
+            $elemMatch: { name: new mongoose.Types.ObjectId(productId) },
           },
         });
-        if (productSizeExist) {
-          console.log("size exists");
-          await cartModel.updateOne(
-            {
-              _id: userCart._id,
-              products: {
-                $elemMatch: {
-                  name: new mongoose.Types.ObjectId(productId),
-                  productSize: size,
-                },
+
+        if (productExist) {
+          const productSizeExist = await cartModel.findOne({
+            _id: userCart._id,
+            products: {
+              $elemMatch: {
+                name: new mongoose.Types.ObjectId(productId),
+                productSize: size,
               },
             },
-            {
+          });
+          if (productSizeExist) {
+            console.log("size exists");
+            await cartModel.updateOne(
+              {
+                _id: userCart._id,
+                products: {
+                  $elemMatch: {
+                    name: new mongoose.Types.ObjectId(productId),
+                    productSize: size,
+                  },
+                },
+              },
+              {
+                $inc: {
+                  "products.$.quantity": 1,
+                  totalPrice: product.price,
+                  totalQuantity: 1,
+                  "products.$.price": product.price,
+                },
+              }
+            );
+            res.json({
+              status: "countAdded",
+            });
+          } else {
+            await cartModel.findByIdAndUpdate(userCart._id, {
+              $push: {
+                products: [
+                  {
+                    name: new mongoose.Types.ObjectId(productId),
+                    price: product.price,
+                    productSize: size,
+                    productStock: stock,
+                  },
+                ],
+              },
               $inc: {
-                "products.$.quantity": 1,
                 totalPrice: product.price,
                 totalQuantity: 1,
-                "products.$.price": product.price,
               },
-            }
-          );
-          res.json({
-            status: "countAdded",
-          });
+            });
+            console.log("same product different size added");
+            res.send({
+              status: "addedToCart",
+              Toastify,
+            });
+          }
         } else {
           await cartModel.findByIdAndUpdate(userCart._id, {
             $push: {
@@ -103,31 +135,13 @@ const addToCart = async (req, res) => {
               totalQuantity: 1,
             },
           });
-          console.log("same product different size added");
           res.send({
             status: "addedToCart",
-            Toastify,
           });
         }
       } else {
-        await cartModel.findByIdAndUpdate(userCart._id, {
-          $push: {
-            products: [
-              {
-                name: new mongoose.Types.ObjectId(productId),
-                price: product.price,
-                productSize: size,
-                productStock: stock,
-              },
-            ],
-          },
-          $inc: {
-            totalPrice: product.price,
-            totalQuantity: 1,
-          },
-        });
         res.send({
-          status: "addedToCart",
+          status: "outOfStock",
         });
       }
     } else {

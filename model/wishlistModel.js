@@ -9,9 +9,13 @@ const wishlistSchema = new mongoose.Schema({
   },
   products: [
     {
-      type: mongoose.Types.ObjectId,
-      ref: productCollection,
-    },
+     name: {
+        type: mongoose.Types.ObjectId,
+        ref: productCollection,
+      },
+      size:Number,
+      stock:Number
+    }
   ],
 });
 

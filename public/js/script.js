@@ -209,13 +209,13 @@ function adminLoginValidation() {
 //   });
 // }
 
-
-function addToCart(productId, discountPrice,selectedSize) {
-  console.log('size = ',selectedSize);
+function addToCart(productId, discountPrice, selectedSize) {
+  console.log("size = ", selectedSize);
+  console.log('id = ',productId);
   // if(validateSize()){
   let count = $("#cartCount").html();
   let wishlistCount = $("#wishlistCount").html();
-  
+
   $.ajax({
     url: "/product/addToCart",
     type: "post",
@@ -235,10 +235,10 @@ function addToCart(productId, discountPrice,selectedSize) {
         Toastify({
           text: "Added to cart",
           className: "info",
-          duration:600,
+          duration: 600,
           style: {
             background: "linear-gradient(to right, #00b09b, #96c93d)",
-          }
+          },
         }).showToast();
         // Assuming you want to reload content after successful addition to cart
         $(".content").load(location.href + " .content");
@@ -252,13 +252,22 @@ function addToCart(productId, discountPrice,selectedSize) {
         Toastify({
           text: "Product count added",
           className: "info",
-          duration:600,
+          duration: 600,
           style: {
             background: "linear-gradient(to right, #00b09b, #96c93d)",
-          }
+          },
         }).showToast();
         // Assuming you want to reload content after successful addition to cart
         $(".content").load(location.href + " .content");
+      } else if (response.status == "outOfStock") {
+        Toastify({
+          text: "Out of stock",
+          className: "info",
+          duration: 600,
+          style: {
+            background: "linear-gradient(to right, #00b09b, #96c93d)",
+          },
+        }).showToast();
       } else {
         location.href = "/userLogin";
       }
@@ -268,43 +277,49 @@ function addToCart(productId, discountPrice,selectedSize) {
       // Handle the error, e.g., show an alert to the user
     },
   });
-
 }
 
-
-function addToWishlist(productId,selectedSize){
-  let count = $('#wishlistCount').html()
+function addToWishlist(productId, selectedSize) {
+  let count = $("#wishlistCount").html();
+  console.log(selectedSize);
   $.ajax({
-    url:'/user/wishlist',
-    data:{productId: productId,size:selectedSize},
-    method:'post',
-    success:(response)=>{
-      console.log('response : ',response);
-      if(response.status == true){
-        count = parseInt(count)+1
-        $('#wishlistCount').html(count)
-      Toastify({
-        text: "Added to wishlist",
-        className: "info",
-        duration:600,
-        style: {
-          background: "linear-gradient(to right, #00b09b, #96c93d)",
-        }
-      }).showToast();
-      }
-      else if(response.status == 'alreadyExists'){
+    url: "/user/wishlist",
+    data: { productId: productId, size: selectedSize },
+    method: "post",
+    success: (response) => {
+      console.log("response : ", response);
+      if (response.status == true) {
+        count = parseInt(count) + 1;
+        $("#wishlistCount").html(count);
+        Toastify({
+          text: "Added to wishlist",
+          className: "info",
+          duration: 600,
+          style: {
+            background: "linear-gradient(to right, #00b09b, #96c93d)",
+          },
+        }).showToast();
+      } else if (response.status == "alreadyExists") {
         Toastify({
           text: "Product already exists",
           className: "info",
-          duration:600,
+          duration: 600,
           style: {
             background: "linear-gradient(to right, #00b09b, #96c93d)",
-          }
+          },
         }).showToast();
+      } else if (response.status == "outOfStock") {
+        Toastify({
+          text: "Out of stock",
+          className: "info",
+          duration: 600,
+          style: {
+            background: "linear-gradient(to right, #00b09b, #96c93d)",
+          },
+        }).showToast();
+      } else {
+        location.href = "/userLogin";
       }
-      else{
-        location.href = '/userLogin'
-      }
-    }
-  })
+    },
+  });
 }

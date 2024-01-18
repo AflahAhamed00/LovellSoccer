@@ -3,6 +3,7 @@ const userModel = require("../model/userModel");
 const cartModel = require("../model/cartModel");
 const brandModel = require("../model/brandModel");
 const categoryModel = require("../model/categoryModel");
+const productModel = require("../model/productModel");
 const moment = require("moment");
 const nodemailer = require("nodemailer");
 const { default: mongoose } = require("mongoose");
@@ -116,13 +117,11 @@ const placeOrder = async (req, res) => {
       orderDetails.size.push({ productSize: product.productSize });
     });
 
-    console.log("order details - ", orderDetails);
     req.session.orderDetails = orderDetails;
 
     const transactionID = Math.floor(
       Math.random() * (1000000000000 - 10000000000) + 10000000000
     );
-    console.log("transaction id - ", transactionID);
     req.session.transactionID = transactionID;
 
     if (req.session.transactionID) {
@@ -131,6 +130,31 @@ const placeOrder = async (req, res) => {
       const orderDetails = new orderModel(req.session.orderDetails);
       await orderDetails.save();
 
+      // decrementing stock after order is placed
+      let productId;
+      let productSize;
+      let productQuantity;
+
+      for (const item of userCart.products) {
+        productId = item.name;
+        productSize = item.productSize;
+        productQuantity = item.quantity;
+        console.log(productQuantity);
+
+        const decrementStock = await productModel.findOneAndUpdate(
+          {
+            _id: productId,
+          },
+          {
+            $inc: { "sizeAndStock.$[elem].stock": -productQuantity },
+          },
+          {
+            arrayFilters: [{ "elem.size": productSize }],
+          }
+        );
+      }
+
+      // decrementing stock after order is placed completed
       await cartModel.findOneAndUpdate(
         {
           customer: req.session.user._id,
@@ -149,12 +173,10 @@ const placeOrder = async (req, res) => {
           currency: "INR",
           receipt: "" + order,
         };
-        console.log("options - ", options);
         instance.orders.create(options, function (err, order) {
           if (err) {
             console.log("error in razorpay - ", err);
           } else {
-            console.log("New order ; ", options);
             res.send({ options });
           }
         });
@@ -313,7 +335,7 @@ const viewOrders = async (req, res) => {
       .sort({ orderedOn: -1 })
       .populate("summary.product");
     currentOrderedProducts = currentOrderedProducts[0];
-    console.log("ordered product list - ", currentOrderedProducts);
+    
     res.render("user/viewOrders", {
       userData,
       categories: categoryList,
