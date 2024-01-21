@@ -26,7 +26,6 @@ i<%- include('../partials/headerLinks.ejs')%>
 
 
                 <form action="/admin/productManagement" method="post" enctype="multipart/form-data"
-                    onsubmit="return productValidate()">
                     <div class="mb-3">
                         <input type="text" class="form-control" id="form-holder" name="name" placeholder="Name"
                             required />
@@ -202,50 +201,7 @@ i<%- include('../partials/headerLinks.ejs')%>
       }); 
     }); 
 
-    // 3 images validation 
-    // $('#addProductForm').submit(function(event) { 
-    //       var fileInput = $('#images'); 
-    //       //fileInput.get(0) retrieves the underlying DOM element from the jQuery object get(index) 
-    //       if (fileInput.get(0).files.length < 3) { 
-    //         event.preventDefault(); 
-    //         $('#error-message').text('Please Upload 3 files') 
-    //       } 
-    //     }); 
 
   </script>
-<!-- <script>
-    $(".dataDivs").hide();
-    $(".jqSelector").change(function () {
-        var data = $("#inputState option:selected").text().trim();
-        console.log(data)
-
-        if (data == 'food') {
-
-            $(".dataDivs").hide();
-            $(".food").show();
-
-
-        }
-        if (data == 'supplement') {
-
-            $(".dataDivs").hide();
-            $(".supplement").show();
-
-
-        }
-        if (data == 'accessories') {
-
-            $(".dataDivs").hide();
-            $(".accessories").show();
-
-        }
-        if (data != 'accessories' && data != 'supplement' && data != 'food') {
-            $(".dataDivs").hide();
-        }
-
-    });
-
-
-</script> -->
 
 <%- include('../partials/adminFooter.ejs')%>

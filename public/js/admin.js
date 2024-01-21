@@ -1,4 +1,4 @@
-function productValidate() {}
+
 
 function changeAccess(id, block) {
   $.ajax({
@@ -9,7 +9,7 @@ function changeAccess(id, block) {
       Block: block,
     },
     success: (res) => {
-      //$("#" + id).load(location.href + "#" + id);
+      
       location.reload();
     },
   });

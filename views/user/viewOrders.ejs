@@ -96,43 +96,8 @@
       >
         Go back shopping
       </a>
-      <button
-        class="w-full px-4 py-2 bg-red-500 rounded-md text-gray-50 md:w-auto hover:bg-red-600 dark:hover:bg-gray-700 dark:bg-gray-600"
-        onclick="cancelOrder('<%= orderedProduct._id %>')"
-      >
-        cancel order
-      </button>
     </div>
   </div>
 </section>
-
-<script>
-  function cancelOrder(id) {
-    console.log(id);
-    Swal.fire({
-      title: "Do you want to cancel the order?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        $.ajax({
-          url: "/cancelOrder",
-          method: "post",
-          data: {
-            orderId: id,
-          },
-          success: (res) => {
-            if (res == "cancelled") {
-              window.location.href = "/";
-            }
-          },
-        });
-      }
-    });
-  }
-</script>
 
 <%- include("../partials/userFooter.ejs")%>

@@ -335,7 +335,7 @@ const viewOrders = async (req, res) => {
       .sort({ orderedOn: -1 })
       .populate("summary.product");
     currentOrderedProducts = currentOrderedProducts[0];
-    
+
     res.render("user/viewOrders", {
       userData,
       categories: categoryList,
@@ -352,12 +352,12 @@ const viewOrders = async (req, res) => {
 const cancelOrder = async (req, res) => {
   try {
     console.log("orderid - ", req.body.orderId);
-    await orderModel.findByIdAndUpdate(req.body.orderId, {
+    let orderId = req.body.orderId;
+    await orderModel.findByIdAndUpdate(orderId, {
       $set: {
         status: "cancelled",
       },
     });
-
     res.json("cancelled");
   } catch (err) {
     console.log("error in canceling order- ", err);

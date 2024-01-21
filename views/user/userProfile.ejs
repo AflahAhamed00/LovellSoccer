@@ -52,7 +52,7 @@
                 <!-- <span class="material-symbols-outlined">
                                 folder
                             </span> -->
-                <a class="title">My Orders</a>
+                <a href="/user/allOrders" class="title">My Orders</a>
               </div>
             </div>
             <div>
@@ -149,7 +149,7 @@
           <!-- ()()()()()()()()()()()()() 1st TAB Content Started ()()()()()()()()()()()()() -->
           <div class="tab_subtitleContent show mb-4" id="content_1">
             <!-------------------------Profile Information Started-------------------------->
-            <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
               <span class="title">Profile Information</span>
               <a href="#" id="proEditBtn" class="edit" onclick="editProfile()"
                 >Edit</a
@@ -188,7 +188,7 @@
                       <label for=""></label>
                       <input
                         type="submit"
-                        class="btn btn-primary"
+                        class="btn btn-primary bg-gray-900 hover:bg-gray-900"
                         id=""
                         name=""
                         style="width: 100%;"
@@ -261,7 +261,7 @@
                       <label for=""></label>
                       <input
                         type="submit"
-                        class="btn btn-primary"
+                        class="btn btn-primary bg-gray-900 hover:bg-gray-900"
                         id="emailBtn"
                         name=""
                         style="width: 100%; display: none;"
@@ -278,58 +278,48 @@
 
           <!-- ()()()()()()()()()()()()() 2nd TAB Content Started ()()()()()()()()()()()()() -->
           <div class="tab_subtitleContent mb-4" id="content_2">
-            <!-------------------------Manage Address Started-------------------------->
+            <!-- Manage Address Started -->
             <span class="title">Manage Address</span>
             <div class="mt-3">
-              <button
-                class="mt-4 mb-8 rounded-md bg-gray-900 px-6 py-3 font-medium text-white"
-              >
-                <a href="/addressPage" for="addBillingAddress"
-                  >Add New Address</a
-                >
-              </button>
+                <button class="mt-4 mb-8 rounded-md bg-gray-900 px-6 py-3 font-medium text-white">
+                    <a class="hover:text-white" href="/addressPage" for="addBillingAddress">Add New Address</a>
+                </button>
             </div>
-            <div
-              id="address"
-              class="p-4 flex justify-between"
-              style="width: 100%; background: #fff;"
-            >
-              <% let addresses = userData ? userData.addresses : [] %> <% if
-              (addresses.length === 0) { %>
-              <h4>No Address. Add Address</h4>
-              <% } else { %> <% addresses.forEach((addr, i) => { %>
-              <div class="mb-2 d-flex">
-                <div>
-                  <input type="" class="form-check-input me-2" name="address"
-                  value="<%= addr._id %>" required <% if (i === 0) { %>checked<%
-                  } %> />
-                </div>
-                <div style="text-align: left;">
-                  <p class="m-0" style="font-weight: bold;">
-                    <%= addr.building %>
-                  </p>
-                  <p style="font-size: 14px;">
-                    <strong>Address Line : - </strong><%= addr.address %><br />
-                    <strong>City : - </strong><%= addr.city %><br />
-                    <strong>Mobile No : - </strong><%= addr.mobileNumber %><br />
-                    <span style="font-weight: bold;"
-                      >Pin-code : - <%= addr.pinCode %></span
-                    >
-                  </p>
-                </div>
-              </div>
-              <a
-                href="/userProfile/editAddressPage/<%= addr._id %>"
-                class="h-10 rounded-md bg-gray-900 px-4 font-medium text-white"
-                ><div class="d-flex align-items-center">
-                  <!-- Container for centering text vertically -->
-                  <span class="align-middle">edit</span>
-                </div></a
-              >
-              <% }) %> <% } %>
+        
+            <div id="address" style="width: 100%; background: #fff;">
+                <% let addresses = userData ? userData.addresses : [] %>
+                <% if (addresses.length === 0) { %>
+                    <h4>No Address. Add Address</h4>
+                <% } else { %>
+                    <% addresses.forEach((addr, i) => { %>
+                        <div class="p-4 flex justify-between mb-4" style="background: #fff; border: 1px solid #ddd;">
+                            <div class="mb-2">
+                                <div>
+                                    <input type="hidden" class="form-check-input me-2" name="address" value="<%= addr._id %>" required <% if (i === 0) { %>checked<% } %> />
+                                </div>
+                                <div style="text-align: left;">
+                                    <p class="m-0" style="font-weight: bold;">
+                                        <%= addr.building %>
+                                    </p>
+                                    <p style="font-size: 14px;">
+                                        <strong>Address Line : - </strong><%= addr.address %><br />
+                                        <strong>City : - </strong><%= addr.city %><br />
+                                        <strong>Mobile No : - </strong><%= addr.mobileNumber %><br />
+                                        <span style="font-weight: bold;">Pin-code : - <%= addr.pinCode %></span>
+                                    </p>
+                                </div>
+                            </div>
+                            <a href="/userProfile/editAddressPage/<%= addr._id %>" class="h-10 rounded-md bg-gray-900 px-4 font-medium text-white">
+                                <div class="d-flex align-items-center">
+                                    <span class="align-middle">edit</span>
+                                </div>
+                            </a>
+                        </div>
+                    <% }) %>
+                <% } %>
             </div>
-            <!-------------------------Manage Address Ended-------------------------->
-          </div>
+            <!-- Manage Address Ended -->
+        </div>
 
           <!-- ()()()()()()()()()()()()() 2nd TAB Content Ended ()()()()()()()()()()()()() -->
 
@@ -377,7 +367,7 @@
                       <label for=""></label>
                       <input
                         type="submit"
-                        class="btn btn-primary"
+                        class="btn btn-primary bg-gray-900 hover:bg-gray-900"
                         id=""
                         name=""
                         style="width: 100%;"

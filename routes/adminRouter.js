@@ -7,8 +7,9 @@ const adminProductController = require("../controller/adminProductController");
 const adminCategoryController = require("../controller/adminCategoryController");
 const adminCustomerManagement = require("../controller/adminCustomerManagement");
 const adminBrandController = require("../controller/adminBrandController");
-const adminCouponController = require("../controller/adminCouponController")
-const adminOrderController = require('../controller/adminOrderController')
+const adminCouponController = require("../controller/adminCouponController");
+const adminOrderController = require("../controller/adminOrderController");
+const adminBannerController = require("../controller/adminBannerController")
 const upload = require("../utilities/imageProcessor");
 
 router.get("/login", adminController.loginPage);
@@ -17,11 +18,14 @@ router.post("/login", adminController.adminVerification);
 
 // Dashboard
 router
-.get("/dashboard", adminSession, adminDashboardController.view)
-.put('/dashboard',adminSession,adminDashboardController.chartData)
+  .get("/dashboard", adminSession, adminDashboardController.view)
+  .put("/dashboard", adminSession, adminDashboardController.chartData);
 
-router
-.get('/chart/:id',adminSession,adminDashboardController.customChartData)
+router.get(
+  "/chart/:id",
+  adminSession,
+  adminDashboardController.customChartData
+);
 // Products
 router
   .get("/productManagement", adminSession, adminProductController.viewProducts)
@@ -55,10 +59,12 @@ router
     adminProductController.saveEditProduct
   );
 
-
-  // change listing
-  router
-  .patch("/productManagement/changeListing/:id",adminSession,adminProductController.changeListing) 
+// change listing
+router.patch(
+  "/productManagement/changeListing/:id",
+  adminSession,
+  adminProductController.changeListing
+);
 // category
 router
   .get("/categories", adminSession, adminCategoryController.listCategory)
@@ -96,20 +102,28 @@ router
     adminCustomerManagement.updateBan
   );
 
-  // coupon 
-  router
-  .get('/couponManagement',adminSession,adminCouponController.getCouponPage)
-  .post('/couponManagement',adminSession,adminCouponController.addNewCoupon)
+// coupon
+router
+  .get("/couponManagement", adminSession, adminCouponController.getCouponPage)
+  .post("/couponManagement", adminSession, adminCouponController.addNewCoupon);
 
-  router
-  .get('/couponManagement/changeActivity',adminSession,adminCouponController.changeCouponActivity)
+router.get(
+  "/couponManagement/changeActivity",
+  adminSession,
+  adminCouponController.changeCouponActivity
+);
 
-  // order
+// order
 
-  router
-  .get('/orders',adminSession,adminOrderController.showAdminOrderPage)
-  .get('/orders/:id',adminSession,adminOrderController.orderDetails)
+router
+  .get("/orders", adminSession, adminOrderController.showAdminOrderPage)
+  .get("/orders/:id", adminSession, adminOrderController.orderDetails);
 
-
+// banner
+router
+.get('/bannerManagement',adminSession,adminBannerController.getBannerPage)
+.post('/bannerManagement',adminSession,upload.single('bannerImage'),adminBannerController.addNewBanner)
+.patch('/bannerManagement',adminSession,adminBannerController.changeBannerActivity)
+.delete('/bannerManagement',adminSession,adminBannerController.deleteBanner)
 
 module.exports = router;

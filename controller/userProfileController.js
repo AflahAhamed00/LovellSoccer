@@ -5,6 +5,7 @@ const categoryModel = require("../model/categoryModel");
 const userModel = require("../model/userModel");
 const bcrypt = require("bcrypt");
 const mongoose = require("mongoose");
+const orderModel = require("../model/orderModel");
 
 const showUserProfilePage = async (req, res) => {
   try {
@@ -150,7 +151,6 @@ const showAdressPage = async (req, res) => {
   }
 };
 
-
 const updateProfile = async (req, res) => {
   try {
     let userData = req.session.user;
@@ -256,10 +256,10 @@ const getAddressEditingPage = async (req, res) => {
       console.log("selected address - ", addressDetails);
       res.render("user/addressEditingPage", {
         addr: addressDetails,
-        categories:category,
-        cartCount:cart,
-        wishlistCount:wishlist,
-        userData
+        categories: category,
+        cartCount: cart,
+        wishlistCount: wishlist,
+        userData,
       });
     }
   } catch (err) {
@@ -267,14 +267,14 @@ const getAddressEditingPage = async (req, res) => {
   }
 };
 
-const updateAddress = async(req,res)=>{
+const updateAddress = async (req, res) => {
   try {
-    console.log('updated address - ',req.body);
-    let userData = req.session.user
-    let data = req.body.data
-    let mobileNumber = Number(data.mobileNumber)
-    let alternativePhoneNumber = Number(data.alterMobile)
-    let pinCode = Number(data.pinCode)
+    console.log("updated address - ", req.body);
+    let userData = req.session.user;
+    let data = req.body.data;
+    let mobileNumber = Number(data.mobileNumber);
+    let alternativePhoneNumber = Number(data.alterMobile);
+    let pinCode = Number(data.pinCode);
     let addressId = req.body.addressId;
     const updatedAddress = await userModel.findOneAndUpdate(
       {
@@ -295,11 +295,65 @@ const updateAddress = async(req,res)=>{
       },
       { new: true }
     );
-    res.json({success:true,address:updatedAddress})
+    res.json({ success: true, address: updatedAddress });
   } catch (err) {
-    console.log('error in updating the address - ',err);
+    console.log("error in updating the address - ", err);
   }
-}
+};
+
+const getAllOrders = async (req, res) => {
+  try {
+    if (req.session.user) {
+      let cartCount = null;
+      let wishlistCount = null;
+      let cart = 0;
+      let wishlist = 0;
+      let userData = req.session.user;
+      if (req.session.userLoggedIn) {
+        cartCount = await cartModel.findOne({ customer: userData._id });
+        if (cartCount && cartCount.totalQuantity !== undefined) {
+          cart = cartCount.totalQuantity;
+        }
+        wishlistCount = await wishlistModel.aggregate([
+          {
+            $group: {
+              _id: null,
+              totalSize: {
+                $sum: {
+                  $size: {
+                    $ifNull: ["$products", []],
+                  },
+                },
+              },
+            },
+          },
+        ]);
+        if (
+          wishlistCount &&
+          wishlistCount.length > 0 &&
+          wishlistCount[0].totalSize !== undefined
+        ) {
+          wishlist = parseInt(wishlistCount[0].totalSize);
+        }
+      }
+
+      const category = await categoryModel.find();
+      const brand = await brandModel.find();
+      const allOrders = await orderModel
+        .find({ customer: userData._id })
+        .populate("summary.product");
+      res.render("user/allOrders", {
+        orders: allOrders,
+        userData,
+        cartCount: cart,
+        wishlistCount: wishlist,
+        categories: category,
+      });
+    }
+  } catch (err) {
+    console.log("error in getting all orders - ", err);
+  }
+};
 
 module.exports = {
   showUserProfilePage,
@@ -309,5 +363,6 @@ module.exports = {
   updateEmailPhone,
   updatePassword,
   getAddressEditingPage,
-  updateAddress
+  updateAddress,
+  getAllOrders,
 };

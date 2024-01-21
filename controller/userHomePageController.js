@@ -9,6 +9,7 @@ const cartModel = require('../model/cartModel');
 const { request } = require("express");
 const wishlistModel = require('../model/wishlistModel')
 const categoryModel = require('../model/categoryModel')
+const bannerModel = require('../model/bannerModel')
 // const { name } = require("ejs");
 
 let OTP = otpGenerator.generate(4, {
@@ -381,11 +382,13 @@ const landingPage = async (req, res) => {
     }
     const brandList = await brandModel.find()
     const categoryList = await categoryModel.find() 
-    const productList= await productModel.find()
+    const productList = await productModel.find()
+    const bannerList = await bannerModel.find({active:true})
     res.render("user/landingPage",{
       brand : brandList,
       product:productList,
       categories:categoryList,
+      banners: bannerList,
       userData,
       cartCount:cart,
       wishlistCount:wishlist
