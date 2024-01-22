@@ -67,7 +67,7 @@ router
 // brand based product showing
 router
 .get('/brand/:id',userProductController.brandBasedProducts)
-.post('/sort/brand/',userProductController.sortBy)
+
 
 // category based product showing
 router
@@ -160,5 +160,10 @@ router
 router
 .get('/addressPage',userProfileController.showAdressPage)
 .post('/addressPage',userProfileController.addAddress)
+
+// search product
+
+router
+.get('/user/searchProducts',userProductController.getSearchProduct)
 
 module.exports = router

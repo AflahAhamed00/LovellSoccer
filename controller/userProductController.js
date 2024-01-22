@@ -267,6 +267,66 @@ const singleProductDetails = async (req, res) => {
   }
 };
 
+const getSearchProduct = async (req, res) => {
+  try {
+    let userData = req.session.user;
+    let cartCount = null;
+    let wishlistCount = null;
+    let cart = 0;
+    let wishlist = 0;
+    if (req.session.userLoggedIn) {
+      cartCount = await cartModel.find({ customer: userData._id });
+      if (
+        cartCount &&
+        cartCount.length > 0 &&
+        cartCount[0].totalQuantity !== undefined
+      ) {
+        cart = cartCount[0].totalQuantity;
+      }
+      wishlistCount = await wishlistModel.aggregate([
+        {
+          $group: {
+            _id: null,
+            totalSize: {
+              $sum: {
+                $size: {
+                  $ifNull: ["$products", []],
+                },
+              },
+            },
+          },
+        },
+      ]);
+      if (
+        wishlistCount &&
+        wishlistCount.length > 0 &&
+        wishlistCount[0].totalSize !== undefined
+      ) {
+        wishlist = parseInt(wishlistCount[0].totalSize);
+      }
+    }
+
+    const categoryList = await categoryModel.find();
+
+    const searchedData = req.query.search;
+    const searchProduct = await productModel.find({
+      name: { $regex: new RegExp(searchedData, "i") },
+      listed:true,
+    });
+  
+    res.render("user/searchProducts", {
+      product: searchProduct,
+      categories: categoryList,
+      userData,
+      cartCount: cart,
+      wishlistCount: wishlist,
+    });
+  } catch (err) {
+    console.log("error in searching products - ", err);
+    res.redirect('/')
+  }
+};
+
 module.exports = {
   showAllProducts,
   brandBasedProducts,
@@ -274,4 +334,5 @@ module.exports = {
   sortBy,
   filterProducts,
   singleProductDetails,
+  getSearchProduct
 };

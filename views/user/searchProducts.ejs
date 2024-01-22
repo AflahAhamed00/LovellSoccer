@@ -1,0 +1,33 @@
+<%- include("../partials/userHeader.ejs")%>
+<div id="productGrid" class="grid grid-cols-4 mt-5 ml-16 w-11/12 h-5/6 gap-10">
+    <% if (product.length >0) { %>
+        
+    <% for (i = 0; i < product.length; i++) { %>
+            <a
+      href="/user/singleProductDetails/<%= product[i]._id %>"
+      class="group relative h-[370px] block overflow-hidden"
+    >
+      <img
+        src="/img/products/<%= product[i].frontImage %>"
+        alt=""
+        class="h-1.5 w-full object-cover sm:h-72"
+      />
+
+      <div class="relative border border-gray-100 bg-white p-6">
+        <div class="flex justify-between">
+          <h3 class="text-sm font-medium text-gray-900">
+            <%= product[i].name %>
+          </h3>
+          <p class="text-sm text-gray-700">₹<%= product[i].price %></p>
+        </div>
+      </div>
+    </a>
+           
+    
+    <% } %>
+    <%} else { %>
+        <p class=" font-bold text-sm"> No product available </p>
+        <% } %>
+  </div>
+</div>
+<%- include("../partials/userFooter.ejs")%>

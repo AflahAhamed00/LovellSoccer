@@ -3,13 +3,13 @@ const otpGenerator = require("otp-generator");
 const userModel = require("../model/userModel");
 const { default: mongoose } = require("mongoose");
 const bcrypt = require("bcrypt");
-const brandModel = require("../model/brandModel")
-const productModel  =require("../model/productModel")
-const cartModel = require('../model/cartModel');
+const brandModel = require("../model/brandModel");
+const productModel = require("../model/productModel");
+const cartModel = require("../model/cartModel");
 const { request } = require("express");
-const wishlistModel = require('../model/wishlistModel')
-const categoryModel = require('../model/categoryModel')
-const bannerModel = require('../model/bannerModel')
+const wishlistModel = require("../model/wishlistModel");
+const categoryModel = require("../model/categoryModel");
+const bannerModel = require("../model/bannerModel");
 // const { name } = require("ejs");
 
 let OTP = otpGenerator.generate(4, {
@@ -58,37 +58,44 @@ const sendVerifyMail = async (name, email) => {
 
 const showLoginPage = async (req, res) => {
   try {
-    const categoryList = await categoryModel.find()
-    res.render("user/userLoginPage", { categories:categoryList,userData: 0, errMsg: false });
+    const categoryList = await categoryModel.find();
+    res.render("user/userLoginPage", {
+      categories: categoryList,
+      userData: 0,
+      errMsg: false,
+    });
   } catch (err) {
     console.log(`showing login page ${err}`);
   }
 };
 
 const userLogin = async (req, res) => {
-  const inputPassword = req.body.password
+  const inputPassword = req.body.password;
   try {
     let hashedPassword;
     const checkUser = await userModel.findOne({ email: req.body.email });
-    const categoryList = await categoryModel.find()
+    const categoryList = await categoryModel.find();
     if (checkUser) {
-      hashedPassword = await bcrypt.compare(
-        inputPassword,
-        checkUser.password
-      );
+      hashedPassword = await bcrypt.compare(inputPassword, checkUser.password);
     }
     if (checkUser && hashedPassword) {
       if (checkUser.block) {
-        res.render('user/userLoginPage', { categories:categoryList, userData: 0, errMsg: 'Sorry you are banned' })
-      }
-      else {
+        res.render("user/userLoginPage", {
+          categories: categoryList,
+          userData: 0,
+          errMsg: "Sorry you are banned",
+        });
+      } else {
         req.session.userLoggedIn = true;
-        req.session.user = checkUser; 
-        res.redirect('/'); 
-      } 
-    }
-    else{
-      res.render('user/userLoginPage',{categories:categoryList, userData: 0, errMsg:`Invalid Credentials`})
+        req.session.user = checkUser;
+        res.redirect("/");
+      }
+    } else {
+      res.render("user/userLoginPage", {
+        categories: categoryList,
+        userData: 0,
+        errMsg: `Invalid Credentials`,
+      });
     }
   } catch (err) {
     console.log(`user Login ${err}`);
@@ -100,8 +107,12 @@ const userLogin = async (req, res) => {
 
 const signUpPage = async (req, res) => {
   try {
-    const categoryList = await categoryModel.find()
-    res.render("user/usersignUpPage", {categories:categoryList, userData: 0, errMsg: false });
+    const categoryList = await categoryModel.find();
+    res.render("user/usersignUpPage", {
+      categories: categoryList,
+      userData: 0,
+      errMsg: false,
+    });
   } catch (err) {
     console.log(`signUp ${err}`);
   }
@@ -111,14 +122,14 @@ const registerUserDetails = async (req, res) => {
   req.session.userDetails = req.body;
   console.log(req.body);
   console.log("fds");
-  const categoryList = await categoryModel.find()
+  const categoryList = await categoryModel.find();
   try {
     const userExists = await userModel.findOne({ email: req.body.email });
 
     if (userExists) {
       res.render("user/userSignUpPage", {
         errMsg: `User email already exists`,
-        userData
+        userData,
       });
     } else {
       sendVerifyMail(req.body.name, req.body.email);
@@ -128,7 +139,14 @@ const registerUserDetails = async (req, res) => {
 
       console.log("old-", req.session.otp);
 
-      res.render("user/otpVerification", { categories:categoryList, userData:0,wishlistCount:0,cartCount:0,userId: 0, errMsg: false });
+      res.render("user/otpVerification", {
+        categories: categoryList,
+        userData: 0,
+        wishlistCount: 0,
+        cartCount: 0,
+        userId: 0,
+        errMsg: false,
+      });
     }
   } catch (err) {
     console.log(`OTP generating ${err}`);
@@ -140,7 +158,7 @@ const otpVerification = async (req, res) => {
   const { name, email, password, phoneNumber } = req.session.userDetails;
   try {
     const currentTime = Date.now();
-    const categoryList = await categoryModel.find()
+    const categoryList = await categoryModel.find();
     if (req.session.targetTime >= currentTime) {
       if (req.session.otp === req.body.otp) {
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -150,8 +168,12 @@ const otpVerification = async (req, res) => {
           phoneNumber: phoneNumber,
           password: hashedPassword,
         });
-        
-        res.render("user/userLoginPage", { categories: categoryList,userData:0 ,errMsg: false });
+
+        res.render("user/userLoginPage", {
+          categories: categoryList,
+          userData: 0,
+          errMsg: false,
+        });
 
         req.session.user = user;
         await userModel.insertMany([user]);
@@ -161,18 +183,18 @@ const otpVerification = async (req, res) => {
         const newCart = await cartModel({
           customer: new mongoose.Types.ObjectId(newUser._id),
         });
-    
+
         // Update the user document with the cart ID
         await userModel.findByIdAndUpdate(newUser._id, {
           $set: { cart: new mongoose.Types.ObjectId(newCart._id) },
         });
-        
+
         await newCart.save();
         // Create a new wishlist for the user
         const newWishlist = await wishlistModel({
           customer: new mongoose.Types.ObjectId(newUser._id),
         });
-      
+
         // Update the user document with the wishlist ID
         await userModel.findByIdAndUpdate(newUser._id, {
           $set: { wishlist: new mongoose.Types.ObjectId(newWishlist._id) },
@@ -185,7 +207,7 @@ const otpVerification = async (req, res) => {
         res.render("user/otpVerification", {
           userId: 0,
           errMsg: `Invalid OTP`,
-          categories:categoryList
+          categories: categoryList,
         });
       }
     } else {
@@ -352,15 +374,19 @@ const resetPassword = async (req, res) => {
 
 const landingPage = async (req, res) => {
   try {
-    let userData = req.session.user
+    let userData = req.session.user;
     let cartCount = null;
     let wishlistCount = null;
-    let cart=0;
+    let cart = 0;
     let wishlist = 0;
     if (req.session.userLoggedIn) {
-      cartCount = await cartModel.find({customer:userData._id})
-      if (cartCount && cartCount.length > 0 && cartCount[0].totalQuantity !== undefined){
-        cart=cartCount[0].totalQuantity;
+      cartCount = await cartModel.find({ customer: userData._id });
+      if (
+        cartCount &&
+        cartCount.length > 0 &&
+        cartCount[0].totalQuantity !== undefined
+      ) {
+        cart = cartCount[0].totalQuantity;
       }
       wishlistCount = await wishlistModel.aggregate([
         {
@@ -368,7 +394,7 @@ const landingPage = async (req, res) => {
             _id: null,
             totalSize: {
               $sum: {
-                $size:{
+                $size: {
                   $ifNull: ["$products", []],
                 },
               },
@@ -376,23 +402,27 @@ const landingPage = async (req, res) => {
           },
         },
       ]);
-      if (wishlistCount && wishlistCount.length > 0 && wishlistCount[0].totalSize !== undefined) {
+      if (
+        wishlistCount &&
+        wishlistCount.length > 0 &&
+        wishlistCount[0].totalSize !== undefined
+      ) {
         wishlist = parseInt(wishlistCount[0].totalSize);
       }
     }
-    const brandList = await brandModel.find()
-    const categoryList = await categoryModel.find() 
-    const productList = await productModel.find()
-    const bannerList = await bannerModel.find({active:true})
-    res.render("user/landingPage",{
-      brand : brandList,
-      product:productList,
-      categories:categoryList,
+    const brandList = await brandModel.find();
+    const categoryList = await categoryModel.find();
+    const productList = await productModel.find();
+    const bannerList = await bannerModel.find({ active: true });
+    res.render("user/landingPage", {
+      brand: brandList,
+      product: productList,
+      categories: categoryList,
       banners: bannerList,
       userData,
-      cartCount:cart,
-      wishlistCount:wishlist
-    })
+      cartCount: cart,
+      wishlistCount: wishlist,
+    });
   } catch (err) {
     console.log(`user landing page rendering err -${err}`);
   }
@@ -411,5 +441,5 @@ module.exports = {
   registerUserDetails,
   otpVerification,
   resendOtp,
-  landingPage
+  landingPage,
 };
