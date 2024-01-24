@@ -338,7 +338,7 @@ const getAllOrders = async (req, res) => {
       }
 
       const category = await categoryModel.find();
-      const brand = await brandModel.find();
+     
       const allOrders = await orderModel
         .find({ customer: userData._id })
         .populate("summary.product");
@@ -352,6 +352,7 @@ const getAllOrders = async (req, res) => {
     }
   } catch (err) {
     console.log("error in getting all orders - ", err);
+    res.redirect('/')
   }
 };
 

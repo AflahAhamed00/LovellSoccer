@@ -1,0 +1,65 @@
+<%- include('../partials/adminHeader.ejs')%> 
+<%- include('../partials/headerLinks.ejs')%>
+<div class="container line-break-top line-break text-center py-3">
+    <span class="shadow-heading">Banners</span>
+</div>
+<div class="container my-3">
+   
+    <div id="allBanners">
+        <% if(details !=null) { %>
+            <table class="table table-hover cell-border fw-light nowrap" id="dataTable" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>Customer ID</th>
+                        <th>Order ID</th>
+                        <th style="width: 20%">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <% details.forEach(function(item,i){ %>
+                        <tr>
+                            <td>
+                                <%= item.customer %>
+                            </td>
+                            <td>
+                                <%= item.order %>
+                            </td>
+                            <td class="text-center" style="width: 20%">
+                                <div id="Action<%=item._id%>" class="d-flex flex-column">
+                                    <% if (item.accept === false) { %>
+                                        <button class="btn btn-sm btn-dark w-100"
+                                                onclick="acceptOrderCancelRequest('<%=item._id%>', '<%=item.accept%>', '<%= item.customer %>', '<%= item.order %>')">
+                                            <span>Accept Cancel Request</span>
+                                        </button>
+                                    <% } else { %>
+                                        <p class="text-xs">Cancel Request Accepted</p>
+                                    <% } %>
+                                </div>
+                            </td>
+                        </tr>
+                        <% }) %>
+                </tbody>
+                <tfoot></tfoot>
+            </table>
+            <% } %>
+    </div>
+</div>
+
+<script>
+    function acceptOrderCancelRequest(id,currentRequestStatus,customerId,orderId){
+        $.ajax({
+            url:'/admin/cancelRequests',
+            method:'patch',
+            data:{
+                id:id,
+                currentCancelStatus:currentRequestStatus,
+                customer: customerId,
+                orderId: orderId
+            },
+            success:(res)=>{
+                $("#Action" + id).load(location.href + " #Action" + id);
+            }
+        })
+        
+    }
+</script>

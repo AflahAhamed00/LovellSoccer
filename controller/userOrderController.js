@@ -9,7 +9,9 @@ const nodemailer = require("nodemailer");
 const { default: mongoose } = require("mongoose");
 const couponModel = require("../model/couponModel");
 const wishlistModel = require("../model/wishlistModel");
+const orderCancelModel = require('../model/orderCancelModel')
 const Razorpay = require("razorpay");
+
 
 var instance = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
@@ -353,12 +355,24 @@ const cancelOrder = async (req, res) => {
   try {
     console.log("orderid - ", req.body.orderId);
     let orderId = req.body.orderId;
+    let userData = req.session.user
     await orderModel.findByIdAndUpdate(orderId, {
       $set: {
-        status: "cancelled",
+        status: "cancellation pending",
       },
     });
-    res.json("cancelled");
+
+    const orderCancelDetails = {
+      customer: userData._id,
+      order:orderId,
+    }
+
+    req.session.orderCancelDetails = orderCancelDetails
+
+    const cancelRequest = new orderCancelModel(req.session.orderCancelDetails)
+    await cancelRequest.save()
+
+    res.json("cancelRequestSend");
   } catch (err) {
     console.log("error in canceling order- ", err);
     res.redirect("/user/viewOrders");

@@ -10,6 +10,7 @@ const adminBrandController = require("../controller/adminBrandController");
 const adminCouponController = require("../controller/adminCouponController");
 const adminOrderController = require("../controller/adminOrderController");
 const adminBannerController = require("../controller/adminBannerController")
+const adminCancelRequestController = require("../controller/adminCancelRequestController")
 const upload = require("../utilities/imageProcessor");
 
 router.get("/login", adminController.loginPage);
@@ -125,5 +126,10 @@ router
 .post('/bannerManagement',adminSession,upload.single('bannerImage'),adminBannerController.addNewBanner)
 .patch('/bannerManagement',adminSession,adminBannerController.changeBannerActivity)
 .delete('/bannerManagement',adminSession,adminBannerController.deleteBanner)
+
+// cacnel request
+router
+.get('/cancelRequests',adminSession,adminCancelRequestController.getAllCancelRequests)
+.patch('/cancelRequests',adminSession,adminCancelRequestController.acceptCancelRequest)
 
 module.exports = router;

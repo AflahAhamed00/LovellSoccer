@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const userModel = require("../model/userModel");
 const couponModel = require("../model/couponModel");
 const productModel = require("../model/productModel");
+const { bool } = require("sharp");
 
 const orderSchema = new mongoose.Schema({
   customer: {
@@ -60,7 +61,6 @@ const orderSchema = new mongoose.Schema({
   },
   finalPrice: Number,
 });
-
 
 const orderModel = mongoose.model("Orders", orderSchema);
 
