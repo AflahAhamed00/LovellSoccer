@@ -121,7 +121,7 @@ const signUpPage = async (req, res) => {
 const registerUserDetails = async (req, res) => {
   req.session.userDetails = req.body;
   console.log(req.body);
-  console.log("fds");
+  
   const categoryList = await categoryModel.find();
   try {
     const userExists = await userModel.findOne({ email: req.body.email });

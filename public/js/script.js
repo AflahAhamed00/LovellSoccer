@@ -161,54 +161,6 @@ function adminLoginValidation() {
   }
 }
 
-// function addToCart(productId, discountPrice) {
-//   let count = $("#cartCount").html();
-//   let wishlistCount = $("#wishlistCount").html();
-//   $.ajax({
-//     url: "/product/addToCart",
-//     type: "post",
-//     data: {
-//       price: discountPrice,
-//       productId: productId,
-//     },
-//     success: (response) => {
-//       if (response.status == "addedToCart") {
-//         count = parseInt(count) + 1;
-//         $("#cartCount").html(count);
-//         if (wishlistCount > 0) {
-//           wishlistCount = parseInt(wishlistCount) - 1;
-//           $("#wishlistCount").html(wishlistCount);
-//         }
-//         Swal.fire({
-//           position: "top-right",
-//           icon: "sucess",
-//           title: "product has been added to cart",
-//           showConfirmButton: false,
-//           timer: 1500,
-//         });
-//         $(".content").load(location.href + ".content");
-//       } else if (response.status == "countAdded") {
-//         count = parseInt(count) + 1;
-//         $("#cartCount").html(count);
-//         if (wishlistCount > 0) {
-//           wishlistCount = parseInt(wishlistCount) - 1;
-//           $("#wislistCount").html(wishlistCount);
-//         }
-//         Swal.fire({
-//           position: "top-right",
-//           icon: "success",
-//           title: "product count added",
-//           showConfirmButton: false,
-//           timer: 1500,
-//         });
-//         $(".content").load(location.href + ".content");
-//       } else {
-//         location.href = "/userLogin";
-//       }
-//     },
-//   });
-// }
-
 function addToCart(productId, discountPrice, selectedSize) {
   console.log("size = ", selectedSize);
   console.log('id = ',productId);
