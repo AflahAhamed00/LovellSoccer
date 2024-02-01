@@ -248,7 +248,8 @@ const resendOtp = async (req, res) => {
 
 const forgotPasswordPage = async (req, res) => {
   try {
-    res.render("user/forgotPassword", { userData: 0, mail: true, errMsg: 0 });
+    const categoryList = await categoryModel.find()
+    res.render("user/forgotPassword", {categories:categoryList, userData: 0, mail: true, errMsg: 0 });
   } catch (err) {
     console.log(`forgot password ${err}`);
     res.redirect("/userLogin");
