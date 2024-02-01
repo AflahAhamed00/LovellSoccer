@@ -127,7 +127,7 @@ const registerUserDetails = async (req, res) => {
     const userExists = await userModel.findOne({ email: req.body.email });
 
     if (userExists) {
-      res.render("user/userSignUpPage", {
+      res.render("user/usersignUpPage", {
         errMsg: `User email already exists`,
         userData,
       });
