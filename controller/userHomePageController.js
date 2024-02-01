@@ -311,15 +311,18 @@ const getForgotPasswordOtp = async (req, res) => {
 const verifyForgotPasswordOtp = async (req, res) => {
   try {
     let forgotPasswordCurrentTime = Date.now();
+    const categoryList = await categoryModel.find()
     if (req.session.forgotPasswordTargetTime >= forgotPasswordCurrentTime) {
       if (req.session.forgotOtp == req.body.otp) {
         res.render("user/forgotPassword", {
+          categories:categoryList,
           userData: 0,
           changePassword: true,
           errMsg: 0,
         });
       } else {
         res.render("user/forgotPassword", {
+          categories:categoryList,
           userData: 0,
           otpPage: true,
           errMsg: `Invalid OTP`,
@@ -327,6 +330,7 @@ const verifyForgotPasswordOtp = async (req, res) => {
       }
     } else {
       res.render("user/forgotPassword", {
+        categories:categoryList,
         userData: 0,
         otpPage: true,
         errMsg: `OTP expired, kindly wait`,
