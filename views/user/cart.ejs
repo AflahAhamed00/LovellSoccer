@@ -260,7 +260,7 @@
     let quantity = parseInt(quantityElement.innerHTML); + count
     console.log('quantity - ',quantity);
 
-    if (quantity >= 0) {
+    if (quantity >= 0  && quantity < 4) {
       document.getElementById("discount").innerHTML =  0;
       $.ajax({
         url: "/cart/changeProductQuantity",
