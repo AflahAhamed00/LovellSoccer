@@ -10,6 +10,7 @@ const { request } = require("express");
 const wishlistModel = require("../model/wishlistModel");
 const categoryModel = require("../model/categoryModel");
 const bannerModel = require("../model/bannerModel");
+const userData = require("../model/userModel");
 // const { name } = require("ejs");
 
 let OTP = otpGenerator.generate(4, {
@@ -121,7 +122,7 @@ const signUpPage = async (req, res) => {
 const registerUserDetails = async (req, res) => {
   req.session.userDetails = req.body;
   console.log(req.body);
-  
+
   const categoryList = await categoryModel.find();
   try {
     const userExists = await userModel.findOne({ email: req.body.email });
@@ -248,8 +249,13 @@ const resendOtp = async (req, res) => {
 
 const forgotPasswordPage = async (req, res) => {
   try {
-    const categoryList = await categoryModel.find()
-    res.render("user/forgotPassword", {categories:categoryList, userData: 0, mail: true, errMsg: 0 });
+    const categoryList = await categoryModel.find();
+    res.render("user/forgotPassword", {
+      categories: categoryList,
+      userData: 0,
+      mail: true,
+      errMsg: 0,
+    });
   } catch (err) {
     console.log(`forgot password ${err}`);
     res.redirect("/userLogin");
@@ -288,9 +294,9 @@ const getForgotPasswordOtp = async (req, res) => {
       });
     } else if (req.session.otpPage) {
       req.session.otpPage = false;
-      const categoryList = await categoryModel.find()
+      const categoryList = await categoryModel.find();
       res.render("user/forgotPassword", {
-        categories:categoryList,
+        categories: categoryList,
         userData: 0,
         otpPage: true,
         errMsg: 0,
@@ -345,10 +351,10 @@ const resendForgotPasswordOtp = async (req, res) => {
     });
     req.session.otp = OTP;
     req.session.forgotPasswordTargetTime = Date.now() + 30000;
-    const categoryList = await categoryModel.find()
+    const categoryList = await categoryModel.find();
     console.log("New forgotPasswordOtp - ", req.session.forgotOtp);
     res.render("user/forgotPassword", {
-      categories:categoryList,
+      categories: categoryList,
       userData: 0,
       otpPage: true,
       errMsg: 0,
@@ -433,6 +439,23 @@ const landingPage = async (req, res) => {
   }
 };
 
+const userLogout = async (req, res) => {
+  try {
+    if (req.session.userLoggedIn) {
+      req.session.destroy((err) => {
+        if (err) {
+          console.log("Error destroying session:", err);
+        } else {
+          res.redirect("/userLogin");
+        }
+      });
+    }
+  } catch (err) {
+    console.log("error in logging out - ", err);
+    res.redirect("/");
+  }
+};
+
 module.exports = {
   showLoginPage,
   signUpPage,
@@ -447,4 +470,5 @@ module.exports = {
   otpVerification,
   resendOtp,
   landingPage,
+  userLogout,
 };

@@ -77,8 +77,20 @@
               </svg>
           </a>
           
+          <a href="/userLogout">
+            <button  class="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900  bg-white rounded-full   focus:z-10   dark:hover:text-white dark:hover:bg-gray-700">
+              LOG OUT
+            </button>
+          </a>
+
         </div>
-        <% } %>
+        <% } else{ %>
+          <a href="/userLogin">
+            <button  class="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900  bg-white rounded-full   focus:z-10   dark:hover:text-white dark:hover:bg-gray-700">
+              LOG IN
+            </button>
+          </a>
+          <% } %>
       </div>
       <!-- Responsive navbar -->
       <a class="xl:hidden flex mr-6 items-center" href="#">

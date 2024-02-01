@@ -20,6 +20,10 @@ router
 router
 .post("/userLogin",userHomePageController.userLogin)
 
+// log out of user
+router
+.get("/userLogout",userHomePageController.userLogout)
+
 // signup of the user
 
 router 
