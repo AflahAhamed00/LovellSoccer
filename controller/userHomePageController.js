@@ -285,16 +285,17 @@ const sendForgotPasswordOtp = async (req, res) => {
 
 const getForgotPasswordOtp = async (req, res) => {
   try {
+    const categoryList = await categoryModel.find();
     if (req.session.invalidEmail) {
       req.session.invalidEmail = false;
       res.render("user/forgotPassword", {
+        categories:categoryList,
         userData: 0,
         mail: true,
         errMsg: `User email not found, kindly signup`,
       });
     } else if (req.session.otpPage) {
       req.session.otpPage = false;
-      const categoryList = await categoryModel.find();
       res.render("user/forgotPassword", {
         categories: categoryList,
         userData: 0,
