@@ -108,7 +108,7 @@ const userLogin = async (req, res) => {
 const signUpPage = async (req, res) => {
   try {
     const categoryList = await categoryModel.find();
-    res.render("user/usersignUpPage", {
+    res.render("user/userSignUpPage", {
       categories: categoryList,
       userData: 0,
       errMsg: false,
