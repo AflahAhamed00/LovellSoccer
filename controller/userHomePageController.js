@@ -288,7 +288,9 @@ const getForgotPasswordOtp = async (req, res) => {
       });
     } else if (req.session.otpPage) {
       req.session.otpPage = false;
+      const categoryList = await categoryModel.find()
       res.render("user/forgotPassword", {
+        categories:categoryList,
         userData: 0,
         otpPage: true,
         errMsg: 0,
