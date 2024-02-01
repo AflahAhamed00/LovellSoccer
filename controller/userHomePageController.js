@@ -345,8 +345,10 @@ const resendForgotPasswordOtp = async (req, res) => {
     });
     req.session.otp = OTP;
     req.session.forgotPasswordTargetTime = Date.now() + 30000;
+    const categoryList = await categoryModel.find()
     console.log("New forgotPasswordOtp - ", req.session.forgotOtp);
     res.render("user/forgotPassword", {
+      categories:categoryList,
       userData: 0,
       otpPage: true,
       errMsg: 0,
