@@ -6,13 +6,6 @@
   <div class="row mb-2 mt-4 rounded border p-3">
     <div class="col-lg-10 mx-auto" id="invoice">
         <a class="navbar-brand d-flex align-items-center justify-content-center mt-2 mb-4">
-            <!-- <img
-              src="/img/logos.png"
-              alt="Logo"
-              width="40"
-              height="40"
-              class="d-inline-block align-text-top"
-            /> -->
             <div class="brand-name ms-3">
               <span>Order Details</span>
             </div>
@@ -132,7 +125,6 @@
       },
       success:(res)=>{
         if (res.data=="Cancelled") {
-         // $(".cancelAndPrint").load(location.href + ".cancelAndPrint" );
          location.reload();
         }
       }
