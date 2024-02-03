@@ -170,4 +170,8 @@ router
 router
 .get('/user/searchProducts',userProductController.getSearchProduct)
 
+// invoice 
+router
+.get('/order/invoice',userSession.userLoginSession,userOrderController.getInvoivePage)
+
 module.exports = router

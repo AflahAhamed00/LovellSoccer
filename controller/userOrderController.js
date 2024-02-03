@@ -379,10 +379,72 @@ const cancelOrder = async (req, res) => {
   }
 };
 
+const getInvoivePage = async(req,res)=>{
+  try {
+    let userData = req.session.user;
+    let cartCount = null;
+    let wishlistCount = null;
+    let cart = 0;
+    let wishlist = 0;
+    if (req.session.userLoggedIn) {
+      cartCount = await cartModel.find({ customer: userData._id });
+      console.log("myCart : ", cartCount);
+      if (
+        cartCount &&
+        cartCount.length > 0 &&
+        cartCount[0].totalQuantity !== undefined
+      ) {
+        cart = cartCount[0].totalQuantity;
+      }
+      wishlistCount = await wishlistModel.aggregate([
+        {
+          $group: {
+            _id: null,
+            totalSize: {
+              $sum: {
+                $size: {
+                  $ifNull: ["$products", []],
+                },
+              },
+            },
+          },
+        },
+      ]);
+      if (
+        wishlistCount &&
+        wishlistCount.length > 0 &&
+        wishlistCount[0].totalSize !== undefined
+      ) {
+        wishlist = parseInt(wishlistCount[0].totalSize);
+      }
+    }
+    const categoryList = await categoryModel.find();
+
+    let currentOrderedProducts = await orderModel
+      .find({ customer: userData._id })
+      .sort({ orderedOn: -1 })
+      .populate("summary.product");
+    currentOrderedProducts = currentOrderedProducts[0];
+
+    res.render('user/invoice',{
+      currentOrder:currentOrderedProducts,
+      categories:categoryList,
+      cartCount: cart,
+      wishlistCount: wishlist,
+      userData,
+      moment
+    })
+  } catch (err) {
+    console.log('rendering invoice page error - ',err);
+    res.redirect('/user/viewOrders')
+  }
+}
+
 module.exports = {
   placeOrder,
   orderSuccess,
   viewOrders,
   verifyPayment,
   cancelOrder,
+  getInvoivePage
 };
