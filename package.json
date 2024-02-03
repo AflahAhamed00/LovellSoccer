@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js",
+    "start": "pm2 start app.js --name app",
     "build:css": "npx tailwindcss -i ./src/input.css -o ./dist/output.css --watch"
   },
   "author": "",
@@ -26,7 +26,6 @@
     "nodemailer": "^6.9.5",
     "nodemon": "^3.0.1",
     "otp-generator": "^4.0.1",
-    "puppeteer": "^21.11.0",
     "razorpay": "^2.9.2",
     "sharp": "^0.32.6",
     "tailwindcss": "^3.3.5",
