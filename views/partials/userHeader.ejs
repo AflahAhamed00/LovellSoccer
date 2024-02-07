@@ -21,12 +21,12 @@
     <nav class="flex justify-between bg-white text-black w-screen">
       <div class="px-5 xl:px-12 py-6 flex w-full items-center">
         <a href="/">
-        <span class="text-3xl font-medium font-heading " >
+        <span class="md:text-3xl font-medium font-heading text-lg" >
           lovell soccer
         </span>
       </a>
         <!-- Nav Links -->
-        <ul class="hidden md:flex px-4 mx-auto font-normal font-heading space-x-12">
+        <ul class="hidden lg:flex px-4 mx-auto font-normal font-heading space-x-12">
           <li><a class="hover:text-black
             -200" href="/user/allProducts">ALL PRODUCTS</a></li>
             <% categories.forEach(category => { %>
@@ -67,45 +67,86 @@
                 <%= cartCount %>
               </span>
           </a> 
-          <!-- Sign In / Register      -->
+          <!-- User Profile -->
           <a class="flex items-center hover:text-black-200" href="/userProfile">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hover:text-black-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
           </a>
-          
-          <a href="/userLogout">
-            <button  class="py-2.5 px-5 me-2  m-2 text-sm font-medium text-gray-900  bg-white rounded-full   focus:z-10   dark:hover:text-white dark:hover:bg-gray-700">
-              LOG OUT
-            </button>
-          </a>
-
+          <div class="hidden xl:block">
+            <a href="/userLogout">
+              <button  class="py-2.5 px-5 me-2  m-2 text-sm font-medium text-gray-900  bg-white rounded-full   focus:z-10   dark:hover:text-white dark:hover:bg-gray-700">
+                LOG OUT
+              </button>
+            </a>
+          </div>
         </div>
         <% } else{ %>
-          <a href="/userLogin">
-            <button  class="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900  bg-white rounded-full   focus:z-10   dark:hover:text-white dark:hover:bg-gray-700">
-              LOG IN
-            </button>
-          </a>
+          <div class="hidden xl:block">
+            <a href="/userLogin">
+              <button  class="py-2.5 px-5 me-2  m-2 text-sm font-medium text-gray-900  bg-white rounded-full   focus:z-10   dark:hover:text-white dark:hover:bg-gray-700">
+                LOG IN
+              </button>
+            </a>
+          </div>
           <% } %>
       </div>
       <!-- Responsive navbar -->
-      <a class="lg:hidden flex mr-6 items-center" href="/user/cart">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hover:text-gray-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-        </svg>
-        <span class="flex absolute -mt-5 ml-4">
-          <span class="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-pink-400 opacity-75"></span>
-          <span class="relative inline-flex rounded-full h-3 w-3 bg-pink-500">
-          </span>
-        </span>
-      </a>
-      <a class="navbar-burger self-center mr-12 xl:hidden" href="#">
+      <% if(userData){ %>
+       
+      <a class="xl:hidden flex items-center max-md:hidden pr-8 hover:text-black
+          -200" href="/user/wishlist">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            </svg>
+            <span class="flex absolute -mt-5 ml-4">
+              <span class="animate-ping absolute inline-flex h-3 w-3 rounded-full opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-3 w-3 id="wishlistCount">
+                </span>
+                <%= wishlistCount %>
+              </span>
+          </a>
+
+          <a class="xl:hidden max-md:hidden pr-8 flex items-center hover:text-black-200" href="/user/cart">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+          <span class="flex absolute -mt-5 ml-4">
+            <span class="animate-ping absolute inline-flex h-3 w-3 rounded-full opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-3 w-3 id="cartCount">
+              </span>
+              <%= cartCount %>
+            </span>
+        </a> 
+      <% } %>
+      <button class="navbar-burger relative self-center mr-12 xl:hidden"  onclick="toggleDropdown()">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hover:text-gray-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
           </svg>
-      </a>
+        </button>
+       <!-- Dropdown Menu (Initially hidden) -->    
     </nav>
+    <div id="dropdownMenu" class="hidden right-0 m top-full w-full bg-white border rounded-md shadow-lg z-10">
+      <ul class="p-4">
+        <li ><a class="lg:hidden hover:text-black-200  text-base" href="/user/allProducts">ALL PRODUCTS</a></li>
+        <% categories.forEach(category => { %>
+          <li ><a class="lg:hidden hover:text-black" href="/<%= category.name %>/<%= category._id %>"><%= category.name %></a></li>
+        <% }); %>
+        <!-- Login Button -->
+        <% if (userData) { %>
+          <li ><a class="items-center md:hidden hover:text-black-200" href="/user/wishlist">WISHLIST </a></li>
+          <li ><a class="md:hidden items-center hover:text-black-200" href="/user/cart">CART</a> </li>
+          <li ><a class="xl:hidden items-center hover:text-black-200" href="/userProfile">USER PROFILE</a></li>
+          <li >
+            <a href="/userLogout" class="hover:text-black">LOG OUT</a>
+          </li>
+        <% } else { %>
+          <li ></li>>
+            <a href="/userLogin" class="hover:text-black">LOG IN</a>
+          </li>
+        <% } %>
+      </ul>
+    </div>
     
   </section>
 </div>
@@ -113,6 +154,13 @@
 </html>
 
 <script>
+ function toggleDropdown() {
+    var dropdownMenu = document.getElementById("dropdownMenu");
+    console.log("dropdown toggle - ",dropdownMenu);
+    dropdownMenu.classList.toggle("hidden");
+  }
+
+
   const productSearchForm = document.getElementById('searchForm')
   productSearchForm.addEventListener('submit',(e)=>{
     e.preventDefault()
@@ -127,6 +175,7 @@
     console.log(data);
     window.location.href = '/user/searchProducts?search=' + encodeURIComponent(formDataObject.search);
   })
+
 </script>
   
 
