@@ -1,5 +1,5 @@
 <%- include("../partials/userHeader.ejs")%>
-<div class="max-w-6xl mx-auto bg-white p-4 rounded shadow-md">
+<div class="max-sm:ml-14 xl:max-w-6xl lg:max-w-4xl md:max-w-2xl max-sm:max-w-72 mx-auto bg-white p-4 rounded shadow-md">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
       <!-- Thumbnail -->
       <div class="cursor-pointer md:col-span-1 shadow-sm">
@@ -7,46 +7,44 @@
             <img src="/img/products/<%=productDetails[0].images[0]%>" alt="Product Image 1" class="w-full rounded" 
                 data-magnify-src="/img/products/<%=productDetails[0].images[0]%>"
                 data-magnify-size="13800x13600">
+                <div class="mt-4">
+                  <div class="flex gap-8">
+                      <div class="cursor-pointer hover:opacity-75" id="thumbnail-1">
+                          <img src="/img/products/<%=productDetails[0].images[0]%>" alt="Product Image 1" class="w-40 rounded" data-magnify-src="/img/products/<%=productDetails[0].images[0]%>">
+                      </div>
+                      <div class="cursor-pointer hover:opacity-75" id="thumbnail-2">
+                          <img src="/img/products/<%=productDetails[0].images[1]%>" alt="Product Image 2" class="w-40 rounded" data-magnify-src="/img/products/<%=productDetails[0].images[1]%>">
+                      </div>
+                      <div class="cursor-pointer hover:opacity-75" id="thumbnail-3">
+                          <img src="/img/products/<%=productDetails[0].images[2]%>" alt="Product Image 3" class="w-40 rounded" data-magnify-src="/img/products/<%=productDetails[0].images[2]%>">
+                      </div>
+                  </div>
+                </div>    
         </div>
     </div>
       <!-- Product Details -->
-      <div class="md:col-span-1 ml-20 mt-40">
-        <h1 class="text-2xl font-bold"><%= productDetails[0].name%></h1>
+      <div class="md:col-span-1 md:ml-20 md:mt-40 max-lg:mt-2">
+        <h1 class=" md:text-2xl max-sm:ml-5 max-sm:text-xl font-bold"><%= productDetails[0].name%></h1>
 
-        <p class="text-xl font-bold my-8">₹<%=productDetails[0].price %></p>
+        <p class="text-xl max-md:ml-14 font-bold my-8">₹<%=productDetails[0].price %></p>
 
-        <h3 class="text-xl font-bold">Size</h3>
+        <h3 class="text-xl max-md:ml-14 font-bold">Size</h3>
         <span id="sizeAlert" class="text-xs text-red-400"></span>
-<div id="sizeContainer" class="h-36 w-72  grid grid-cols-3">
-  <% productDetails[0].sizeAndStock.forEach((item,i)=>{ %>
-        <input type="radio" name="size" value="<%=item.size%>" class="hidden" id="size-<%= i + 1 %>-<%= item.size %>">
-        <label for="size-<%= i + 1 %>-<%= item.size %>" class="flex justify-center  h-10 w-16 my-4 border border-black hover:border-blue-700 cursor-pointer">
-            <h6 class="mt-1 font-sans font-semibold"><%=item.size%></h6>
-        </label>
-        <%})%>
-        <input type="hidden" id="selectedSize" name="selectedSize" value=""> 
-</div>
-        <button id="addToWishlistButton" class="w-64 bg-blue-500 text-white px-4 py-2 mt-4 rounded hover:bg-blue-700">Add to Wishlist</button>
-        <button id="addToCartButton" class="w-64 bg-blue-500 text-white px-4 py-2 mt-4 rounded hover:bg-blue-700">Add to Cart</button>
+        <div id="sizeContainer" class=" lg:h-36 max-lg:h-48 w-72  grid max-lg:grid-cols-2 lg:grid-cols-3">
+            <% productDetails[0].sizeAndStock.forEach((item,i)=>{ %>
+            <input type="radio" name="size" value="<%=item.size%>" class="hidden" id="size-<%= i + 1 %>-<%= item.size %>">
+            <label for="size-<%= i + 1 %>-<%= item.size %>" class="flex justify-center max-sm:ml-4  h-10 w-16 my-4 border border-black hover:border-blue-700 cursor-pointer">
+              <h6 class="mt-1 font-sans font-semibold"><%=item.size%></h6>
+            </label>
+          <%})%>
+          <input type="hidden" id="selectedSize" name="selectedSize" value=""> 
+        </div>
+        <button id="addToWishlistButton" class="w-64  max-lg:mt-40 max-sm:mt-6 max-lg:ml-5 mt-10 max-lg:w-44 max-md:ml-14 max-sm:ml-10 bg-blue-500 text-white px-4 py-2  rounded hover:bg-blue-700">Add to Wishlist</button>
+        <button id="addToCartButton" class="w-64 max-md:ml-14 max-lg:w-44 max-sm:ml-10 max-lg:ml-5 bg-blue-500 text-white px-4 py-2 mt-4 rounded hover:bg-blue-700">Add to Cart</button>
       </div>
     </div>
-
-    <!-- Image Gallery -->
-    <div class="mt-4">
-      <div class="flex gap-8">
-          <div class="cursor-pointer hover:opacity-75" id="thumbnail-1">
-              <img src="/img/products/<%=productDetails[0].images[0]%>" alt="Product Image 1" class="w-40 rounded" data-magnify-src="/img/products/<%=productDetails[0].images[0]%>">
-          </div>
-          <div class="cursor-pointer hover:opacity-75" id="thumbnail-2">
-              <img src="/img/products/<%=productDetails[0].images[1]%>" alt="Product Image 2" class="w-40 rounded" data-magnify-src="/img/products/<%=productDetails[0].images[1]%>">
-          </div>
-          <div class="cursor-pointer hover:opacity-75" id="thumbnail-3">
-              <img src="/img/products/<%=productDetails[0].images[2]%>" alt="Product Image 3" class="w-40 rounded" data-magnify-src="/img/products/<%=productDetails[0].images[2]%>">
-          </div>
-      </div>
-  </div>
 </div>
-    <div class="mt-8 ml-48 w-9/12">
+    <div class="mt-8 md:ml-48 max-sm:ml-24 w-9/12">
         <h2 class="font-medium">Product Description</h2>
     <p class="text-black font-light mt-2 w-9/12"><%= productDetails[0].description %></p>
   </div>

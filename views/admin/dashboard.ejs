@@ -94,187 +94,199 @@ include('../partials/headerLinks.ejs')%>
 <div class="container">
   <h6 class="text-center mt-5 mb-3">Order Status</h6>
   <div class="dropdown">
-    <a class="btn btn-dark btn-sm dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-      aria-expanded="false" style="background-color: rgb(99, 99, 99);">
+    <a
+      class="btn btn-dark btn-sm dropdown-toggle"
+      href=""
+      role="button"
+      data-bs-toggle="dropdown"
+      aria-expanded="false"
+      style="background-color: rgb(99, 99, 99);"
+    >
     </a>
     <ul class="dropdown-menu" style="background-color: rgb(88, 85, 85);">
-
-      <label for="r1" class="dropdown-item text-black" style="font-weight: bolder;"
-        onclick="customChartData('lastweek')"><input type="radio" name="group1" id="r1" value="1" /> 1 Week</label>
-      <label for="r1" class="dropdown-item text-black" style="font-weight: bolder;"
-        onclick="customChartData('lastmonth')"><input type="radio" name="group1" id="r1" value="1" /> 1
-        month</label>
-      <label for="r1" class="dropdown-item text-black" style="font-weight: bolder;"
-        onclick="customChartData('last3month')"><input type="radio" name="group1" id="r1" value="1" /> 3
-        Month</label>
-
+      <label
+        for="r1"
+        class="dropdown-item text-black"
+        style="font-weight: bolder;"
+        onclick="customChartData('lastweek')"
+        ><input type="radio" name="group1" id="r1" value="1" /> 1 Week</label
+      >
+      <label
+        for="r1"
+        class="dropdown-item text-black"
+        style="font-weight: bolder;"
+        onclick="customChartData('lastmonth')"
+        ><input type="radio" name="group1" id="r1" value="1" /> 1 month</label
+      >
+      <label
+        for="r1"
+        class="dropdown-item text-black"
+        style="font-weight: bolder;"
+        onclick="customChartData('last3month')"
+        ><input type="radio" name="group1" id="r1" value="1" /> 3 Month</label
+      >
     </ul>
   </div>
   <div class="col-lg-4 mx-auto" id="doughnutChart">
     <canvas id="myChart3"></canvas>
   </div>
-  <h6 class="text-center mt-5 mb-3">Sales Analytics - <%let currentYear=new Date();%>
-      <%currentYear=currentYear.getFullYear();%>
-        <%=currentYear%>
+  <h6 class="text-center mt-5 mb-3">
+    Sales Analytics - <%let currentYear=new Date();%>
+    <%currentYear=currentYear.getFullYear();%> <%=currentYear%>
   </h6>
   <div class="row my-3" id="charts">
     <div class="col-lg-6">
-
       <canvas id="myChart"></canvas>
     </div>
-    <div class="col-lg-6 ">
+    <div class="col-lg-6">
       <canvas id="myChart2"></canvas>
     </div>
   </div>
-
-
 </div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+  let notDelivered;
+  let delivered;
+  let cancelled;
 
-let notDelivered;
-let delivered;
-let cancelled;
+  const ctz = document.getElementById("myChart3");
+  let chart = new Chart(ctz, {
+    type: "doughnut",
+    data: {
+      labels: ["Not-Delivered", "Delivered", "Cancelled"],
+      datasets: [
+        {
+          label: "Order Status",
+          data: [notDelivered, delivered, cancelled],
 
-const ctz = document.getElementById("myChart3");
-let chart = new Chart(ctz, {
-  type: "doughnut",
-  data: {
-    labels: ["Not-Delivered", "Delivered", "Cancelled"],
-    datasets: [
-      {
-        label: "Order Status",
-        data: [notDelivered, delivered, cancelled],
-
-        backgroundColor: [
-          "rgb(255, 205, 86,0.9)",
-          "rgb(34,139,34,0.9)",
-          "rgb(255,80,66,0.9)",
-          "rgb(55, 32, 138,0.9)",
-        ],
-        hoverOffset: 10,
-      },
-    ],
-  },
-});
-
-$.ajax({
-  url: "/admin/dashboard",
-  method: "put",
-  success: (res) => {
-    let orderData = res.data.orderData;
-    let totalOrders = [];
-    let revenuePerMonth = [];
-    let avgBillPerOrder = [];
-    let productsPerMonth = [];
-    orderData.forEach((order) => {
-      totalOrders[order._id.month - 1] = order.totalOrders;
-      revenuePerMonth[order._id.month - 1] = order.revenue;
-      avgBillPerOrder[order._id.month - 1] = order.avgBillPerOrder;
-      productsPerMonth[order._id.month - 1] = order.totalProducts;
-    });
-
-    const monthDetails = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
-    const ctx = document.getElementById("myChart");
-    new Chart(ctx, {
-      type: "bar",
-      data: {
-        labels: monthDetails,
-        datasets: [
-          {
-            label: "Revenue",
-            data: revenuePerMonth,
-            borderWidth: 1,
-            backgroundColor: "rgba(255, 99, 132, 0.4)",
-            borderColor: "rgb(255, 99, 132)",
-          },
-          {
-            label: "Avg. Bill per Order",
-            data: avgBillPerOrder,
-            borderWidth: 1,
-            backgroundColor: "rgba(255, 159, 64, 0.4)",
-            borderColor: "rgb(255, 159, 64)",
-          },
-        ],
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true,
-          },
+          backgroundColor: [
+            "rgb(255, 205, 86,0.9)",
+            "rgb(34,139,34,0.9)",
+            "rgb(255,80,66,0.9)",
+            "rgb(55, 32, 138,0.9)",
+          ],
+          hoverOffset: 10,
         },
-      },
-    });
+      ],
+    },
+  });
 
-    notDelivered = res.data.notDelivered;
-    delivered = res.data.delivered;
-    cancelled = res.data.cancelled;
-
-    chart.data.datasets[0].data = [notDelivered, delivered, cancelled];
-
-    chart.update();
-
-    const cty = document.getElementById("myChart2");
-    new Chart(cty, {
-      type: "bar",
-      data: {
-        labels: monthDetails,
-        datasets: [
-          {
-            label: "Orders",
-            data: totalOrders,
-            borderWidth: 1,
-            backgroundColor: "rgba(54, 162, 235, 0.4",
-            borderColor: "rgb(54, 162, 235)",
-          },
-          {
-            label: "Products sold",
-            data: productsPerMonth,
-            borderWidth: 1,
-            backgroundColor: "rgba(75, 192, 192, 0.4)",
-            borderColor: "rgb(75, 192, 192)",
-          },
-        ],
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true,
-          },
-        },
-      },
-    });
-  },
-});
-
-function customChartData(data) {
   $.ajax({
-    url: `/admin/chart/${data}`,
-    method: "get",
+    url: "/admin/dashboard",
+    method: "put",
     success: (res) => {
+      let orderData = res.data.orderData;
+      let totalOrders = [];
+      let revenuePerMonth = [];
+      let avgBillPerOrder = [];
+      let productsPerMonth = [];
+      orderData.forEach((order) => {
+        totalOrders[order._id.month - 1] = order.totalOrders;
+        revenuePerMonth[order._id.month - 1] = order.revenue;
+        avgBillPerOrder[order._id.month - 1] = order.avgBillPerOrder;
+        productsPerMonth[order._id.month - 1] = order.totalProducts;
+      });
+
+      const monthDetails = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ];
+      const ctx = document.getElementById("myChart");
+      new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: monthDetails,
+          datasets: [
+            {
+              label: "Revenue",
+              data: revenuePerMonth,
+              borderWidth: 1,
+              backgroundColor: "rgba(255, 99, 132, 0.4)",
+              borderColor: "rgb(255, 99, 132)",
+            },
+            {
+              label: "Avg. Bill per Order",
+              data: avgBillPerOrder,
+              borderWidth: 1,
+              backgroundColor: "rgba(255, 159, 64, 0.4)",
+              borderColor: "rgb(255, 159, 64)",
+            },
+          ],
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+            },
+          },
+        },
+      });
+
       notDelivered = res.data.notDelivered;
-      cancelled = res.data.cancelled;
       delivered = res.data.delivered;
+      cancelled = res.data.cancelled;
+
       chart.data.datasets[0].data = [notDelivered, delivered, cancelled];
 
       chart.update();
+
+      const cty = document.getElementById("myChart2");
+      new Chart(cty, {
+        type: "bar",
+        data: {
+          labels: monthDetails,
+          datasets: [
+            {
+              label: "Orders",
+              data: totalOrders,
+              borderWidth: 1,
+              backgroundColor: "rgba(54, 162, 235, 0.4",
+              borderColor: "rgb(54, 162, 235)",
+            },
+            {
+              label: "Products sold",
+              data: productsPerMonth,
+              borderWidth: 1,
+              backgroundColor: "rgba(75, 192, 192, 0.4)",
+              borderColor: "rgb(75, 192, 192)",
+            },
+          ],
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+            },
+          },
+        },
+      });
     },
   });
-}
 
+  function customChartData(data) {
+    $.ajax({
+      url: `/admin/chart/${data}`,
+      method: "get",
+      success: (res) => {
+        notDelivered = res.data.notDelivered;
+        cancelled = res.data.cancelled;
+        delivered = res.data.delivered;
+        chart.data.datasets[0].data = [notDelivered, delivered, cancelled];
+
+        chart.update();
+      },
+    });
+  }
 </script>
 
 <%- include('../partials/adminFooter.ejs')%>

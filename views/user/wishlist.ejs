@@ -3,7 +3,7 @@
 <div class="container mx-auto py-8">
     <h1 class="text-3xl text-center font-semibold mb-8">Wishlist</h1>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+    <div class="grid grid-cols-1 max-sm:w-72 max-sm:ml-16 ml-10 max-sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <% if (wishlist !== null && wishlist.products.length !== 0) { %>
             <% wishlist.products.forEach((product,i) => { %>
                 <div class="bg-white p-6 rounded-lg shadow-md relative">
