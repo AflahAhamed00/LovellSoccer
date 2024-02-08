@@ -72,17 +72,17 @@
       <div class="pt-3" id="filter-section-mobile-0">
         <div class="space-y-1">
           <% for (i = 0; i < brand.length; i++) { %>
-          <div class="flex items-center">
+          <div class="flex items-center  max-md:w-20">
             <input
               id="brand-<%= brand[i].name %>"
               name="<%= brand[i].name %>"
               value="brand-<%= brand[i]._id %>"
               type="checkbox"
-              class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+              class="h-4 sm:w-4  rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
             />
             <label
               for="filter-mobile-brand-0"
-              class="ml-3 min-w-0 flex-1 text-gray-500"
+              class="ml-3 md:min-w-0 sm:w-20 flex-1 max-md:text-sm text-gray-500"
               ><%= brand[i].name %></label
             >
           </div>
@@ -114,7 +114,7 @@
             text-indigo-600 focus:ring-indigo-500" />
             <label
               for="filter-mobile-category-0"
-              class="ml-3 min-w-0 flex-1 text-gray-500"
+              class="ml-3 min-w-0 flex-1 max-md:text-sm text-gray-500"
               ><%= categories[i].name %></label
             >
           </div>
@@ -228,31 +228,48 @@
     </div>
   </div>
 
-  <div class="product-container flex-1 ml-10">
-    <div id="productGrid" class="grid grid-cols-3 mt-5 w-11/12 h-5/6 gap-10">
-      <% for (i = 0; i < product.length; i++) { %>
-      <a
-        href="/user/singleProductDetails/<%= product[i]._id %>"
-        class="group relative h-[370px] block overflow-hidden"
-      >
-        <img
-          src="/img/products/<%= product[i].frontImage %>"
-          alt=""
-          class="h-1.5 w-full object-cover sm:h-72"
-        />
+  <div class="product-container flex-1 ml-10 hidden sm:block">
+    <div id="productGrid" class="grid xl:grid-cols-3 md:grid-cols-2 mt-5 md:w-11/12 h-5/6 md:gap-10">
+        <% for (i = 0; i < product.length; i++) { %>
+        <a href="/user/singleProductDetails/<%= product[i]._id %>" class="group relative block overflow-hidden">
+            <div class="md:h-auto">
+                <img src="/img/products/<%= product[i].frontImage %>" alt="" class="w-full h-full object-cover object-center" />
+            </div>
 
-        <div class="relative border border-gray-100 bg-white p-6">
-          <div class="flex justify-between">
-            <h3 class="text-sm font-medium text-gray-900">
-              <%= product[i].name %>
-            </h3>
-            <p class="text-sm text-gray-700">₹<%= product[i].price %></p>
+            <div class="relative border border-gray-100 bg-white p-6">
+                <div class="flex justify-between">
+                    <h3 class="text-sm font-medium text-gray-900">
+                        <%= product[i].name %>
+                    </h3>
+                    <p class="text-sm text-gray-700">₹<%= product[i].price %></p>
+                </div>
+            </div>
+        </a>
+        <% } %>
+    </div>
+</div>
+<!--mobile-->
+<div class="product-container flex-1 ml-10 block sm:hidden">
+  <div id="productGrid" class="ml-6 gap-6 grid w-3/4">
+      <% for (i = 0; i < product.length; i++) { %>
+      <a href="/user/singleProductDetails/<%= product[i]._id %>" class="group relative block overflow-hidden">
+          <div class="">
+              <img src="/img/products/<%= product[i].frontImage %>" alt="" class="w-full h-full object-cover object-center" />
           </div>
-        </div>
+
+          <div class="relative border border-gray-100 bg-white p-6">
+              <div class="flex justify-between">
+                  <h3 class="text-sm font-medium text-gray-900">
+                      <%= product[i].name %>
+                  </h3>
+                  <p class="text-sm text-gray-700">₹<%= product[i].price %></p>
+              </div>
+          </div>
       </a>
       <% } %>
-    </div>
   </div>
+</div>
+
 </div>
 
 <script>
@@ -280,6 +297,7 @@
         if (res && res.products) {
           // Update the product grid with the sorted products
           const productGrid = document.getElementById("productGrid");
+          console.log(pr);
           productGrid.innerHTML = ""; // Clear the existing products
           res.products.forEach((product) => {
             productGrid.innerHTML += `

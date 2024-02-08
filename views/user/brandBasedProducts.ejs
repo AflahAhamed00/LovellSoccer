@@ -1,27 +1,45 @@
 <%- include("../partials/userHeader.ejs")%>
-    <div id="productGrid" class="grid grid-cols-4 mt-5 ml-16 w-11/12 h-5/6 gap-10">
+<div class="product-container flex-1 ml-10 hidden sm:block">
+  <div id="productGrid" class="grid xl:grid-cols-3 md:grid-cols-2 mt-5 md:w-11/12 h-5/6 md:gap-10">
       <% for (i = 0; i < product.length; i++) { %>
-      <a
-        href="/user/singleProductDetails/<%= product[i]._id %>"
-        class="group relative h-[370px] block overflow-hidden"
-      >
-        <img
-          src="/img/products/<%= product[i].frontImage %>"
-          alt=""
-          class="h-1.5 w-full object-cover sm:h-72"
-        />
-
-        <div class="relative border border-gray-100 bg-white p-6">
-          <div class="flex justify-between">
-            <h3 class="text-sm font-medium text-gray-900">
-              <%= product[i].name %>
-            </h3>
-            <p class="text-sm text-gray-700">₹<%= product[i].price %></p>
+      <a href="/user/singleProductDetails/<%= product[i]._id %>" class="group relative block overflow-hidden">
+          <div class="md:h-auto">
+              <img src="/img/products/<%= product[i].frontImage %>" alt="" class="w-full h-full object-cover object-center" />
           </div>
-        </div>
+
+          <div class="relative border border-gray-100 bg-white p-6">
+              <div class="flex justify-between">
+                  <h3 class="text-sm font-medium text-gray-900">
+                      <%= product[i].name %>
+                  </h3>
+                  <p class="text-sm text-gray-700">₹<%= product[i].price %></p>
+              </div>
+          </div>
       </a>
       <% } %>
-    </div>
   </div>
+</div>
+
+<!--mobile-->
+<div class="product-container flex-1 ml-10 block sm:hidden">
+  <div id="productGrid" class="ml-6 gap-6 grid w-3/4">
+      <% for (i = 0; i < product.length; i++) { %>
+      <a href="/user/singleProductDetails/<%= product[i]._id %>" class="group relative block overflow-hidden">
+          <div class="">
+              <img src="/img/products/<%= product[i].frontImage %>" alt="" class="w-full h-full object-cover object-center" />
+          </div>
+
+          <div class="relative border border-gray-100 bg-white p-6">
+              <div class="flex justify-between">
+                  <h3 class="text-sm font-medium text-gray-900">
+                      <%= product[i].name %>
+                  </h3>
+                  <p class="text-sm text-gray-700">₹<%= product[i].price %></p>
+              </div>
+          </div>
+      </a>
+      <% } %>
+  </div>
+</div>
 
 <%- include("../partials/userFooter.ejs")%>
