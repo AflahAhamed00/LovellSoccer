@@ -297,7 +297,6 @@
         if (res && res.products) {
           // Update the product grid with the sorted products
           const productGrid = document.getElementById("productGrid");
-          console.log(pr);
           productGrid.innerHTML = ""; // Clear the existing products
           res.products.forEach((product) => {
             productGrid.innerHTML += `
