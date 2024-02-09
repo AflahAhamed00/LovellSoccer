@@ -1,6 +1,6 @@
 <%- include("../partials/userHeader.ejs")%>
 
-<div class="grid sm:px-10 lg:grid-cols-2 lg:px-20 xl:px-32">
+<div class="grid sm:px-10 xl:grid-cols-2 lg:px-20 xl:px-32">
   <div class="px-4 pt-8">
     <p class="text-xl font-medium">Order Summary</p>
     <p class="text-gray-400">
@@ -40,7 +40,7 @@
         %> <% if (address=="" ) { %>
         <h4>No Address. Add Address</h4>
         <% } else { %> <% address.forEach((address, i) => { %>
-        <div class="mb-2 d-flex">
+        <div class="mb-4 d-flex">
           <div>
             <input
               type="radio"
@@ -76,12 +76,13 @@
           type="text"
           name="coupon"
           id="couponCode"
+          placeholder="coupon code"
           value="<%= coupon._id %>"
           class="p-3 ml-6 mr-12 rounded-md"
         />
         <button
           id="applyCouponBtn"
-          class="mt-8 mb-8 rounded-md bg-gray-900 px-3 py-3 font-medium text-white"
+          class="mt-8 mb-8 max-xl:ml-6 rounded-md bg-gray-900 px-3 py-3 font-medium text-white"
           onclick="applyCoupon()"
         >
           Apply Coupon
